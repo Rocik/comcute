@@ -12,7 +12,7 @@ header {
     text-decoration: none;
   }
   
-  #comcute-button {
+  .comcute-button {
     display: inline-block;
     min-width: 300px;
     
@@ -22,8 +22,9 @@ header {
     text-align: center;
     line-height: 60px;
     
-    color: #fff;
+    color: #f9f9f9;
     @include relative-font-size(1.2);
+    font-family: arial,sans-serif;
     font-weight: bold;
     cursor: pointer;
     text-transform: lowercase;
@@ -37,15 +38,17 @@ header {
       @include relative-font-size(1.0);
     }
     
-    @include transition(box-shadow 0.2s linear);
+    @include transition(box-shadow 0.4s linear);
     box-shadow: none;
     &:hover {
-      box-shadow: 0 1px 15px rgba(black, 0.3);
+      color: #fff;
+      background: #ee3d3a;
+      box-shadow: 0 1px 10px rgba(black, 0.3);
     }
     
     &:active {
-      box-shadow: 0 1px 15px rgba(black, 0.3),
-                  inset 0px 0px 10px rgba(75,31,27,0.3);
+      color: #eee;
+      background: #de3a36;
     }
   }
 }
@@ -53,7 +56,7 @@ header {
 
 .page {
   background: #fcfcfc;
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
   
   margin-top: $spacing-unit;
   margin-bottom: $spacing-unit;

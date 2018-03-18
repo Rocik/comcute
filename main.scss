@@ -65,6 +65,7 @@ $on-laptop:        800px !default;
 // Import partials.
 @import
   "base",
+  "common",
   "layout",
   "syntax-highlighting"
 ;
