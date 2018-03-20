@@ -48,7 +48,7 @@ header {
     
     &:active {
       color: #eee;
-      background: #de3a36;
+      background: #d53431;
     }
   }
 }
@@ -61,9 +61,9 @@ header {
   margin-top: $spacing-unit;
   margin-bottom: $spacing-unit;
   
-  .wrapper {
-    padding-right: $spacing-unit;
-    padding-left: $spacing-unit;
+  @include media-query($on-laptop) {
+    box-shadow: none;
+    margin: 0;
   }
 }
 
