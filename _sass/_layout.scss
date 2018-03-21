@@ -1,3 +1,5 @@
+$header-width: 850px !default;
+
 header {
   padding-top: 20px;
 }
@@ -7,60 +9,132 @@ header {
 
   // Positioning context for the mobile navigation icon
   position: relative;
-  
+
   a {
     text-decoration: none;
   }
-  
-  .comcute-button {
-    display: inline-block;
-    min-width: 300px;
-    
-    float: right;
-    
-    background: #e03d3a;
-    text-align: center;
-    line-height: 60px;
-    
-    color: #f9f9f9;
-    @include relative-font-size(1.2);
-    font-family: arial,sans-serif;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: lowercase;
-    
-    @include media-query(850px) {
-      min-width: 100%;
-      line-height: 50px;
-      
-      margin-top: $spacing-unit * 0.5;
-      
-      @include relative-font-size(1.0);
-    }
-    
-    @include transition(box-shadow 0.4s linear);
-    box-shadow: none;
-    &:hover {
-      color: #fff;
-      background: #ee3d3a;
-      box-shadow: 0 1px 10px rgba(black, 0.3);
-    }
-    
-    &:active {
-      color: #eee;
-      background: #d53431;
-    }
+}
+
+
+.comcute-button {
+  display: inline-block;
+  float: right;
+  min-width: 300px;
+
+  line-height: 60px;
+  text-align: center;
+  text-shadow: 0px 0px 1px #522;
+  text-transform: lowercase;
+
+  color: #f9f9f9;
+  @include relative-font-size(1.2);
+  font-family: arial,sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+
+  @include media-query($header-width) {
+    float: none;
+    line-height: 50px;
+    min-width: 100%;
+
+    margin-top: $spacing-unit * 0.5;
+
+    @include relative-font-size(1.0);
   }
+
+  @include transition(box-shadow 0.4s linear);
+  box-shadow: none;
+  &:hover {
+    color: #fff;
+    box-shadow: 0 1px 10px rgba(black, 0.3);
+  }
+
+  &:active {
+    color: #eee;
+  }
+}
+
+
+#comcute-start {
+  background: #e03d3a;
+
+  &:hover {
+    background: #ee3d3a;
+  }
+
+  &:active {
+    background: #d53431;
+  }
+}
+
+
+#comcute-stop {
+  background: #757575;
+
+  &:hover {
+    background: #808080;
+  }
+
+  &:active {
+    background: #686868;
+  }
+}
+
+
+#progressbar {
+  width: 100%;
+  margin-top: $spacing-unit / 4;
+  background: #eee;
+
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+
+  @include transition(height 0.5s);
+
+  @include media-query($header-width) {
+    margin-top: 0;
+    border: none;
+  }
+
+  .progress {
+      height: 100%;
+      background: #759eeb;
+  }
+}
+
+
+@include keyframes (fadein) {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.expanded {
+  height: 8px;
+  animation: fadein 1s;
+  border: 1px solid #ddd;
+}
+
+
+@include keyframes (fadeout) {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+.collapsed {
+  height: 0px;
+  animation: fadeout 1s;
+  border: none;
 }
 
 
 .page {
   background: #fcfcfc;
   box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
-  
+
   margin-top: $spacing-unit;
   margin-bottom: $spacing-unit;
-  
+
   @include media-query($on-laptop) {
     box-shadow: none;
     margin: 0;
@@ -72,7 +146,7 @@ header {
   line-height: $base-line-height * $base-font-size * 2.25;
 
   .nav-trigger {
-      display: none;
+    display: none;
   }
 
   .menu-icon {
@@ -177,7 +251,7 @@ header {
  * Page content
  */
 .page-content {
-  
+
 }
 
 .page-heading {
