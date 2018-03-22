@@ -1,7 +1,7 @@
 <script type="text/javascript" src="{{ "/js/jquery-3.3.1.min.js" | relative_url }}"></script>
 <script type="text/javascript">
-     /* <![CDATA[ */
-      var Comcute = {
+    /* <![CDATA[ */
+    var Comcute = {
         ajaxurl: 'http://comcute.eti.pg.gda.pl/wp-admin/admin-ajax.php',
         messages: {
             errorMsg: "Przepraszamy, ale wystąpił błąd. Spróbuj dołączyć do nas później.",
@@ -10,22 +10,22 @@
             computingStartMsg: "Dziękujemy za udostępnienie mocy obliczeniowej. Obliczenia trwają...",
             computingEndMsg: "Zakończono obliczenia. Dziękujemy za współpracę.",
         },
-              };
-     /* ]]> */
-      jQuery(document).ready(function($) {
-      $('#nav-button').click(function(event){
-       if (!$('#nav-button').hasClass('active')) {
-           $('#nav-button').addClass('active');
-           $('nav#categories > ul').show();
-           event.stopPropagation();
-           $(document).one('click', function() {
-               $('#nav-button').removeClass('active');
-               $('nav#categories > ul').hide();
-           });
-       } else {
-           $('#nav-button').removeClass('active');
-           $('nav#categories > ul').hide();
-       }
+    };
+    /* ]]> */
+    jQuery(document).ready(function($) {
+    $('#nav-button').click(function(event){
+        if (!$('#nav-button').hasClass('active')) {
+            $('#nav-button').addClass('active');
+            $('nav#categories > ul').show();
+            event.stopPropagation();
+            $(document).one('click', function() {
+                $('#nav-button').removeClass('active');
+                $('nav#categories > ul').hide();
+            });
+        } else {
+            $('#nav-button').removeClass('active');
+            $('nav#categories > ul').hide();
+        }
     })
 }(jQuery));
 </script>

@@ -1,107 +1,107 @@
 $header-width: 910px !default;
 
 .site-header {
-  position: relative;
-  min-height: $spacing-unit * 1.865;
+    position: relative;
+    min-height: $spacing-unit * 1.865;
 
-  padding-top: 20px;
+    padding-top: 20px;
 
-  a {
-    text-decoration: none;
-  }
+    a {
+        text-decoration: none;
+    }
 }
 
 
 .logo img {
-  margin-left: $spacing-unit * 0.2;
-  margin-right: $spacing-unit * 0.2;
-  margin-bottom: $spacing-unit * 0.2;
+    margin-left: $spacing-unit * 0.2;
+    margin-right: $spacing-unit * 0.2;
+    margin-bottom: $spacing-unit * 0.2;
 }
 
 
 .comcute-button {
-  display: inline-block;
-  float: right;
-  min-width: 300px;
+    display: inline-block;
+    float: right;
+    min-width: 300px;
 
-  line-height: 55px;
-  text-align: center;
-  text-shadow: 0px 0px 1px #522;
-  text-transform: lowercase;
+    line-height: 55px;
+    text-align: center;
+    text-shadow: 0px 0px 1px #522;
+    text-transform: lowercase;
 
-  color: #f9f9f9;
-  @include relative-font-size(1.2);
-  font-family: arial,sans-serif;
-  font-weight: bold;
-  cursor: pointer;
+    color: #f9f9f9;
+    @include relative-font-size(1.2);
+    font-family: arial,sans-serif;
+    font-weight: bold;
+    cursor: pointer;
 
-  @include media-query($header-width) {
-    float: none;
-    line-height: 50px;
-    min-width: 100%;
+    @include media-query($header-width) {
+        float: none;
+        line-height: 50px;
+        min-width: 100%;
 
-    @include relative-font-size(1.0);
-  }
+        @include relative-font-size(1.0);
+    }
 
-  @include transition(box-shadow 0.4s linear);
-  box-shadow: none;
-  &:hover {
-    color: #fff;
-    box-shadow: 0 1px 10px rgba(black, 0.3);
-  }
+    @include transition(box-shadow 0.4s linear);
+    box-shadow: none;
+    &:hover {
+        color: #fff;
+        box-shadow: 0 1px 10px rgba(black, 0.3);
+    }
 
-  &:active {
-    color: #eee;
-  }
+    &:active {
+        color: #eee;
+    }
 }
 
 
 #comcute-start {
-  background: #e03d3a;
+    background: #e03d3a;
 
-  &:hover {
-    background: #ee3d3a;
-  }
+    &:hover {
+        background: #ee3d3a;
+    }
 
-  &:active {
-    background: #d53431;
-  }
+    &:active {
+        background: #d53431;
+    }
 }
 
 
 #comcute-stop {
-  background: #757575;
+    background: #757575;
 
-  &:hover {
-    background: #808080;
-  }
+    &:hover {
+        background: #808080;
+    }
 
-  &:active {
-    background: #686868;
-  }
+    &:active {
+        background: #686868;
+    }
 }
 
 
 #progressbar {
-  width: 100%;
-  margin-top: $spacing-unit / 4;
-  background: #eee;
+    width: 100%;
+    margin-top: $spacing-unit / 4;
+    background: #eee;
 
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 
-  @include transition(height 0.5s);
+    @include transition(height 0.5s);
 
-  @include media-query($header-width) {
-    margin-top: 0;
-    border: none;
-  }
+    @include media-query($header-width) {
+        margin-top: 0;
+        border: none;
+    }
 
-  .progress {
-      height: 100%;
-      background: #759eeb;
-  }
+    .progress {
+        height: 100%;
+        background: #759eeb;
+    }
 }
 
 
@@ -111,9 +111,9 @@ $header-width: 910px !default;
 }
 
 .expanded {
-  height: 8px;
-  animation: fadein 1s;
-  border: 1px solid #ddd;
+    height: 8px;
+    animation: fadein 1s;
+    border: 1px solid #ddd;
 }
 
 
@@ -123,99 +123,99 @@ $header-width: 910px !default;
 }
 
 .collapsed {
-  height: 0px;
-  animation: fadeout 1s;
-  border: none;
+    height: 0px;
+    animation: fadeout 1s;
+    border: none;
 }
 
 
 .page {
-  background: #fcfcfc;
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
+    background: #fcfcfc;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
 
-  margin-top: $spacing-unit / 2;
-  margin-bottom: $spacing-unit;
+    margin-top: $spacing-unit / 2;
+    margin-bottom: $spacing-unit;
 
-  @include media-query($on-laptop) {
-    box-shadow: none;
-    margin: 0;
-  }
+    @include media-query($on-laptop) {
+        box-shadow: none;
+        margin: 0;
+    }
 }
 
 
 .site-nav {
-  line-height: $base-line-height * $base-font-size * 2.25;
+    line-height: $base-line-height * $base-font-size * 2.25;
 
-  .nav-trigger {
-    display: none;
-  }
-
-  .menu-icon {
-    display: none;
-  }
-
-  .page-link {
-    color: $text-color;
-    line-height: $base-line-height;
-
-    // Gaps between nav items, but not on the last one
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
-  }
-
-  @include media-query($on-palm) {
-    position: absolute;
-    top: 9px;
-    right: $spacing-unit / 2;
-    background-color: $background-color;
-    border: 1px solid $grey-color-light;
-    border-radius: 5px;
-    text-align: right;
-
-    label[for="nav-trigger"] {
-      display: block;
-      float: right;
-      width: 36px;
-      height: 36px;
-      z-index: 2;
-      cursor: pointer;
+    .nav-trigger {
+        display: none;
     }
 
     .menu-icon {
-      display: block;
-      float: right;
-      width: 36px;
-      height: 26px;
-      line-height: 0;
-      padding-top: 10px;
-      text-align: center;
-
-      > svg path {
-        fill: $grey-color-dark;
-      }
-    }
-
-    input ~ .trigger {
-      clear: both;
-      display: none;
-    }
-
-    input:checked ~ .trigger {
-      display: block;
-      padding-bottom: 5px;
+        display: none;
     }
 
     .page-link {
-      display: block;
-      padding: 5px 10px;
+        color: $text-color;
+        line-height: $base-line-height;
 
-      &:not(:last-child) {
-        margin-right: 0;
-      }
-      margin-left: 20px;
+        // Gaps between nav items, but not on the last one
+        &:not(:last-child) {
+            margin-right: 20px;
+        }
     }
-  }
+
+    @include media-query($on-palm) {
+        position: absolute;
+        top: 9px;
+        right: $spacing-unit / 2;
+        background-color: $background-color;
+        border: 1px solid $grey-color-light;
+        border-radius: 5px;
+        text-align: right;
+
+        label[for="nav-trigger"] {
+            display: block;
+            float: right;
+            width: 36px;
+            height: 36px;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            display: block;
+            float: right;
+            width: 36px;
+            height: 26px;
+            line-height: 0;
+            padding-top: 10px;
+            text-align: center;
+
+            > svg path {
+                fill: $grey-color-dark;
+            }
+        }
+
+        input ~ .trigger {
+            clear: both;
+            display: none;
+        }
+
+        input:checked ~ .trigger {
+            display: block;
+            padding-bottom: 5px;
+        }
+
+        .page-link {
+            display: block;
+            padding: 5px 10px;
+
+            &:not(:last-child) {
+                margin-right: 0;
+            }
+            margin-left: 20px;
+        }
+    }
 }
 
 
@@ -224,27 +224,27 @@ $header-width: 910px !default;
  * Site footer
  */
 .site-footer {
-  border-top: 1px solid $grey-color-light;
-  padding-top: $spacing-unit;
+    border-top: 1px solid $grey-color-light;
+    padding-top: $spacing-unit;
 }
 
 .footer-heading {
-  @include relative-font-size(1.125);
-  margin-bottom: $spacing-unit / 2;
+    @include relative-font-size(1.125);
+    margin-bottom: $spacing-unit / 2;
 }
 
 .footer-wrapper {
-  @include relative-font-size(0.75);
-  color: $grey-color-dark;
-  padding-left: $spacing-unit / 2;
-  margin-left: -$spacing-unit / 2;
-  margin-bottom: $spacing-unit / 2;
-  @extend %clearfix;
+    @include relative-font-size(0.75);
+    color: $grey-color-dark;
+    padding-left: $spacing-unit / 2;
+    margin-left: -$spacing-unit / 2;
+    margin-bottom: $spacing-unit / 2;
+    @extend %clearfix;
 }
 
 .footer-about {
-  color: $grey-color;
-  margin-top: $spacing-unit / 2;
+    color: $grey-color;
+    margin-top: $spacing-unit / 2;
 }
 
 
@@ -256,30 +256,30 @@ $header-width: 910px !default;
 }
 
 .page-heading {
-  @include relative-font-size(2);
+    @include relative-font-size(2);
 }
 
 .post-list-heading {
-  @include relative-font-size(1.75);
+    @include relative-font-size(1.75);
 }
 
 .post-list {
-  margin-left: 0;
-  list-style: none;
+    margin-left: 0;
+    list-style: none;
 
-  > li {
-    margin-bottom: $spacing-unit;
-  }
+    > li {
+        margin-bottom: $spacing-unit;
+    }
 }
 
 .post-meta {
-  font-size: $small-font-size;
-  color: $grey-color;
+    font-size: $small-font-size;
+    color: $grey-color;
 }
 
 .post-link {
-  display: block;
-  @include relative-font-size(1.5);
+    display: block;
+    @include relative-font-size(1.5);
 }
 
 
@@ -288,43 +288,43 @@ $header-width: 910px !default;
  * Posts
  */
 .post-header {
-  margin-bottom: $spacing-unit;
+    margin-bottom: $spacing-unit;
 }
 
 .post-title {
-  @include relative-font-size(2.625);
-  letter-spacing: -1px;
-  line-height: 1;
+    @include relative-font-size(2.625);
+    letter-spacing: -1px;
+    line-height: 1;
 
-  @include media-query($on-laptop) {
-    @include relative-font-size(2.25);
-  }
+    @include media-query($on-laptop) {
+        @include relative-font-size(2.25);
+    }
 }
 
 .post-content {
-  margin-bottom: $spacing-unit;
+    margin-bottom: $spacing-unit;
 
-  h2 {
-    @include relative-font-size(2);
+    h2 {
+        @include relative-font-size(2);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.75);
+        @include media-query($on-laptop) {
+            @include relative-font-size(1.75);
+        }
     }
-  }
 
-  h3 {
-    @include relative-font-size(1.625);
+    h3 {
+        @include relative-font-size(1.625);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.375);
+        @include media-query($on-laptop) {
+            @include relative-font-size(1.375);
+        }
     }
-  }
 
-  h4 {
-    @include relative-font-size(1.25);
+    h4 {
+        @include relative-font-size(1.25);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.125);
+        @include media-query($on-laptop) {
+            @include relative-font-size(1.125);
+        }
     }
-  }
 }
