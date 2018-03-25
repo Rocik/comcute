@@ -3,9 +3,8 @@ layout: post
 title:  "Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych"
 date:   2018-03-14 18:44:58 +0100
 categories: comcute
+author: "Autorzy: Jerzy Balicki, Piotr Brudło"
 ---
-
-<div style="text-align: right"> Autorzy: Jerzy Balicki, Piotr Brudło </div>
 
 <br/>W rozdziale omówiono zasady funkcjonowania serwerów dystrybucyjnych w systemie obliczeniowym klasy grid pracującym w trybie volunteer computing. Omówiono sposoby zwiększania wydajności tej warstwy systemu za pomocą zarządzania strumieniem paczek danych. Odniesiono się także do koncepcji Map-Reduce w implementacji przetwarzania równoległego.
 

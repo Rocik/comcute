@@ -3,9 +3,8 @@ layout: post
 title:  "Architektura systemu Comcute"
 date:   2018-03-14 17:44:58 +0100
 categories: comcute
+author: "Autor: Mariusz Matuszek"
 ---
-
-<div style="text-align: right"> Autor: Mariusz Matuszek </div>
 
 <br/>W rozdziale przedstawiono architekturę systemu Comcute realizującego masywne przetwarzanie rozproszone wykorzystujące powszechny wolontariat użytkowników komputerów w sieciach rozległych.
 

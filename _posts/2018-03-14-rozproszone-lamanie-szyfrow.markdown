@@ -3,9 +3,8 @@ layout: post
 title:  "Rozproszone łamanie szyfrów"
 date:   2018-03-14 21:45:58 +0100
 categories: comcute
+author: "Autor: Piotr Szpryngier"
 ---
-
-<div style="text-align: right"> Autor: Piotr Szpryngier </div>
 
 <br/>W rozdziale zaprezentowano podstawowe techniki łamania szyfrów symetrycznych i asymetrycznych o stosunkowo niewielkiej długości kluczy. Przedstawiono ogólną charakterystykę metod łamania szyfrów. Ilustracją tych metod jest zaprezentowana aplikacja służąca do łamania haseł lub badania odporności haseł na odgadnięcie.
 

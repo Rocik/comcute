@@ -3,9 +3,8 @@ layout: post
 title:  "Optymalizacja równoważenia obciążeń w systemach klasy grid"
 date:   2018-03-14 20:44:58 +0100
 categories: comcute
+author: "Autorzy: Jerzy Balicki, Tomasz Boiński, Waldemar Korłub"
 ---
-
-<div style="text-align: right"> Autorzy: Jerzy Balicki, Tomasz Boiński, Waldemar Korłub </div>
 
 <br/>W rozdziale zaprezentowano techniki równoważenia obciążeń testowane w systemie rozproszonym Comcute o architekturze typu grid. Omówiono niezbędne uwarunkowania środowiska prowadzenia obliczeń w zestawie laboratoryjnym Politechniki Gdańskiej, a także odniesiono się do kryteriów kierunkujących równoważenie obciążeń. Przedstawiono wielopoziomową metodę równoważenia obciążeń.
 

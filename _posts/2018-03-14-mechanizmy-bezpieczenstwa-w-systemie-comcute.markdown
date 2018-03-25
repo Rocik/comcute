@@ -3,9 +3,8 @@ layout: post
 title:  "Mechanizmy bezpieczeństwa w systemie Comcute"
 date:   2018-03-14 19:44:58 +0100
 categories: comcute
+author: "Autor: Piotr Szpryngier"
 ---
-
-<div style="text-align: right"> Autor: Piotr Szpryngier </div>
 
 <br/>Celem niniejszego dokumentu jest wyróżnienie podstawowych problemów związanych z bezpieczeństwem przetwarzania w systemie utrzymania wielkiej mocy obliczeniowej w sytuacjach kryzysowych Comcute. Ponadto na przykładzie architektury systemu modelowego będą przedstawione mechanizmy bezpieczeństwa przydatne do zastosowania w projekcie.
 
