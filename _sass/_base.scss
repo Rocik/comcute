@@ -7,7 +7,13 @@ dl, dd, ol, ul, figure {
 
 
 html {
-    background: url("images/bg.png") repeat-x #e6e6e6;
+    height: 100%;
+    background-color: #e6e6e6;
+    background-repeat: no-repeat;
+    background-size: auto 800px;
+    background-image: -webkit-linear-gradient(#fcfcfc 0%, #e6e6e6 800px);
+    background-image:    -moz-linear-gradient(#fcfcfc 0%, #e6e6e6 800px);
+    background-image:         linear-gradient(#fcfcfc 0%, #e6e6e6 800px);
 }
 
 
@@ -16,9 +22,9 @@ body {
     color: $text-color;
     -webkit-text-size-adjust: 100%;
     -webkit-font-feature-settings: "kern" 1;
-     -moz-font-feature-settings: "kern" 1;
-       -o-font-feature-settings: "kern" 1;
-          font-feature-settings: "kern" 1;
+       -moz-font-feature-settings: "kern" 1;
+         -o-font-feature-settings: "kern" 1;
+            font-feature-settings: "kern" 1;
     font-kerning: normal;
 }
 
@@ -26,12 +32,13 @@ body {
 p, blockquote, pre,
 ul, ol, dl, figure,
 %vertical-rhythm {
-    margin-bottom: $spacing-unit / 4;
+    margin-bottom: $spacing-unit / 3;
 }
 
 
 main {
-    display: block; /* Default value of `display` of `main` element is 'inline' in IE 11. */
+    // Default value of `display` of `main` element is 'inline' in IE 11.
+    display: block;
 }
 
 
@@ -54,9 +61,10 @@ li {
 
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: $base-font-weight;
+    font-weight: bold;
 
-    margin-top: $spacing-unit / 1.5;
+    padding-top: $spacing-unit / 3;
+    margin-top: $spacing-unit / 3;
     margin-bottom: $spacing-unit / 3;
 }
 
@@ -72,14 +80,6 @@ a {
     &:hover {
         color: $text-color;
         text-decoration: underline;
-    }
-
-    .social-media-list &:hover {
-        text-decoration: none;
-
-        .username {
-            text-decoration: underline;
-        }
     }
 }
 
@@ -160,7 +160,7 @@ table {
     color: lighten($text-color, 18%);
     border-collapse: collapse;
     border: 1px solid $grey-color-light;
-    
+
     tr {
         &:nth-child(even) {
             background-color: lighten($grey-color-light, 6%);

@@ -3,12 +3,14 @@ layout: post
 title:  "Architektura systemu Comcute"
 date:   2018-03-14 17:44:58 +0100
 categories: comcute
-author: "Autor: Mariusz Matuszek"
+authors:
+ - name: "Mariusz Matuszek"
+   email: Mariusz.Matuszek@pg.gda.pl
 ---
 
-<br/>W rozdziale przedstawiono architekturę systemu Comcute realizującego masywne przetwarzanie rozproszone wykorzystujące powszechny wolontariat użytkowników komputerów w sieciach rozległych.
+W rozdziale przedstawiono architekturę systemu Comcute realizującego masywne przetwarzanie rozproszone wykorzystujące powszechny wolontariat użytkowników komputerów w sieciach rozległych.
 
-<h1>7.1. Wprowadzenie</h1>
+# 7.1. Wprowadzenie
 
 Założenia projektowe:
 
@@ -33,8 +35,8 @@ Założenia projektowe:
 10. Mogą istnieć sytuacje, w których zadanie obliczeniowe uznaje się za  ukończone nawet wówczas, gdy wyniki nie zostaną policzone w 100%.
 
 
-<br/>
-<h1>7.2. Koncepcja architektury systemu</h1>
+
+# 7.2. Koncepcja architektury systemu
 
 System składa się z czterech warstw (rys. 7.1):
 
@@ -46,34 +48,26 @@ System składa się z czterech warstw (rys. 7.1):
 
 * warstwy I (publicznej, zewnętrznej), w której komputery internautów I wykonują w tle właściwe obliczenia. Komputery internautów są dołączane się do systemu przez serwery publiczne P i stowarzyszone z nimi serwery przekierowujące R.
 
-{:refdef: style="text-align: center;"}
-![Koncepcja architektury systemu przetwarzania rozproszonego]({{"/images/image0011.png" | absolute_url}})
-<br /> Rys. 7.1. Koncepcja architektury systemu przetwarzania rozproszonego
-{:refdef}
+{% include figure.html file="/images/image0011.png" caption="Rys. 7.1. Koncepcja architektury systemu przetwarzania rozproszonego" %}
 
-<br/>Oddzielenie warstwy dystrybucyjnej od warstwy wewnętrznej umożliwia:
+Oddzielenie warstwy dystrybucyjnej od warstwy wewnętrznej umożliwia:
 
 * dopasowanie liczby węzłów W do zadania obliczeniowego,
 * dopasowanie liczby węzłów S do liczby internautów i ich lokalizacji,
 * ochronę węzłów W dysponujących informacją o całym zadaniu (wraz z wynikami obliczeń) przed zagrożeniem z zewnątrz.
 
-<br/>Założenia projektowe systemu zakładają, że istnieje pełna kontrola nad budową i sposobem funkcjonowania węzłów W i serwerów S. Serwery R nie są projektowane w ramach systemu, lecz muszą być z nim „zaprzyjaźnione”, tzn. muszą mieć informacje o położeniu serwerów S i sposobie komunikacji z nimi. Nie ma żadnej kontroli nad serwerami P i komputerami internautów I.
+Założenia projektowe systemu zakładają, że istnieje pełna kontrola nad budową i sposobem funkcjonowania węzłów W i serwerów S. Serwery R nie są projektowane w ramach systemu, lecz muszą być z nim „zaprzyjaźnione”, tzn. muszą mieć informacje o położeniu serwerów S i sposobie komunikacji z nimi. Nie ma żadnej kontroli nad serwerami P i komputerami internautów I.
 
-<br/>
-<h1>7.3. Współdziałanie komponentów</h1>
+
+# 7.3. Współdziałanie komponentów
 
 Koncepcję współdziałania komponentów należących do różnych warstw ilustruje rys. 7.2.
 
-{:refdef: style="text-align: center;"}
-![Koncepcja działania systemu Comcute - zlecanie i partycjonowanie zadań]({{"/images/image0022.png" | absolute_url}})
-{:refdef}
+{% include figure.html file="/images/image0022.png" alt="Koncepcja działania systemu Comcute - zlecanie i partycjonowanie zadań" %}
 
-{:refdef: style="text-align: center;"}
-![Koncepcja działania systemu Comcute - dystrybucja zadań]({{"/images/image0032.png" | absolute_url}})
-<br /> Rys. 7.2. Koncepcja działania systemu Comcute: a) zlecanie i partycjonowanie zadań, b) dystrybucja zadań
-{:refdef}
+{% include figure.html file="/images/image0032.png" alt="Koncepcja działania systemu Comcute - dystrybucja zadań" caption="Rys. 7.2. Koncepcja działania systemu Comcute: a) zlecanie i partycjonowanie zadań, b) dystrybucja zadań" %}
 
-<br/>Działanie systemu składa się z pięciu faz:
+Działanie systemu składa się z pięciu faz:
 
 1. **Faza zlecenia zadania:**
 
@@ -116,16 +110,16 @@ Koncepcję współdziałania komponentów należących do różnych warstw ilust
    2. Wyniki po skompletowaniu są odsyłane do zleceniodawcy z dowolnego węzła W, który uczestniczył w obliczeniach.
 
 
-<br/>
-<h1>7.4. Sposoby dystrybucji zadań obliczeniowych</h1>
+
+# 7.4. Sposoby dystrybucji zadań obliczeniowych
 
 Ponieważ system nie może w żaden sposób zagwarantować, że internauta nie zamknie przeglądarki lub nie przełączy się na inną stronę przed zakończeniem wykonywania swojego fragmentu zadania obliczeniowego, potencjalnie te same fragmenty zadań będą realizowane wielokrotnie przez węzły W aż do uzyskania odpowiedzi (od własnych internautów lub od innych węzłów). Taki mechanizm jest potrzebny do zapewnienia niezawodności systemu. Dla zapewnienia wiarygodności (uodpornienia na ataki podstawieniowe) obliczenia muszą być powtarzane (potencjalnie przez różne węzły), zaś wyniki porównywane ze sobą i wybierane przez głosowanie (min. 3 odpowiedzi). Węzły dystrybuują zadania wg algorytmu pseudolosowego. Jeśli algorytm wskazuje na zadanie, które ma już wyniki, to węzeł W prześle zadanie do realizacji wówczas, gdy ilość odpowiedzi jest mniejsza od minimalnej. Wszystkie wyniki są rejestrowane wraz z ilością „oddanych głosów”. Po skompletowaniu wszystkich wyników i scalaniu rozwiązania problemu wybierane są wyniki z największą ilością głosów (rys. 7.3).
 
-<br/>W problemach niedeterministycznych nie da sięzagwarantować wiarygodności tą metodą (wyniki obliczeń nie są znane z góry, a porównywanie ich nic nie da, bo odpowiedzi mogą być różne). Dlatego ze względu na koszt czasowy obliczeń, jeśli algorytm wyboru zadania przez węzeł W wskaże zadanie, które ma już odpowiedź, to węzeł pominie to zadanie. Nie da się w całości wyeliminować powtórzeń tą metodą, ale ilość powtórzeń będzie minimalna (algorytm pseudolosowy będzie powodował inicjowanie różnych zadań w tym samym czasie a algorytm synchronizacji daje duże prawdopodobieństwo, że to samo zadanie nie zostanie ponownie zainicjowane).
+W problemach niedeterministycznych nie da sięzagwarantować wiarygodności tą metodą (wyniki obliczeń nie są znane z góry, a porównywanie ich nic nie da, bo odpowiedzi mogą być różne). Dlatego ze względu na koszt czasowy obliczeń, jeśli algorytm wyboru zadania przez węzeł W wskaże zadanie, które ma już odpowiedź, to węzeł pominie to zadanie. Nie da się w całości wyeliminować powtórzeń tą metodą, ale ilość powtórzeń będzie minimalna (algorytm pseudolosowy będzie powodował inicjowanie różnych zadań w tym samym czasie a algorytm synchronizacji daje duże prawdopodobieństwo, że to samo zadanie nie zostanie ponownie zainicjowane).
 
-<br/>Założeniem jest dystrybuowanie zadań do internautów w sposób jawny, ale mało inwazyjny w normalne korzystanie z serwisów internetowych. Internauci zgłaszając się do serwerów publicznych pobierają z nich treści interesujące dla siebie (np. serwisy wiadomości, aplikacje do komunikacji peer-to-peer, aplikacje gier internetowych, muzyka, zdjęcia i filmy), a wraz z tymi treściami pobierają zadania obliczeniowe do wykonania.
+Założeniem jest dystrybuowanie zadań do internautów w sposób jawny, ale mało inwazyjny w normalne korzystanie z serwisów internetowych. Internauci zgłaszając się do serwerów publicznych pobierają z nich treści interesujące dla siebie (np. serwisy wiadomości, aplikacje do komunikacji peer-to-peer, aplikacje gier internetowych, muzyka, zdjęcia i filmy), a wraz z tymi treściami pobierają zadania obliczeniowe do wykonania.
 
-<br/>Treści pobierane przez internautów można podzielić nanastępujące kategorie:
+Treści pobierane przez internautów można podzielić nanastępujące kategorie:
 
 1. statyczne strony HTML – praktycznie bardzo krótko goszczą internautów, którzy po ewentualnym zapoznaniu się z treścią przechodzą do kolejnej strony,
 
@@ -141,7 +135,7 @@ Ponieważ system nie może w żaden sposób zagwarantować, że internauta nie z
 
 7. aplikacje usługowe działające po stronie klienta – oparte o najnowsze technologie Flex i Silverlight; jeśli internauci potrzebują usług wymagających względnie dużej mocy obliczeniowej lub działających na względnie dużych danych, to zamiast wysyłać dane do obróbki po stronie serwera pobierają aplikację działającą po stronie klienta i w ten sposób rozproszony system wykorzystuje rozproszoną moc obliczeniową; internauci spędzają na tych stronach tyle czasu, ile potrzebują do wykonania usługi.
 
-<br/>Z punktu widzenia celu systemu interesujące są te kategorie treści, które spełniają łącznie następujące warunki:
+Z punktu widzenia celu systemu interesujące są te kategorie treści, które spełniają łącznie następujące warunki:
 
 1. po stronie klienta jest uruchamiany kod wykonywalny w pewnym języku skryptowym,
 
@@ -153,34 +147,26 @@ Ponieważ system nie może w żaden sposób zagwarantować, że internauta nie z
 
 5. umożliwiają dynamiczne dopasowanie się do zmieniających się zadań obliczeniowych po stronie serwera.
 
-<br/>Stąd wynika, że w dalszych pracach trzeba skoncentrować się na treściach z kategorii 4 – 7. Wszystkie one działają w oparciu o aplikacje pracujące po stronie klienta i w taką aplikację muszą być wbudowane moduły obliczeniowe (wymaga to uzgodnienia między organizacją zarządzającą systemem obliczeniowym a kadrą zarządzającą serwerami R i jej administratorami).
+Stąd wynika, że w dalszych pracach trzeba skoncentrować się na treściach z kategorii 4 – 7. Wszystkie one działają w oparciu o aplikacje pracujące po stronie klienta i w taką aplikację muszą być wbudowane moduły obliczeniowe (wymaga to uzgodnienia między organizacją zarządzającą systemem obliczeniowym a kadrą zarządzającą serwerami R i jej administratorami).
 
-<br/>Nie znaczy to, że należy całkowicie pominąć pierwsze trzy kategorie treści. Chociaż czas przebywania internauty na stronach HTML statycznych i dynamicznych (z kategorii 1 i 2) jest dość krótki, to zysk ze stosowania systemu przetwarzania wolontariatowego wynika ze skali obliczeń – bardzo dużej ilości często krótkich, podstawowych obliczeń. Dlatego również wykorzystanie statycznych i dynamicznych strony może być opłacalne. Jeśli są one zaopatrzone w bannery reklamowe Flash (kategoria 3), to można treść bannera wzbogacić o komendy ActionScript tworząc w ten sposób miniaplikację działającą po stronie klienta.
+Nie znaczy to, że należy całkowicie pominąć pierwsze trzy kategorie treści. Chociaż czas przebywania internauty na stronach HTML statycznych i dynamicznych (z kategorii 1 i 2) jest dość krótki, to zysk ze stosowania systemu przetwarzania wolontariatowego wynika ze skali obliczeń – bardzo dużej ilości często krótkich, podstawowych obliczeń. Dlatego również wykorzystanie statycznych i dynamicznych strony może być opłacalne. Jeśli są one zaopatrzone w bannery reklamowe Flash (kategoria 3), to można treść bannera wzbogacić o komendy ActionScript tworząc w ten sposób miniaplikację działającą po stronie klienta.
 
-<br/>Elastyczne dopasowywanie się systemu do zmiennychzadań obliczeniowych trzeba zapewnić przez dołączanie zmieniających się modułów obliczeniowych do użytecznej treści WWW. Ważne jest, aby treść WWW udostępniana przez serwery P odwoływała się do serwerów R, które będą wzbogacały ją o kod rozszerzający pełniący funkcję loadera, który będzie pobierał z serwera W poprzez serwer S moduł obliczeniowy zawierający kod i dane do obliczenia Możliwe jest też inne rozwiązanie. Można do internauty dostarczyć gotowy kod obliczeniowy, który będzie pobierał jedynie dane. To rozwiązanie jest mniej elastyczne, ale nie wymaga tworzenia specjalnego środowiska uruchomieniowego po stronie internauty.
+Elastyczne dopasowywanie się systemu do zmiennychzadań obliczeniowych trzeba zapewnić przez dołączanie zmieniających się modułów obliczeniowych do użytecznej treści WWW. Ważne jest, aby treść WWW udostępniana przez serwery P odwoływała się do serwerów R, które będą wzbogacały ją o kod rozszerzający pełniący funkcję loadera, który będzie pobierał z serwera W poprzez serwer S moduł obliczeniowy zawierający kod i dane do obliczenia Możliwe jest też inne rozwiązanie. Można do internauty dostarczyć gotowy kod obliczeniowy, który będzie pobierał jedynie dane. To rozwiązanie jest mniej elastyczne, ale nie wymaga tworzenia specjalnego środowiska uruchomieniowego po stronie internauty.
 
-<br/> **Tryb pracy w sytuacji szczególnego zagrożenia**
+**Tryb pracy w sytuacji szczególnego zagrożenia**
 
-<br/>W sytuacji szczególnego zagrożenia założenie o dobrowolnym uczestnictwie w dystrybucji i przetwarzaniu zadań staje się nieaktualne. Internauci świadomi zagrożenia instytucji państwowych mogą zdecydować się na udział w obliczeniach z pobudek patriotycznych, ale również odpowiednie przepisy prawne mogą usankcjonować narzucenie wykorzystywania ich mocy obliczeniowej. Wówczas serwisy S mogą zaoferować specjalną aplikację, która będzie jawnie wykonywać zadania obliczeniowe po stronie klienta na komputerach internautów, co pozwoli na pominięcie mechanizmu doklejania dodatkowego kodu do treści oferowanych przez serwery P.
+W sytuacji szczególnego zagrożenia założenie o dobrowolnym uczestnictwie w dystrybucji i przetwarzaniu zadań staje się nieaktualne. Internauci świadomi zagrożenia instytucji państwowych mogą zdecydować się na udział w obliczeniach z pobudek patriotycznych, ale również odpowiednie przepisy prawne mogą usankcjonować narzucenie wykorzystywania ich mocy obliczeniowej. Wówczas serwisy S mogą zaoferować specjalną aplikację, która będzie jawnie wykonywać zadania obliczeniowe po stronie klienta na komputerach internautów, co pozwoli na pominięcie mechanizmu doklejania dodatkowego kodu do treści oferowanych przez serwery P.
 
-<br/> **Komercyjny tryb pracy**
+**Komercyjny tryb pracy**
 
-<br/>W zastosowaniach komercyjnych można zastosować obliczenia jawne i zwiększyć obciążenie komputerów internautów. Można też zwiększyć zaufanie do aplikacji i w ten sposób częściowo zapewnić możliwość obliczeń peer-to-peer (do pewnego stopnia, bo ograniczenia są przez zapory sieciowe).
+W zastosowaniach komercyjnych można zastosować obliczenia jawne i zwiększyć obciążenie komputerów internautów. Można też zwiększyć zaufanie do aplikacji i w ten sposób częściowo zapewnić możliwość obliczeń peer-to-peer (do pewnego stopnia, bo ograniczenia są przez zapory sieciowe).
 
-{:refdef: style="text-align: center;"}
-![Sekwencja dystrybucji zadania dla uniwersalnego kodu rozszerzającego]({{"/images/image0041.png" | absolute_url}})
-{:refdef}
+{% include figure.html file="/images/image0041.png" alt="Sekwencja dystrybucji zadania dla uniwersalnego kodu rozszerzającego" %}
 
-{:refdef: style="text-align: center;"}
-![Sekwencja dystrybucji zadania dla wyspecjalizowanego kodu obliczeniowego]({{"/images/image0051.png" | absolute_url}})
-<br/> Rys. 7.3. Sekwencja dystrybucji zadania: a) dla uniwersalnego kodu rozszerzającego, b) dla wyspecjalizowanego kodu obliczeniowego
-{:refdef}
+{% include figure.html file="/images/image0051.png" alt="Sekwencja dystrybucji zadania dla wyspecjalizowanego kodu obliczeniowego" caption="Rys. 7.3. Sekwencja dystrybucji zadania: a) dla uniwersalnego kodu rozszerzającego, b) dla wyspecjalizowanego kodu obliczeniowego" %}
 
-<br/>
-<h1>7.5. Literatura</h1>
+# 7.5. Literatura
 
 1. Kuchta Jarosław, Matuszek Mariusz, Czarnul Paweł, Szpryngier Piotr: Projektarchitektury środowiska laboratoryjnego systemu Comcute – 2011, Raport techniczny WETI nr 32/2011
 2. Use-It-Better: Analiza możliwości rekrutacji mocy obliczeniowej w Internecie. dokument wewnętrzny opracowany w ramach projektu Comcute, 2011
 3. Couloris G., Dollimore J., Kindberg T.: Distributed Systems: Concepts and Design. Addison Wesley Longman Ltd., London, 1994
-
-

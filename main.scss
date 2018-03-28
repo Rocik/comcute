@@ -41,7 +41,7 @@ $on-laptop:        800px !default;
 
 @mixin keyframes($name) {
   @-webkit-keyframes #{$name} {
-    @content; 
+    @content;
   }
   @-moz-keyframes #{$name} {
     @content;
@@ -56,10 +56,10 @@ $on-laptop:        800px !default;
 
 @mixin transition($properties) {
     -webkit-transition: $properties;
-    -moz-transition: $properties;
-    -ms-transition: $properties;
-    -o-transition: $properties;
-    transition: $properties;
+       -moz-transition: $properties;
+        -ms-transition: $properties;
+         -o-transition: $properties;
+            transition: $properties;
 }
 
 // Import partials.

@@ -1,4 +1,4 @@
-$header-width: 910px !default;
+$header-width: 900px !default;
 
 .site-header {
     position: relative;
@@ -12,10 +12,18 @@ $header-width: 910px !default;
 }
 
 
-.logo img {
-    margin-left: $spacing-unit * 0.2;
-    margin-right: $spacing-unit * 0.2;
-    margin-bottom: $spacing-unit * 0.2;
+.logo {
+    font-size: 0;
+
+    img {
+        margin-bottom: $spacing-unit * 0.2;
+        white-space-collapse: discard;
+    }
+}
+
+.with-margins {
+    margin-left: $spacing-unit * 0.5;
+    margin-right: $spacing-unit * 0.5;
 }
 
 
@@ -30,7 +38,7 @@ $header-width: 910px !default;
     text-transform: lowercase;
 
     color: #f9f9f9;
-    @include relative-font-size(1.2);
+    @include relative-font-size(1.25);
     font-family: arial,sans-serif;
     font-weight: bold;
     cursor: pointer;
@@ -40,7 +48,7 @@ $header-width: 910px !default;
         line-height: 50px;
         min-width: 100%;
 
-        @include relative-font-size(1.0);
+        @include relative-font-size(1.15);
     }
 
     @include transition(box-shadow 0.4s linear);
@@ -131,7 +139,7 @@ $header-width: 910px !default;
 
 .page {
     background: #fcfcfc;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.2);
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,.2);
 
     margin-top: $spacing-unit / 2;
     margin-bottom: $spacing-unit;
@@ -225,7 +233,7 @@ $header-width: 910px !default;
  */
 .site-footer {
     border-top: 1px solid $grey-color-light;
-    padding-top: $spacing-unit;
+    padding-top: $spacing-unit / 1.5;
 }
 
 .footer-heading {
@@ -252,11 +260,12 @@ $header-width: 910px !default;
  * Page content
  */
 .page-content {
-
+    color: #444;
 }
 
 .page-heading {
     @include relative-font-size(2);
+    font-weight: bold;
 }
 
 .post-list-heading {
@@ -269,6 +278,11 @@ $header-width: 910px !default;
 
     > li {
         margin-bottom: $spacing-unit;
+    }
+
+    hr {
+         border: 0;
+         border-top: 1px solid rgba(0, 0, 0, 0.2);
     }
 }
 
@@ -283,26 +297,32 @@ $header-width: 910px !default;
 }
 
 
-
 /**
  * Posts
  */
 .post-header {
-    margin-bottom: $spacing-unit;
+    margin-bottom: $spacing-unit / 1.5;
 }
 
 .post-title {
-    @include relative-font-size(2.625);
+    @include relative-font-size(2.4);
     letter-spacing: -1px;
     line-height: 1;
+    font-weight: bold;
 
     @include media-query($on-laptop) {
-        @include relative-font-size(2.25);
+        @include relative-font-size(2.2);
     }
 }
 
 .post-content {
     margin-bottom: $spacing-unit;
+
+    > p:first-child {
+        font-style: italic;
+        color: #2362a5;
+        margin-bottom: $spacing-unit / 2;
+    }
 
     h2 {
         @include relative-font-size(2);
@@ -327,4 +347,49 @@ $header-width: 910px !default;
             @include relative-font-size(1.125);
         }
     }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+
+        margin-top: $spacing-unit / 2;
+        margin-bottom: $spacing-unit / 2;
+    }
+}
+
+
+figure {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: $spacing-unit / 2;
+    margin-bottom: $spacing-unit / 1.5;
+
+    figcaption {
+        display: table-caption;
+        caption-side: bottom;
+
+        text-align: center;
+        font-size: $small-font-size;
+        font-weight: bold;
+    }
+
+    .caption-right {
+        display: table-cell;
+        caption-side: none;
+        font-weight: normal;
+
+        padding-left: 1em;
+    }
+}
+
+
+dl {
+    margin-left: $spacing-unit / 2;
+}
+
+dd {
+    margin-left: $spacing-unit / 2;
+    margin-bottom: $spacing-unit / 3;
 }

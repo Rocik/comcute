@@ -1,0 +1,13 @@
+<div>
+    <figure>
+        <a href="{{ include.file | relative_url }}">
+            <img src="{{ include.file | relative_url }}" alt="{{ include.alt }}" title="{{ include.caption }}"/>
+        </a>
+        {% if include.caption %}
+        <figcaption>{{ include.caption }}</figcaption>
+        {% endif %}
+        {% if include.rcaption %}
+        <figcaption class="caption-right">{{ include.rcaption }}</figcaption>
+        {% endif %}
+    </figure>
+</div>

@@ -3,52 +3,38 @@ layout: post
 title:  "Analiza istniejących obliczeń uruchamianych w ramach systemów rozproszonych"
 date:   2018-03-14 15:44:58 +0100
 categories: comcute
-author: "Autor: Paweł Czarnul"
+authors:
+ - name: "Paweł Czarnul"
+   email: pczarnul@eti.pg.gda.pl
 ---
 
-<br/>W rozdziale zaprezentowano analizę algorytmów równoległych tradycyjnie uruchamianych w systemach klastrowych wysokiej wydajności, a następnie pokazano charakterystykę algorytmów ze względu na parametry istotne przy implementacji ich rozwiązań w rozproszonym środowisku Comcute. Następnie przedstawiono ocenę możliwości ich przeniesienia do tego środowiska.
+W rozdziale zaprezentowano analizę algorytmów równoległych tradycyjnie uruchamianych w systemach klastrowych wysokiej wydajności, a następnie pokazano charakterystykę algorytmów ze względu na parametry istotne przy implementacji ich rozwiązań w rozproszonym środowisku Comcute. Następnie przedstawiono ocenę możliwości ich przeniesienia do tego środowiska.
 
-<h1>4.1. Tradycyjne paradygmaty przetwarzania równoległego – sposób rozpraszania zadań, obliczeń i danych</h1>
+# 4.1. Tradycyjne paradygmaty przetwarzania równoległego – sposób rozpraszania zadań, obliczeń i danych
 
 Tradycyjne algorytmy [12-15] uruchamiane w systemach równoległych można podzielić ze względu na paradygmaty przetwarzania, podziału danych i synchronizacji. Wyróżnić można przetwarzanie typu:
 
-* embarrassingly parallel – obliczenia lub dane mogą zostać podzielone na niezależne fragmenty i rozproszone przed wykonaniem obliczeń równoległych (rys. 4.1). Wysoka skalowalność.
+* *embarrassingly parallel* – obliczenia lub dane mogą zostać podzielone na niezależne fragmenty i rozproszone przed wykonaniem obliczeń równoległych (rys. 4.1). Wysoka skalowalność.
 
-{:refdef: style="text-align: center;"}
-![Przetwarzanie typu embarrassingly parallel]({{"/images/image001.png" | absolute_url}})
-<br /> Rys. 4.1. Przetwarzanie typu embarrassingly parallel
-{:refdef}
+{% include figure.html file="/images/image001.png" alt="Przetwarzanie typu embarrassingly parallel" caption="Rys. 4.1. Przetwarzanie typu embarrassingly parallel" %}
 
-* master-slave/task farming – proces-master dzieli dane wejściowe i/lub obliczenia na fragmenty, których przetworzenie zleca procesom typu slave (rys. 4.2). Podział i dystrybucja mogą być wykonane statycznie bądź dynamicznie.
+* *master-slave/task farming* – proces-master dzieli dane wejściowe i/lub obliczenia na fragmenty, których przetworzenie zleca procesom typu slave (rys. 4.2). Podział i dystrybucja mogą być wykonane statycznie bądź dynamicznie.
 
-{:refdef: style="text-align: center;"}
-![Przetwarzanie typu master-slave]({{"/images/image002.png" | absolute_url}})
-<br /> Rys. 4.2. Przetwarzanie typu master-slave
-{:refdef}
+{% include figure.html file="/images/image002.png" alt="Przetwarzanie typu master-slave" caption="Rys. 4.2. Przetwarzanie typu master-slave" %}
 
-* single program multiple data (SPMD)/geometric parallelism – wiele procesów lub wątków aplikacji wykonuje te same obliczenia (stąd określenie Single Program) na różnych danych (stąd Multiple Data) – rys. 4.3 Zwykle obliczenia tego typu polegają na podziale dużej przestrzeni danych wejściowych na procesy/wątki i rozwiązywanie fragmentów równolegle z następującą zaraz później synchronizacją danych. Przykładem może być wiele problemów fizycznych, takich jak aplikacje symulujące zmiany pogodowe w danym fragmencie przestrzeni, zjawiska zachodzące np. w organizmie ludzkim, rozchodzenie się fal w przestrzeni, rozprzestrzenianie się skażeń promieniotwórczych lub biologicznych, czy inne aplikacje, w których przestrzeń modelowana jest przez podział na wiele komórek zależnych od komórek sąsiednich. Wydajne zrównoleglanie wymaga tutaj w szczególności krótkich opóźnień komunikacyjnych, w szczególności dla uzyskania wysokiej skalowalności dla dużej liczby procesorów. W paradygmacie tym następuje podział przestrzeni na fragmenty przydzielone różnym procesom. Procesy komunikują się ze sobą. Symulacja często polega na pętli zawierającej przeplatające się obliczenia i komunikację
+* *single program multiple data (SPMD)/geometric parallelism* – wiele procesów lub wątków aplikacji wykonuje te same obliczenia (stąd określenie Single Program) na różnych danych (stąd Multiple Data) – rys. 4.3 Zwykle obliczenia tego typu polegają na podziale dużej przestrzeni danych wejściowych na procesy/wątki i rozwiązywanie fragmentów równolegle z następującą zaraz później synchronizacją danych. Przykładem może być wiele problemów fizycznych, takich jak aplikacje symulujące zmiany pogodowe w danym fragmencie przestrzeni, zjawiska zachodzące np. w organizmie ludzkim, rozchodzenie się fal w przestrzeni, rozprzestrzenianie się skażeń promieniotwórczych lub biologicznych, czy inne aplikacje, w których przestrzeń modelowana jest przez podział na wiele komórek zależnych od komórek sąsiednich. Wydajne zrównoleglanie wymaga tutaj w szczególności krótkich opóźnień komunikacyjnych, w szczególności dla uzyskania wysokiej skalowalności dla dużej liczby procesorów. W paradygmacie tym następuje podział przestrzeni na fragmenty przydzielone różnym procesom. Procesy komunikują się ze sobą. Symulacja często polega na pętli zawierającej przeplatające się obliczenia i komunikację
 
-{:refdef: style="text-align: center;"}
-![Przetwarzanie typu SPMD]({{"/images/image003.png" | absolute_url}})
-<br /> Rys. 4.3. Przetwarzanie typu SPMD
-{:refdef}
+{% include figure.html file="/images/image003.png" alt="Przetwarzanie typu SPMD" caption="Rys. 4.3. Przetwarzanie typu SPMD" %}
 
-* przetwarzanie potokowe – wyróżnia się niezależne fragmenty przetwarzania (polegające zwykle na uruchomieniu innego kodu), które wykonywane są po kolei na danych wejściowych. Dane wejściowe to zwykle wiele paczek danych, które są kolejno podawane do kolejnych punktów przetwarzania w potoku (rys. 4.4).
+* *przetwarzanie potokowe* – wyróżnia się niezależne fragmenty przetwarzania (polegające zwykle na uruchomieniu innego kodu), które wykonywane są po kolei na danych wejściowych. Dane wejściowe to zwykle wiele paczek danych, które są kolejno podawane do kolejnych punktów przetwarzania w potoku (rys. 4.4).
 
-{:refdef: style="text-align: center;"}
-![Przetwarzanie potokowe]({{"/images/image004.png" | absolute_url}})
-<br /> Rys. 4.4. Przetwarzanie potokowe
-{:refdef}
+{% include figure.html file="/images/image004.png" alt="Przetwarzanie potokowe" caption="Rys. 4.4. Przetwarzanie potokowe" %}
 
-* dziel-i-rządź – początkowy problem dzielony jest na podproblemy (często dzielone są przy tym dane wejściowe). Dalej następuje rekurencyjny podział danych/problemu na fragmenty/podproblemy (rys. 4.5).
+* *dziel-i-rządź* – początkowy problem dzielony jest na podproblemy (często dzielone są przy tym dane wejściowe). Dalej następuje rekurencyjny podział danych/problemu na fragmenty/podproblemy (rys. 4.5).
 
-{:refdef: style="text-align: center;"}
-![Przetwarzanie typu dziel i rządź]({{"/images/image005.png" | absolute_url}})
-<br /> Rys. 4.5. Przetwarzanie typu dziel i rządź
-{:refdef}
+{% include figure.html file="/images/image005.png" alt="Przetwarzanie typu dziel i rządź" caption="Rys. 4.5. Przetwarzanie typu dziel i rządź" %}
 
-<br/>
-<h1>4.2. Cele równoległego uruchomienia w kontekście środowiska Comcute</h1>
+# 4.2. Cele równoległego uruchomienia w kontekście środowiska Comcute
 
 Systemy równoległe takie jak superkomputery, wysokowydajne klastry czy lokalne sieci komputerowe wykorzystywane są do uruchamiania aplikacji równoległych lub sekwencyjnych operujących na niezależnych fragmentach danych w celu:
 
@@ -62,8 +48,7 @@ Systemy równoległe takie jak superkomputery, wysokowydajne klastry czy lokalne
 
 Wszystkie powyższe cele mogą być również pożądane w kontekście uruchomienia danego problemu w rozproszonym środowisku Comcute pod warunkiem, że system będzie w stanie wydajnie dany algorytm uruchomić (patrz punkt 4.3 poniżej).
 
-<br/>
-<h1>4.3. Istotne parametry przy migracji tradycyjnych obliczeń na środowisko Comcute</h1>
+# 4.3. Istotne parametry przy migracji tradycyjnych obliczeń na środowisko Comcute
 
 Bazując na ww. prawie Amdahla, z punktu widzenia wydajności równoległego czy rozproszonego wykonania algorytmu istotne są wartości związane z:
 
@@ -71,25 +56,25 @@ Bazując na ww. prawie Amdahla, z punktu widzenia wydajności równoległego czy
 * czasem komunikacji,
 * kosztem i częstotliwością synchronizacji.
 
-<br/>Parametry te będą determinowały skalowalność algorytmów w środowiskach rozproszonych, w których czas komunikacji w stosunku do czasu obliczeń będzie znacznie większy niż dla tego samego rozwiązania uruchomionego w systemach klastrowych.
+Parametry te będą determinowały skalowalność algorytmów w środowiskach rozproszonych, w których czas komunikacji w stosunku do czasu obliczeń będzie znacznie większy niż dla tego samego rozwiązania uruchomionego w systemach klastrowych.
 
-<br/>Z tego punktu widzenia, istotne parametry sieci komunikacyjnej to:
+Z tego punktu widzenia, istotne parametry sieci komunikacyjnej to:
 
-* przepustowość (ang. bandwidth) – zdolność łącza komunikacyjnego do przesłania określonej ilości danych w jednostce czasu,
-* startup time – czas niezbędny na zainicjowanie połączenia.
+* *przepustowość* (ang. *bandwidth*) – zdolność łącza komunikacyjnego do przesłania określonej ilości danych w jednostce czasu,
+* *startup time* – czas niezbędny na zainicjowanie połączenia.
 
-<br/>Typowe wartości uzyskiwane dla klastrów bazujących na sieci Gigabit Ethernet to 100 MB/s oraz opóźnienia rzędu 50-80μs, zaś dla wydajnych klastrów z siecią Infiniband 1000 MB/s oraz 1-5 μs.
+Typowe wartości uzyskiwane dla klastrów bazujących na sieci Gigabit Ethernet to 100 MB/s oraz opóźnienia rzędu 50-80μs, zaś dla wydajnych klastrów z siecią Infiniband 1000 MB/s oraz 1-5 μs.
 
-<br/>Z kolei, przepustowości dla komunikacji klient-serwer w Internecie mają zwykle wartości od kilku KB/s do około 10-20 Mbit/s dla szerokopasmowych łącz i na wybranych fragmentach sieci.
+Z kolei, przepustowości dla komunikacji klient-serwer w Internecie mają zwykle wartości od kilku KB/s do około 10-20 Mbit/s dla szerokopasmowych łącz i na wybranych fragmentach sieci.
 
-<br/>Stąd też, analiza możliwości przeniesienia tradycyjnych algorytmów z systemów klastrowych do systemu Comcute powinna uwzględniać:
+Stąd też, analiza możliwości przeniesienia tradycyjnych algorytmów z systemów klastrowych do systemu Comcute powinna uwzględniać:
 
 1. paradygmaty przetwarzania:
-   * embarrassingly parallel [11],
-   * master-slave[11],
-   * single program multiple data [5],
-   * pipeline[11],
-   * divide-and-conquer[3-4,6].
+   * *embarrassingly parallel* [11],
+   * *master-slave* [11],
+   * *single program multiple data* [5],
+   * *pipeline* [11],
+   * *divide-and-conquer* [3-4,6].
 
    Ze względu na proponowaną architekturę systemu algorytmy, które będą wstępnie predysponowane do zrównoleglenia powinny działać w jednym w paradygmatów: embarrassingly parallel, master-slave lub divide-and-conquer.
 
@@ -117,10 +102,7 @@ Bazując na ww. prawie Amdahla, z punktu widzenia wydajności równoległego czy
 
 9. typowy czas działania algorytmu – zwykle algorytmy działające dłużej (ze względu na swoją złożoność bądź zwykle stosowane rozmiary danych wejściowych) będą prezentowały większy potencjał zrównoleglania w środowisku Comcute niż algorytmy działające krócej. Wynika to z potencjalnie dużych czasów komunikacji w rozproszonym środowisku Comcute.
 
-
-
-<br/>
-<h1>4.4. Charakterystyki istniejących systemów i standardów obliczeniowych – w kontekście migracji algorytmów do systemu Comcute</h1>
+# 4.4. Charakterystyki istniejących systemów i standardów obliczeniowych – w kontekście migracji algorytmów do systemu Comcute
 
 Potencjalne przeniesienie algorytmów z tradycyjnych systemów klastrowych na rozproszony system Comcute wiąże się bezpośrednio z technologią kodowania, kompilacji i uruchomienia tego typu aplikacji. Tradycyjnie wykorzystuje się niskopoziomowe programowanie równoległe na klastrach – m.in. następujące modele i interfejsy programistyczne oraz środowiska:
 
@@ -132,20 +114,20 @@ Potencjalne przeniesienie algorytmów z tradycyjnych systemów klastrowych na ro
    *  MPI [2] – popularna specyfikacja z przekazywaniem wiadomości, również wsparciem dla wielowątkowości, API dla języków C/C++ i Fortran.
    * PVM [1] – środowisko przetwarzania równoległego i rozproszonego dla języka C/C++ i Fortran.
 
-<br/>Zwykle kompilacja tego typu zadań wykonywana jest przez programistę-użytkownika, który następnie uruchamia aplikację równoległą na dedykowanej maszynie wirtualnej lub wykorzystuje do uruchomienia systemy kolejkowe takie jak PBS, LSF itp.
+Zwykle kompilacja tego typu zadań wykonywana jest przez programistę-użytkownika, który następnie uruchamia aplikację równoległą na dedykowanej maszynie wirtualnej lub wykorzystuje do uruchomienia systemy kolejkowe takie jak PBS, LSF itp.
 
-<br/>W literaturze wymienia się wysokopoziomowe oprogramowanie i wzorce do automatycznego zrównoleglania pewnych klas algorytmów takich jak:
+W literaturze wymienia się wysokopoziomowe oprogramowanie i wzorce do automatycznego zrównoleglania pewnych klas algorytmów takich jak:
 
-1. divide-and-conquer – np. Cilk dla języka C, Satin [9] dla języka Java, DAMPVM/DAC [4] dla języka C++.
-2. single program multiple data (SPMD) – ParMETIS, Zoltan.
+1. *divide-and-conquer* – np. Cilk dla języka C, Satin [9] dla języka Java, DAMPVM/DAC [4] dla języka C++.
+2. *single program multiple data (SPMD)* – ParMETIS, Zoltan.
 
-<br/>Aplikacje równoległe mogą być także uruchamiane na wielu klastrach za pomocą narzędzi takich jak MPICH-G2, PACX-MPI lub BC-MPI.
+Aplikacje równoległe mogą być także uruchamiane na wielu klastrach za pomocą narzędzi takich jak MPICH-G2, PACX-MPI lub BC-MPI.
 
-<br/>Z racji tego, że wyżej wymienione narzędzia wymagają specjalistycznej wiedzy, powstało wiele systemów pozwalających na uruchamianie aplikacji równoległych (przygotowanych często dla użytkownika) dla zadanych danych z wykorzystaniem łatwego w użyciu interfejsu. Zasoby wykorzystywane przez tego typu systemy gridowe są ukryte przed użytkownikiem, który jedynie zleca zadania do wykonania i oczekuje na wyniki. System dokonuje wyboru zasobów spełniających wymagania tj. np. architektura procesora, na której może być uruchamiany plik wykonywalny, rozmiar dostępnej pamięci RAM oraz przestrzeni dyskowej, po czym dokonuje rezerwacji zasobów, kopiuje podane przez użytkownika dane wejściowe, uruchamia aplikację (sekwencyjnie bądź równolegle), z powrotem przesyła dane wyjściowe do użytkownika. Tego typu systemy wykorzystują często tzw. warstwę pośrednią grid jak np. Globus Toolkit, Unicore etc.
+Z racji tego, że wyżej wymienione narzędzia wymagają specjalistycznej wiedzy, powstało wiele systemów pozwalających na uruchamianie aplikacji równoległych (przygotowanych często dla użytkownika) dla zadanych danych z wykorzystaniem łatwego w użyciu interfejsu. Zasoby wykorzystywane przez tego typu systemy gridowe są ukryte przed użytkownikiem, który jedynie zleca zadania do wykonania i oczekuje na wyniki. System dokonuje wyboru zasobów spełniających wymagania tj. np. architektura procesora, na której może być uruchamiany plik wykonywalny, rozmiar dostępnej pamięci RAM oraz przestrzeni dyskowej, po czym dokonuje rezerwacji zasobów, kopiuje podane przez użytkownika dane wejściowe, uruchamia aplikację (sekwencyjnie bądź równolegle), z powrotem przesyła dane wyjściowe do użytkownika. Tego typu systemy wykorzystują często tzw. warstwę pośrednią grid jak np. Globus Toolkit, Unicore etc.
 
-<br/>Pewnym rozwinięciem tego typu przetwarzania jest cloud computing gdzie dostawca oferuje użytkownikowi całą platformę, infrastrukturę bądź oprogramowanie w zadanej konfiguracji, na określony czas, za określoną kwotę. Użytkownik może dostosowywać system do swoich potrzeb kontrolując jednocześnie koszt zasobów i oprogramowania. Nie musi wówczas utrzymywać całego środowiska samodzielnie.
+Pewnym rozwinięciem tego typu przetwarzania jest cloud computing gdzie dostawca oferuje użytkownikowi całą platformę, infrastrukturę bądź oprogramowanie w zadanej konfiguracji, na określony czas, za określoną kwotę. Użytkownik może dostosowywać system do swoich potrzeb kontrolując jednocześnie koszt zasobów i oprogramowania. Nie musi wówczas utrzymywać całego środowiska samodzielnie.
 
-<br/>Z kolei przetwarzanie typu volunteer computing wykorzystuje komputery internautów do podzielenia danych wejściowych dużego problemu (master-slave) na fragmenty i zlecenia ich przetwarzania użytkownikom. Kwestie z tym związane dotyczą:
+Z kolei przetwarzanie typu volunteer computing wykorzystuje komputery internautów do podzielenia danych wejściowych dużego problemu (master-slave) na fragmenty i zlecenia ich przetwarzania użytkownikom. Kwestie z tym związane dotyczą:
 
 1. wiarygodności przetwarzania – obliczenia muszą być zlecane niezależnym klientom i wyniki porównywane,
 
@@ -155,229 +137,221 @@ Potencjalne przeniesienie algorytmów z tradycyjnych systemów klastrowych na ro
 
 4. użytkownicy zwykle nie są wynagradzani finansowo za uczestnictwo w projekcie, mają natomiast świadomość współuczestnictwa w ważnych projektach.
 
-<br/>Bardzo często implementacje algorytmów wykorzystują zewnętrzne biblioteki do wykonania pewnych operacji lub części algorytmów – np. sortowanie, operacje na macierzach, przetwarzanie obrazów etc. Powstaje kwestia możliwości wykorzystania tego typu bibliotek po stronie klienta w aplikacji systemu Comcute. Konkretna technologia może ograniczyć możliwość wykorzystania danej biblioteki bądź wymusić implementację w innym języku (np. migrację do języka Java jeśli strona klienta systemu Comcute wykorzysta technologię apletów Javy itp.). Bardzo wiele programów równoległych implementowanych jest w językach C/C++ lub Fortranie. Istnieje wiele często wykorzystywanych bibliotek zaimplementowanych w tych językach.
+Bardzo często implementacje algorytmów wykorzystują zewnętrzne biblioteki do wykonania pewnych operacji lub części algorytmów – np. sortowanie, operacje na macierzach, przetwarzanie obrazów etc. Powstaje kwestia możliwości wykorzystania tego typu bibliotek po stronie klienta w aplikacji systemu Comcute. Konkretna technologia może ograniczyć możliwość wykorzystania danej biblioteki bądź wymusić implementację w innym języku (np. migrację do języka Java jeśli strona klienta systemu Comcute wykorzysta technologię apletów Javy itp.). Bardzo wiele programów równoległych implementowanych jest w językach C/C++ lub Fortranie. Istnieje wiele często wykorzystywanych bibliotek zaimplementowanych w tych językach.
 
-<br/>W kontekście systemu Comcute, wymaga to albo nowego sposobu kodowania algorytmów z uwzględnieniem języka wykorzystywanego przez daną technologię bądź możliwości uruchomienia kodu po stronie klienta, albo specjalnych nakładek na istniejące API, co wydaje się kłopotliwe.
+W kontekście systemu Comcute, wymaga to albo nowego sposobu kodowania algorytmów z uwzględnieniem języka wykorzystywanego przez daną technologię bądź możliwości uruchomienia kodu po stronie klienta, albo specjalnych nakładek na istniejące API, co wydaje się kłopotliwe.
 
-<br/>Problemy w Comcute:
+Problemy w Comcute:
 
 1. podział danych – jaki – statyczny/dynamiczny,
 2. język kodowania algorytmów,
 3. repozytorium algorytmów,
 4. technologia uruchamiania.
 
-<br/>Na ile łatwo zmigrować już istniejący kod do tego typu środowiska? Implementacje aplikacji z systemów typu BOINC [16] do konkretnej technologii przez przeglądarkę będą możliwe do przeniesienia z uzyskaniem istotnego przyspieszenia obliczeń. Będzie to możliwe dla aplikacji w paradygmatach embarrassingly parallel oraz master-slave z dużym stosunkiem czasu obliczeń do komunikacji i synchronizacji, w mniejszym stopniu dla aplikacji dziel-i-rządź. Aplikacje SPMD oraz potokowe nie będą pracowały wydajnie w środowisku Comcute chyba, że system zostanie wykorzystany do uruchamiania całych instancji z różnymi danymi wejściowymi u różnych internautów. W takim przypadku Comcute pozwoli na równoległe obliczenie wielu scenariuszy z różnymi danymi wejściowymi.
+Na ile łatwo zmigrować już istniejący kod do tego typu środowiska? Implementacje aplikacji z systemów typu BOINC [16] do konkretnej technologii przez przeglądarkę będą możliwe do przeniesienia z uzyskaniem istotnego przyspieszenia obliczeń. Będzie to możliwe dla aplikacji w paradygmatach embarrassingly parallel oraz master-slave z dużym stosunkiem czasu obliczeń do komunikacji i synchronizacji, w mniejszym stopniu dla aplikacji dziel-i-rządź. Aplikacje SPMD oraz potokowe nie będą pracowały wydajnie w środowisku Comcute chyba, że system zostanie wykorzystany do uruchamiania całych instancji z różnymi danymi wejściowymi u różnych internautów. W takim przypadku Comcute pozwoli na równoległe obliczenie wielu scenariuszy z różnymi danymi wejściowymi.
 
-<br/>
-<h1>4.5. Charakterystyka wybranych algorytmów</h1>
+
+# 4.5. Charakterystyka wybranych algorytmów
 
 W rozdziale przedstawiono charakterystykę wybranych i często używanych algorytmów równoległych (uruchamianych do tej pory na klastrach, sieciach LAN), pod kątem możliwości uruchomienia w środowisku rozproszonym (tj. takim gdzie koszty komunikacji są relatywnie większe niż na klastrach), a więc możliwości uruchomienia w środowisku Comcute.
 
-<br/>
-<h1>4.5.1. Równoległe symulacje SPMD</h1>
+
+# 4.5.1. Równoległe symulacje SPMD
 
 Zwykle równoległe aplikacje rozwiązujące układ równań różniczkowych – sprowadzone do liniowych równań rozwiązywanych w czasie równolegle.
 
 **Paradygmat przetwarzania**
-<br/>&nbsp;&nbsp;&nbsp;single program multiple data
+: *single program multiple data*
 
 **Dane wejściowe**
-<br/>&nbsp;&nbsp;&nbsp;zwykle przestrzeń 2D lub 3D podzielona na fragmenty – możliwy podział statyczny lub dynamiczny
+: zwykle przestrzeń 2D lub 3D podzielona na fragmenty – możliwy podział statyczny lub dynamiczny
 
 **Wynik**
-<br/>&nbsp;&nbsp;&nbsp;wartości danych w przestrzeni o rozmiarze takim jak dane wejściowe
+: wartości danych w przestrzeni o rozmiarze takim jak dane wejściowe
 
 **Typowe rozmiary danych wejściowych**
-<br/>&nbsp;&nbsp;&nbsp;np. 1000x1000x1000x kilka zmiennych
+: np. 1000x1000x1000x kilka zmiennych
 
 **Typowe rozmiary danych wyjściowych**
-<br/>&nbsp;&nbsp;&nbsp;jak dane wejściowe
+: jak dane wejściowe
 
 **Typowa liczba procesorów/ rdzeni, na których uruchamia się algorytm**
-<br/>&nbsp;&nbsp;&nbsp;1-256
+: 1-256
 
 **Stosunek czasu obliczeń do czasu komunikacji w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;taki, który pozwala na wydajność rzędu 0,5-0,8 na 32-64 procesorach (przetwarzanie z pamięcią rozproszoną)
+: taki, który pozwala na wydajność rzędu 0,5-0,8 na 32-64 procesorach (przetwarzanie z pamięcią rozproszoną)
 
 **Synchronizacja w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;Zwykle lokalna, może być globalna np. co pewną liczbę iteracji
+: Zwykle lokalna, może być globalna np. co pewną liczbę iteracji
 
 **Liczba synchronizacji**
-<br/>&nbsp;&nbsp;&nbsp;synchronizacja co 1 iterację algorytmu
+: synchronizacja co 1 iterację algorytmu
 
 **Złożoność algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;przybliżone rozwiązanie
+: przybliżone rozwiązanie
 
 **Algorytm**
-<br/>&nbsp;&nbsp;&nbsp;heurystyczny
+: heurystyczny
 
 **Typowe rozmiary danych przesyłanych pomiędzy węzłami**
-<br/>&nbsp;&nbsp;&nbsp;zależy od liczby procesorów, ale rzędu rozmiaru wymiaru przestrzeni bazowej
+: zależy od liczby procesorów, ale rzędu rozmiaru wymiaru przestrzeni bazowej
 
 **Typowy czas działania algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;zależy od dokładności, może być od kilku godzin do wielu dni
+: zależy od dokładności, może być od kilku godzin do wielu dni
 
 **Znane implementacje algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;publikacje w literaturze raportu
+: publikacje w literaturze raportu
 
 **Istniejące implementacje – licencja + język programowania**
-<br/>&nbsp;&nbsp;&nbsp;oprogramowanie ułatwiające implementację + algorytmy zrównoleglania np. Zoltan, ParMETIS
+: oprogramowanie ułatwiające implementację + algorytmy zrównoleglania np. Zoltan, ParMETIS
 
-
-
-<br/>
-<h1>4.5.2. Dziel-i-rządź</h1>
+# 4.5.2. Dziel-i-rządź
 
 Schemat pozwalający na złożone i często nieregularne obliczenia np. przeszukiwanie drzew w grach etc.
 
 **Paradygmat przetwarzania**
-<br/>&nbsp;&nbsp;&nbsp;divide-and-conquer
+: *divide-and-conquer*
 
 **Dane wejściowe**
-<br/>&nbsp;&nbsp;&nbsp;może to być pojedynczy wektor rozmiaru n (np. sortowanie) i/lub pewne globalne dane – np. szachownica do przeszukiwania ruchów
+: może to być pojedynczy wektor rozmiaru n (np. sortowanie) i/lub pewne globalne dane – np. szachownica do przeszukiwania ruchów
 
 **Wynik**
-<br/>&nbsp;&nbsp;&nbsp;zwykle wartości danych w przestrzeni o rozmiarze takim jak dane wejściowe
+: zwykle wartości danych w przestrzeni o rozmiarze takim jak dane wejściowe
 
 **Typowe rozmiary danych wejściowych**
-<br/>&nbsp;&nbsp;&nbsp;od kilkunastu-kilkuset zmiennych do dziesiątek setek tysięcy
+: od kilkunastu-kilkuset zmiennych do dziesiątek setek tysięcy
 
 **Typowe rozmiary danych wyjściowych**
-<br/>&nbsp;&nbsp;&nbsp;jak dane wejściowe
+: jak dane wejściowe
 
 **Typowa liczba procesorów/ rdzeni, na których uruchamia się algorytm**
-<br/>&nbsp;&nbsp;&nbsp;1-256
+: 1-256
 
 **Stosunek czasu obliczeń do czasu komunikacji w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;zależy od algorytmu – głównie zależy od czasu podziału/ scalania danych oraz obliczeń wykonywanych w węzłach, duży dla np. rozwiązywania gier typu szachy/ warcaby
+: zależy od algorytmu – głównie zależy od czasu podziału/ scalania danych oraz obliczeń wykonywanych w węzłach, duży dla np. rozwiązywania gier typu szachy/ warcaby
 
 **Synchronizacja w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;Zwykle brak, ale może też być okazjonalna synchronizacja lokalna i globalna
+: Zwykle brak, ale może też być okazjonalna synchronizacja lokalna i globalna
 
 **Liczba synchronizacji**
-<br/>&nbsp;&nbsp;&nbsp;zwykle podział na podproblemy i zebranie wyników, może być okazjonalna synchronizacja globalna (np. równoległy algorytm alfa-beta)
+: zwykle podział na podproblemy i zebranie wyników, może być okazjonalna synchronizacja globalna (np. równoległy algorytm alfa-beta)
 
 **Złożoność algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;zwykle pełne przeszukiwanie przestrzeni rozwiązań, mogą być odcięcia jak w algorytmach alfa-beta
+: zwykle pełne przeszukiwanie przestrzeni rozwiązań, mogą być odcięcia jak w algorytmach alfa-beta
 
 **Algorytm**
-<br/>&nbsp;&nbsp;&nbsp;optymalny
+: optymalny
 
 **Typowe rozmiary danych przesyłanych pomiędzy węzłami**
-<br/>&nbsp;&nbsp;&nbsp;od kilkunastu / kilkuset zmiennych do dziesiątek setek tysięcy, ale stosunkowo rzadka komunikacja o ile czas obliczeń w węzłach wystarczająco długi, problem przy skalowaniu gdy czasy te są krótkie i jeszcze dodatkowo nieznane z góry
+: od kilkunastu / kilkuset zmiennych do dziesiątek setek tysięcy, ale stosunkowo rzadka komunikacja o ile czas obliczeń w węzłach wystarczająco długi, problem przy skalowaniu gdy czasy te są krótkie i jeszcze dodatkowo nieznane z góry
 
 **Typowy czas działania algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;zależy od problemu, może być od kilku godzin do wielu dni
+: zależy od problemu, może być od kilku godzin do wielu dni
 
 **Znane implementacje algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;publikacje w literaturze raportu
+: publikacje w literaturze raportu
 
 **Istniejące implementacje – licencja + język programowania**
-<br/>&nbsp;&nbsp;&nbsp;różne frameworki dla różnych języków programowania – do automatycznego zrównoleglania również np. Satin, Cilk, DAMPVM/DAC
+: różne frameworki dla różnych języków programowania – do automatycznego zrównoleglania również np. *Satin, Cilk, DAMPVM/DAC*
 
-<br/>
-<h1>4.5.3. Sortowanie quick-sort</h1>
+# 4.5.3. Sortowanie *quick-sort*
 
 Często wykorzystywany algorytm sortowania oparty na porównywaniu.
 
 **Paradygmat przetwarzania**
-<br/>&nbsp;&nbsp;&nbsp;divide-and-conquer
+: *divide-and-conquer*
 
 **Dane wejściowe**
-<br/>&nbsp;&nbsp;&nbsp;wektor rozmiaru n
+: wektor rozmiaru n
 
 **Wynik**
-<br/>&nbsp;&nbsp;&nbsp;wektor rozmiaru n
+: wektor rozmiaru n
 
 **Typowe rozmiary danych wejściowych**
-<br/>&nbsp;&nbsp;&nbsp;od kilkunastu do wielu tysięcy lub więcej zmiennych
+: od kilkunastu do wielu tysięcy lub więcej zmiennych
 
 **Typowe rozmiary danych wyjściowych**
-<br/>&nbsp;&nbsp;&nbsp;od kilkunastu do wielu tysięcy lub więcej zmiennych
+: od kilkunastu do wielu tysięcy lub więcej zmiennych
 
 **Typowa liczba procesorów/ rdzeni, na których uruchamia się algorytm**
-<br/>&nbsp;&nbsp;&nbsp;Kilka-kilkadziesiąt
+: Kilka-kilkadziesiąt
 
 **Stosunek czasu obliczeń do czasu komunikacji w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;duży przy dużym wektorze wejściowym, algorytm naturalnie dzieli problem wejściowy na podproblemy (dziel i rządź)
+: duży przy dużym wektorze wejściowym, algorytm naturalnie dzieli problem wejściowy na podproblemy (dziel i rządź)
 
 **Synchronizacja w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;brak w dziel i rządź
+: brak w dziel i rządź
 
 **Liczba synchronizacji**
-<br/>&nbsp;&nbsp;&nbsp;brak pośrednich, podział danych i zebranie wyników
+: brak pośrednich, podział danych i zebranie wyników
 
 **Złożoność algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;O(nlogn)
+: O(nlogn)
 
 **Algorytm**
-<br/>&nbsp;&nbsp;&nbsp;optymalny
+: optymalny
 
 **Typowe rozmiary danych przesyłanych pomiędzy węzłami**
-<br/>&nbsp;&nbsp;&nbsp;O(n)
+: O(n)
 
 **Typowy czas działania algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;bardzo szybki algorytm, sekundy, minuty
+: bardzo szybki algorytm, sekundy, minuty
 
 **Znane implementacje algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;książki o tematyce HPC
+: książki o tematyce HPC
 
 **Istniejące implementacje – licencja + język programowania**
-<br/>&nbsp;&nbsp;&nbsp;wiele implementacji dostępnych, np. w bibliotekach do C, wiele implementacji dla różnych języków
+: wiele implementacji dostępnych, np. w bibliotekach do C, wiele implementacji dla różnych języków
 
-<br/>
-<h1>4.5.4. Wyszukiwanie wzorca tekstowego w pliku/plikach</h1>
+# 4.5.4. Wyszukiwanie wzorca tekstowego w pliku/plikach
 
 Wyszukiwanie wzorca w jednym lub wielu danych plikach.
 
 **Paradygmat przetwarzania**
-<br/>&nbsp;&nbsp;&nbsp;single program multiple data, pipeline
+: *single program multiple data, pipeline*
 **Dane wejściowe**
-<br/>&nbsp;&nbsp;&nbsp;pliki do przeszukania i wzorzec (zwykle znacznie mniejszy)
+: pliki do przeszukania i wzorzec (zwykle znacznie mniejszy)
 
 **Wynik**
-<br/>&nbsp;&nbsp;&nbsp;fragmenty plików bądź też indeksy
+: fragmenty plików bądź też indeksy
 
 **Typowe rozmiary danych wejściowych**
-<br/>&nbsp;&nbsp;&nbsp;wzorce rzędu kilku, kilkuset, kilku tysięcy bajtów, pliki o rozmiarach megabajtów
+: wzorce rzędu kilku, kilkuset, kilku tysięcy bajtów, pliki o rozmiarach megabajtów
 
 **Typowe rozmiary danych wyjściowych**
-<br/>&nbsp;&nbsp;&nbsp;indeksy znalezionych fragmentów bądź fragmenty plików
+: indeksy znalezionych fragmentów bądź fragmenty plików
 
 **Typowa liczba procesorów/ rdzeni, na których uruchamia się algorytm**
-<br/>&nbsp;&nbsp;&nbsp;1-256
+: 1-256
 
 **Stosunek czasu obliczeń do czasu komunikacji w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;zwykle duży – dobrze się zrównolegla
+: zwykle duży – dobrze się zrównolegla
 
 **Synchronizacja w algorytmie**
-<br/>&nbsp;&nbsp;&nbsp;brak
+: brak
 
 **Liczba synchronizacji**
-<br/>&nbsp;&nbsp;&nbsp;niewiele, podział danych i zebranie wyników, może być dynamiczny master-slave
+: niewiele, podział danych i zebranie wyników, może być dynamiczny master-slave
 
 **Złożoność algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;pełne przeszukiwanie
+: pełne przeszukiwanie
 
 **Algorytm**
-<br/>&nbsp;&nbsp;&nbsp;optymalny
+: optymalny
 
 **Typowe rozmiary danych przesyłanych pomiędzy węzłami**
-<br/>&nbsp;&nbsp;&nbsp;rzędu rozmiarów plików wejściowych, ale dane mogą być przesyłane bądź na początku i na końcu działania aplikacji bądź też dosyłane fragmentami – dynamiczny master-slave – większa możliwość nakładania obliczeń i komunikacji
+: rzędu rozmiarów plików wejściowych, ale dane mogą być przesyłane bądź na początku i na końcu działania aplikacji bądź też dosyłane fragmentami – dynamiczny *master-slave* – większa możliwość nakładania obliczeń i komunikacji
 
 **Typowy czas działania algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;kilka minut – kilka dni
+: kilka minut – kilka dni
 
 **Znane implementacje algorytmu**
-<br/>&nbsp;&nbsp;&nbsp;książki o tematyce HPC
+: książki o tematyce HPC
 
 **Istniejące implementacje – licencja + język programowania**
-<br/>&nbsp;&nbsp;&nbsp;programy grep i inne, możliwe wykorzystanie do równoległej implementacji
+: programy grep i inne, możliwe wykorzystanie do równoległej implementacji
 
-
-<br/>
-<h1>4.6. Wykaz literatury</h1>
-
+# 4.6. Wykaz literatury
 
 1. Geist A., Beguelin A., Dongarra J., Jiang W., Mancheck R., Sunderam V.: PVM Parallel Virtual Machine. A Users Guide and Tutorial for Networked Parallel Computing. MIT Press, Cambridge, 1994. [http://www.epm.ornl.gov/pvm/](http://www.epm.ornl.gov/pvm/)
 2. Pacheco P.: Parallel programming with MPI. Morgan Kaufmann. 1996
