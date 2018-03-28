@@ -260,7 +260,7 @@ $header-width: 900px !default;
  * Page content
  */
 .page-content {
-    color: #444;
+    color: $grey-color-dark;
 }
 
 .page-heading {
@@ -294,6 +294,16 @@ $header-width: 900px !default;
 .post-link {
     display: block;
     @include relative-font-size(1.5);
+
+    color: #3b5c9b;
+
+    &:visited {
+        color: #3b5c9b;
+    }
+
+    &:hover {
+        color: #5178BC;
+    }
 }
 
 
@@ -382,14 +392,4 @@ figure {
 
         padding-left: 1em;
     }
-}
-
-
-dl {
-    margin-left: $spacing-unit / 2;
-}
-
-dd {
-    margin-left: $spacing-unit / 2;
-    margin-bottom: $spacing-unit / 3;
 }

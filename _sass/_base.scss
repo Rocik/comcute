@@ -181,3 +181,16 @@ table {
         border: 1px solid $grey-color-light;
     }
 }
+
+
+/**
+ * Description list
+ */
+dl {
+    margin-left: $spacing-unit / 2;
+}
+
+dd {
+    margin-left: $spacing-unit / 2;
+    margin-bottom: $spacing-unit / 3;
+}
