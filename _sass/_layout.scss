@@ -172,6 +172,14 @@ $header-width: 900px !default;
         }
     }
 
+    #page-current {
+        border-bottom: 4px solid #5178BC;
+    	border-bottom-width: 4px;
+    	border-bottom-style: solid;
+    	border-bottom-color: rgb(81, 120, 188);
+        font-weight: bold;
+    }
+
     @include media-query($on-palm) {
         position: absolute;
         top: 9px;
@@ -222,6 +230,10 @@ $header-width: 900px !default;
                 margin-right: 0;
             }
             margin-left: 20px;
+        }
+
+        #page-current {
+            border-bottom: none;
         }
     }
 }
