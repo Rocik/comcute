@@ -1,5 +1,5 @@
 var jsLoader = function(settings) {
-    var LOADER_SERVICE_URL = "http://s1.comcute.eti.pg.gda.pl:50080/S-war/SIService", // Adres usługi systemu comcute do komunikacji z internatuą.
+    var LOADER_SERVICE_URL = "http://w1.comcute.eti.pg.gda.pl:50080/S-war/SIService", // Adres usługi systemu comcute do komunikacji z internatuą.
         LOADER_SERVICE_NAMESPACE = "http://si.webservice/", // Namespace usługi systemu comcute do komunikacji z internatuą.
         jsMW,
         opt,
