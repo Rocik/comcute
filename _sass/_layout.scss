@@ -4,10 +4,15 @@ $header-width: 900px !default;
     position: relative;
     min-height: $spacing-unit * 1.865;
 
-    padding-top: 20px;
+    padding-top: $spacing-unit * 0.75;
 
     a {
         text-decoration: none;
+
+        @include media-query($header-width) {
+            padding-left: auto;
+            padding-right: auto;
+        }
     }
 }
 
@@ -180,12 +185,15 @@ $header-width: 900px !default;
 
     #page-current {
         border-bottom: 4px solid #5178BC;
+
+        @include media-query($on-palm) {
+            color: $text-color;
+        }
     }
 
     @include media-query($on-palm) {
-        position: absolute;
-        top: 9px;
-        right: $spacing-unit / 2;
+        float: right;
+        margin-top: $spacing-unit / 4;
         background-color: $background-color;
         border: 1px solid $grey-color-light;
         border-radius: 5px;

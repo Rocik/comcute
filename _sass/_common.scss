@@ -5,10 +5,25 @@
          -moz-user-select: none;
           -ms-user-select: none;
               user-select: none;
-            
+
         -webkit-user-drag: none;
          -khtml-user-drag: none;
            -moz-user-drag: none;
             -ms-user-drag: none;
                 user-drag: none;
+}
+
+
+.hide-on-mobile {
+    @include media-query($on-palm) {
+        display: none;
+    }
+}
+
+
+.center-on-mobile {
+    @include media-query($on-palm) {
+        display: block;
+        text-align: center;
+    }
 }
