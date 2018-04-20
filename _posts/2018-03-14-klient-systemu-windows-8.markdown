@@ -16,6 +16,6 @@ Poniżej zamieszczono archiwum z plikami źródłowymi aplikacji działającej p
 
 [COMCUTE_Client_W7_bin_x86.zip][COMCUTE_Client_W7_bin_x86]
 
-[COMCUTE_Client_src]: http://comcute.eti.pg.gda.pl/wp-content/uploads/2013/07/COMCUTE_Client_src.zip
-[COMCUTE_Client_W7_src]: http://comcute.eti.pg.gda.pl/wp-content/uploads/2013/07/COMCUTE_Client_W7_src.zip
-[COMCUTE_Client_W7_bin_x86]: http://comcute.eti.pg.gda.pl/wp-content/uploads/2013/07/COMCUTE_Client_W7_bin_x86.zip
+[COMCUTE_Client_src]: http://comcute.eti.pg.edu.pl/wp-content/uploads/2013/07/COMCUTE_Client_src.zip
+[COMCUTE_Client_W7_src]: http://comcute.eti.pg.edu.pl/wp-content/uploads/2013/07/COMCUTE_Client_W7_src.zip
+[COMCUTE_Client_W7_bin_x86]: http://comcute.eti.pg.edu.pl/wp-content/uploads/2013/07/COMCUTE_Client_W7_bin_x86.zip

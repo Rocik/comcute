@@ -5,7 +5,7 @@ date:   2018-03-14 15:44:58 +0100
 categories: comcute
 authors:
  - name: "Paweł Czarnul"
-   email: pczarnul@eti.pg.gda.pl
+   email: pczarnul@eti.pg.edu.pl
 ---
 
 W rozdziale zaprezentowano analizę algorytmów równoległych tradycyjnie uruchamianych w systemach klastrowych wysokiej wydajności, a następnie pokazano charakterystykę algorytmów ze względu na parametry istotne przy implementacji ich rozwiązań w rozproszonym środowisku Comcute. Następnie przedstawiono ocenę możliwości ich przeniesienia do tego środowiska.

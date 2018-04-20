@@ -5,9 +5,9 @@ date:   2018-03-14 20:44:58 +0100
 categories: comcute
 authors:
  - name: "Jerzy Balicki"
-   email: jerzy.balicki@eti.pg.gda.pl
+   email: jerzy.balicki@eti.pg.edu.pl
  - name: "Tomasz Boiński"
-   email: tobo@eti.pg.gda.pl
+   email: tobo@eti.pg.edu.pl
  - name: "Waldemar Korłub"
    email: stawrul@gmail.com
 ---

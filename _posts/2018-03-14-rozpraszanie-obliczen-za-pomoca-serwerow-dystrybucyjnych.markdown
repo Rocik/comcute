@@ -5,9 +5,9 @@ date:   2018-03-14 18:44:58 +0100
 categories: comcute
 authors:
  - name: "Jerzy Balicki"
-   email: jerzy.balicki@eti.pg.gda.pl
+   email: jerzy.balicki@eti.pg.edu.pl
  - name: "Piotr Brudło"
-   email: pebrd@eti.pg.gda.pl
+   email: pebrd@eti.pg.edu.pl
 ---
 
 W rozdziale omówiono zasady funkcjonowania serwerów dystrybucyjnych w systemie obliczeniowym klasy grid pracującym w trybie volunteer computing. Omówiono sposoby zwiększania wydajności tej warstwy systemu za pomocą zarządzania strumieniem paczek danych. Odniesiono się także do koncepcji *map-reduce* w implementacji przetwarzania równoległego.

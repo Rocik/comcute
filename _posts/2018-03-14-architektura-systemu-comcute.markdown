@@ -5,7 +5,7 @@ date:   2018-03-14 17:44:58 +0100
 categories: comcute
 authors:
  - name: "Mariusz Matuszek"
-   email: Mariusz.Matuszek@pg.gda.pl
+   email: Mariusz.Matuszek@pg.edu.pl
 ---
 
 W rozdziale przedstawiono architekturę systemu Comcute realizującego masywne przetwarzanie rozproszone wykorzystujące powszechny wolontariat użytkowników komputerów w sieciach rozległych.

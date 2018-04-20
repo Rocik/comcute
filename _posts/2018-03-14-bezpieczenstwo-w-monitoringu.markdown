@@ -5,7 +5,7 @@ date:   2018-03-14 21:44:58 +0100
 categories: comcute
 authors:
  - name: "Piotr Brudło"
-   email: pebrd@eti.pg.gda.pl
+   email: pebrd@eti.pg.edu.pl
 ---
 
 Zaproponowano szereg algorytmów realizujących aspekty bezpieczeństwa zorientowane na aplikacje monitorujące. W znaczącej części pozwolą one na zastąpienie pracy czynnika ludzkiego przy przeglądaniu lub analizie zapisów video z monitorowanych miejsc lub obszarów. Ze względu na szeroki potencjalny obszar, zakres zastosowań praktycznych oraz potencjalne efekty natury ekonomicznej u potencjalnych klientów spodziewane jest szerokie wykorzystanie tego typu rozwiązań w automatycznym monitoringu zarówno typu offline jak i online.

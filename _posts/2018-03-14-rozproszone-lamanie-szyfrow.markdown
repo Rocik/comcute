@@ -5,7 +5,7 @@ date:   2018-03-14 21:45:58 +0100
 categories: comcute
 authors:
  - name: "Piotr Szpryngier"
-   email: piotrs@eti.pg.gda.pl
+   email: piotrs@eti.pg.edu.pl
 ---
 
 W rozdziale zaprezentowano podstawowe techniki łamania szyfrów symetrycznych i asymetrycznych o stosunkowo niewielkiej długości kluczy. Przedstawiono ogólną charakterystykę metod łamania szyfrów. Ilustracją tych metod jest zaprezentowana aplikacja służąca do łamania haseł lub badania odporności haseł na odgadnięcie.
