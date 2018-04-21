@@ -6,6 +6,8 @@ $header-width: 900px !default;
 
     padding-top: $spacing-unit * 0.75;
 
+    @include animation(fadein 0.3s both 0.15s);
+
     a {
         text-decoration: none;
 
@@ -149,6 +151,8 @@ $header-width: 900px !default;
     margin-top: $spacing-unit / 2;
     margin-bottom: $spacing-unit;
 
+    @include animation(fadein 0.3s both 0.25s);
+
     @include media-query($on-laptop) {
         box-shadow: none;
         margin: 0;
@@ -169,7 +173,7 @@ $header-width: 900px !default;
     }
 
     .page-link {
-        color: $grey-color;
+        color: darken($grey-color, 20%);
         line-height: $base-line-height;
 
         // Gaps between nav items, but not on the last one
@@ -187,7 +191,7 @@ $header-width: 900px !default;
         border-bottom: 4px solid #5178BC;
 
         @include media-query($on-palm) {
-            color: $text-color;
+            color: darken($grey-color, 30%);
         }
     }
 
@@ -249,40 +253,13 @@ $header-width: 900px !default;
 }
 
 
-
-/**
- * Site footer
- */
-.site-footer {
-    border-top: 1px solid $grey-color-light;
-    padding-top: $spacing-unit / 1.5;
-}
-
-.footer-heading {
-    @include relative-font-size(1.125);
-    margin-bottom: $spacing-unit / 2;
-}
-
-.footer-wrapper {
-    @include relative-font-size(0.75);
-    color: $grey-color-dark;
-    padding-left: $spacing-unit / 2;
-    margin-left: -$spacing-unit / 2;
-    margin-bottom: $spacing-unit / 2;
-    @extend %clearfix;
-}
-
-.footer-about {
-    color: $grey-color;
-    margin-top: $spacing-unit / 2;
-}
-
-
 /**
  * Page content
  */
 .page-content {
     color: $grey-color-dark;
+
+    border-top: 1px solid $grey-color-light;
 }
 
 .page-heading {
@@ -414,4 +391,32 @@ figure {
 
         padding-left: 1em;
     }
+}
+
+
+/**
+ * Site footer
+ */
+.site-footer {
+    border-top: 1px solid $grey-color-light;
+    padding-top: $spacing-unit / 1.5;
+}
+
+.footer-heading {
+    @include relative-font-size(1.125);
+    margin-bottom: $spacing-unit / 2;
+}
+
+.footer-wrapper {
+    @include relative-font-size(0.75);
+    color: $grey-color-dark;
+    padding-left: $spacing-unit / 2;
+    margin-left: -$spacing-unit / 2;
+    margin-bottom: $spacing-unit / 2;
+    @extend %clearfix;
+}
+
+.footer-about {
+    color: $grey-color;
+    margin-top: $spacing-unit / 2;
 }

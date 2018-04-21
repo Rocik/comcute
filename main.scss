@@ -57,9 +57,15 @@ $on-laptop:        800px !default;
 @mixin transition($properties) {
     -webkit-transition: $properties;
        -moz-transition: $properties;
-        -ms-transition: $properties;
          -o-transition: $properties;
             transition: $properties;
+}
+
+@mixin animation($properties) {
+    -webkit-animation: $properties;
+       -moz-animation: $properties;
+         -o-animation: $properties;
+            animation: $properties;
 }
 
 // Import partials.
