@@ -253,13 +253,36 @@ $header-width: 900px !default;
 }
 
 
+#center {
+    overflow: hidden;
+    position: relative;
+
+    @include media-query($on-palm) {
+        overflow: initial;
+        position: initial;
+    }
+}
+
+
 /**
  * Page content
  */
 .page-content {
     color: $grey-color-dark;
-
     border-top: 1px solid $grey-color-light;
+    width:calc(75% - 20px);
+
+    @include media-query($on-palm) {
+        width:auto;
+    }
+
+    &.more {
+        width:calc(100% - 20px);
+
+        @include media-query($on-palm) {
+            width:auto;
+        }
+    }
 }
 
 .page-heading {
@@ -390,6 +413,95 @@ figure {
         font-weight: normal;
 
         padding-left: 1em;
+    }
+}
+
+
+/**
+ * Side panel
+ */
+#line {
+    border-top: 1px solid $grey-color-light;
+    border-left: 1px solid $grey-color-light;
+    height: 100%;
+    width: 20px;
+    position: absolute;
+    right: 25%;
+
+    @include media-query($on-palm) {
+        display: none;
+    }
+
+    &.less {
+        right: 0%;
+        border-left: none;
+    }
+}
+
+#more-less {
+    background: url("images/more_less.png") no-repeat scroll top right transparent;
+    color: #4A4A4A;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: 0;
+    opacity: 0.2;
+    transition: opacity 0.25s ease-out;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    &.less {
+        background-position: left top;
+    }
+}
+
+#panel {
+    border-top: 1px solid $grey-color-light;
+    width: 25%;
+    float:right;
+
+    @include media-query($on-palm) {
+        display: none;
+    }
+
+    &.hidden {
+        display: none;
+    }
+
+    a {
+        color: #000
+    }
+
+    ul {
+        list-style-type: none;
+        margin-left: 5px;
+    }
+
+    li {
+        ul {
+            list-style-type: disc;
+            li {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .spacer-panel {
+        padding-right: 30px;
+        padding-top: 10px;
+        padding-bottom: 15px;
+    }
+
+    .cover {
+        width: 250px;
+        height: 348px;
+        padding: 4px;
+        background: url('images/okladka_bg.png') no-repeat center center #fff;
+        border: 1px solid #dadada;
+        margin-bottom: 2px;
+        text-indent: -999999px;
     }
 }
 

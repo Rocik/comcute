@@ -11,11 +11,17 @@
 
         {%- include menu.html -%}
 
-        <main class="page-content" aria-label="Content">
-            <div class="spacer">
-                {{ content }}
-            </div>
-        </main>
+        <div id="center">
+
+            {%- include side-panel.html -%}
+
+            <main class="page-content" aria-label="Content">
+                <div class="spacer">
+                    {{ content }}
+                </div>
+            </main>
+
+        </div>
 
         {%- include footer.html -%}
 

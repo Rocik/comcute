@@ -176,14 +176,16 @@ jQuery(document).ready(function($) {
         }
     });
     $('#more-less').click(function(event) {
-        if ($('#more-less').hasClass('more')) {
-            $('#main').addClass('full');
-            $('#more-less').removeClass('more');
-            $('#more-less').addClass('less');
-        } else if ($('#more-less').hasClass('less')) {
-            $('#main').removeClass('full');
+        if ($('#more-less').hasClass('less')) {
             $('#more-less').removeClass('less');
-            $('#more-less').addClass('more');
+            $('#line').removeClass('less');
+            $('.page-content').removeClass('more');
+            $('#panel').removeClass('hidden');
+        } else {
+            $('#more-less').addClass('less');
+            $('#line').addClass('less');
+            $('.page-content').addClass('more');
+            $('#panel').addClass('hidden');
         }
     });
 }(jQuery));
