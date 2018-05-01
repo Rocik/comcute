@@ -44,7 +44,7 @@ $header-width: 900px !default;
     text-shadow: 0px 0px 1px #522;
     text-transform: lowercase;
 
-    color: #f9f9f9;
+    color: #fff;
     @include relative-font-size(1.25);
     font-family: arial,sans-serif;
     font-weight: bold;
@@ -66,7 +66,7 @@ $header-width: 900px !default;
     }
 
     &:active {
-        color: #eee;
+        color: #ededed;
     }
 }
 
@@ -161,8 +161,9 @@ $header-width: 900px !default;
 
 
 .site-nav {
-    line-height: $base-line-height * $base-font-size * 2.5;
     font-weight: bold;
+    padding-top: $spacing-unit / 2;
+    padding-bottom: $spacing-unit / 2 - 4;
 
     .nav-trigger {
         display: none;
@@ -188,7 +189,7 @@ $header-width: 900px !default;
     }
 
     #page-current {
-        border-bottom: 4px solid #5178BC;
+        border-bottom: 3px solid #5178BC;
 
         @include media-query($on-palm) {
             color: darken($grey-color, 30%);
@@ -198,6 +199,7 @@ $header-width: 900px !default;
     @include media-query($on-palm) {
         float: right;
         margin-top: $spacing-unit / 4;
+        padding: 0;
         background-color: $background-color;
         border: 1px solid $grey-color-light;
         border-radius: 5px;
@@ -270,7 +272,8 @@ $header-width: 900px !default;
 .page-content {
     color: $grey-color-dark;
     border-top: 1px solid $grey-color-light;
-    width:calc(75% - 20px);
+    padding-top: $spacing-unit / 3;
+    width: calc(75% - 20px);
 
     @include media-query($on-palm) {
         width:auto;
@@ -337,13 +340,13 @@ $header-width: 900px !default;
 }
 
 .post-title {
-    @include relative-font-size(2.4);
+    @include relative-font-size(2.2);
     letter-spacing: -1px;
     line-height: 1;
     font-weight: bold;
 
     @include media-query($on-laptop) {
-        @include relative-font-size(2.2);
+        @include relative-font-size(2);
     }
 }
 
@@ -397,23 +400,25 @@ figure {
     margin-right: auto;
     margin-top: $spacing-unit / 2;
     margin-bottom: $spacing-unit / 1.5;
+}
 
-    figcaption {
-        display: table-caption;
-        caption-side: bottom;
+figcaption {
+    display: table-caption;
+    caption-side: bottom;
 
-        text-align: center;
-        font-size: $small-font-size;
-        font-weight: bold;
-    }
+    margin-top: 4px;
 
-    .caption-right {
-        display: table-cell;
-        caption-side: none;
-        font-weight: normal;
+    text-align: center;
+    font-size: $small-font-size;
+    font-weight: bold;
+}
 
-        padding-left: 1em;
-    }
+.caption-right {
+    display: table-cell;
+    caption-side: none;
+    font-weight: normal;
+
+    padding-left: 1em;
 }
 
 
@@ -463,7 +468,6 @@ figure {
     width: 25%;
     border-top: 1px solid $grey-color-light;
     font-size: $small-font-size;
-
 
     @include media-query($on-palm) {
         display: none;

@@ -6,14 +6,17 @@ dl, dd, ol, ul, figure {
 }
 
 
+$bg-height: 1200px !default;
+$bg-color:  #e6e6e6 !default;
+
 html {
     height: 100%;
-    background-color: #e6e6e6;
+    background-color: $bg-color;
     background-repeat: no-repeat;
-    background-size: 100% 800px;
-    background-image: -webkit-linear-gradient(#fcfcfc 0%, #e6e6e6 800px);
-    background-image:    -moz-linear-gradient(#fcfcfc 0%, #e6e6e6 800px);
-    background-image:         linear-gradient(#fcfcfc 0%, #e6e6e6 800px);
+    background-size: 100% $bg-height;
+    background-image: -webkit-linear-gradient(#fcfcfc 0%, $bg-color $bg-height);
+    background-image:    -moz-linear-gradient(#fcfcfc 0%, $bg-color $bg-height);
+    background-image:         linear-gradient(#fcfcfc 0%, $bg-color $bg-height);
 }
 
 
@@ -45,6 +48,12 @@ main {
 img {
     max-width: 100%;
     vertical-align: middle;
+}
+
+
+video {
+    width: 100%;
+    height: auto;
 }
 
 
