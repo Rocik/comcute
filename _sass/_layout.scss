@@ -253,7 +253,7 @@ $header-width: 900px !default;
 }
 
 
-#center {
+#page-middle {
     overflow: hidden;
     position: relative;
 
@@ -439,12 +439,13 @@ figure {
 }
 
 #more-less {
-    background: url("images/more_less.png") no-repeat scroll top right transparent;
-    color: #4A4A4A;
+    position: absolute;
+    top: 6px;
     height: 20px;
     width: 20px;
-    position: absolute;
-    top: 0;
+    background: url("images/more_less.png") no-repeat scroll top right transparent;
+    color: #4A4A4A;
+    cursor: pointer;
     opacity: 0.2;
     transition: opacity 0.25s ease-out;
 
@@ -458,9 +459,11 @@ figure {
 }
 
 #panel {
-    border-top: 1px solid $grey-color-light;
+    float: right;
     width: 25%;
-    float:right;
+    border-top: 1px solid $grey-color-light;
+    font-size: $small-font-size;
+
 
     @include media-query($on-palm) {
         display: none;
@@ -471,7 +474,7 @@ figure {
     }
 
     a {
-        color: #000
+        color: $text-color;
     }
 
     ul {
@@ -481,7 +484,9 @@ figure {
 
     li {
         ul {
-            list-style-type: disc;
+            margin-bottom: 20px;
+
+            list-style-type: circle;
             li {
                 margin-left: 10px;
             }
@@ -489,9 +494,7 @@ figure {
     }
 
     .spacer-panel {
-        padding-right: 30px;
-        padding-top: 10px;
-        padding-bottom: 15px;
+        padding: 10px 20px 0 0;
     }
 
     .cover {
