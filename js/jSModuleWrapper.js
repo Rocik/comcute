@@ -1,147 +1,147 @@
-var COMPUTATION_TIME = 100, // czas trwania etapu obliczeń w milisekundach
-    COMPUTATION_INTERVAL = 100, // czas przerwy pomiędzy etapami obliczeń w milisekundach
-    result = "", // wynik obliczeń dla paczki danych
-    packageProcessed = false; // flaga wskazująca, czy obliczenia dla danej paczki danych zostały zakończone
-
 /**
  *  Pobiera dane do zadania, uruchamia obliczenia
- *  @param timeOutFunction funkcja wykonywana, gdy nie powiedzie się pobranie danych
  *  @param logger obiekt logujacy zdarzenia
  */
-var jsModuleWrapper = function(timeOutFunction, logger) {
-    var taskIdGlobal = "", // id rozwiązywanego zadania, zserializowane UUID
-        sServiceUrlGlobal = "", // adres URL usługi sieciowej znajdującej się na serwerze S, z którym się komunikujemy
-        sServiceNamespaceGlobal = "", // przestrzeń nazw powyższej usługi
-        toFunction = timeOutFunction,
-        logger = logger,
-        jsMW = {},
+var jsModuleWrapper = function(_logger) {
+    "use strict";
+    const parent = this;
+    const logger = _logger;
 
-        /**
-         * Funkcja pobierajaca dane od serwera S.
-         * Jej wywołanie rozpoczyna pracę skryptu.
-         *
-         * @param string taskID
-         * @param string sServiceUrl
-         * @param string sServiceNamespace
-         */
-        getData = function(taskID, sServiceUrl, sServiceNamespace) {
-            var getDataArguments = new Array();
-            getDataArguments[0] = taskID;
-            // eksport zmiennych do zasięgu globlanego
-            taskIdGlobal = taskID;
-            sServiceUrlGlobal = sServiceUrl;
-            sServiceNamespaceGlobal = sServiceNamespace;
+    this.sServiceUrl = ""; // adres URL usługi sieciowej znajdującej się na serwerze S, z którym się komunikujemy
+    this.sServiceNamespace = ""; // przestrzeń nazw powyższej usługi
+    var taskId = ""; // id rozwiązywanego zadania, zserializowane UUID
 
-            // Wywołanie webserwisu
-            // Pobranie danych obliczeniowych
-            jQuery.webservice({
-                url: sServiceUrl,
-                nameSpace: sServiceNamespace,
-                methodName: "GetData",
-                dataType: "text",
-                data: getDataArguments,
-                success: parseResponse, // po przyjściu danych wykonaj obliczenia
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    console.log(XMLHttpRequest);
-                    logger.onError(Comcute.logErrorTypes.errorGetData, XMLHttpRequest.status, textStatus, errorThrown.toString());
-                }
-            });
-        },
+    var running = true;
+    var ww;
 
-        /**
-         * Parsuje odpowiedź z usługi internetowej na żądanie pobrania danych do zadania
-         * @param soapData odpowiedź usługi sieciowej
-         * @param textStatus statuc usługi sieciowej
-         */
-        parseResponse = function(soapData, textStatus) {
-            var responseText,
-                responseJSON,
-                dataTaskID,
-                dataID,
-                dataObject,
-                resultArguments;
+    /**
+     * Funkcja pobierajaca dane od serwera S.
+     * Jej wywołanie rozpoczyna pracę skryptu.
+     *
+     * @param string taskID
+     * @param string sServiceUrl
+     * @param string sServiceNamespace
+     */
+    this.getData = function(newTaskId, computeModule) {
+        taskId = newTaskId;
 
-            // sprawdzenie, czy pobranie danych przebiegło poprawnie
-            if (null === textStatus || 'success' !== textStatus) {
-                logger.onError(Comcute.logErrorTypes.errorBadData, '200', textStatus, '');
-                calculationsEnded();
-                return;
+        if (ww === undefined) {
+            ww = new WW(computeModule);
+            ww.import('/js/jsbn.js', '/js/jsbn2.js');
+            ww.onProgressChanged = (p) => {
+                $('.progress').css("width", p + "%");
+            };
+        }
+
+        running = true;
+        fetchModule();
+    };
+
+
+    this.stop = function() {
+        if (ww !== undefined) {
+            running = false;
+
+            ww.dispose();
+            ww = undefined;
+
+            $('.progress').css("width", "0%");
+        }
+    }
+
+
+    var fetchModule = function() {
+        const getDataArguments = [taskId];
+
+        // Pobranie danych obliczeniowych
+        jQuery.webservice({
+            url: parent.sServiceUrl,
+            nameSpace: parent.sServiceNamespace,
+            methodName: "GetData",
+            dataType: "text",
+            data: getDataArguments,
+            success: parseResponse, // po przyjściu danych wykonaj obliczenia
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest);
+                logger.onError(Comcute.logErrorTypes.errorGetData, XMLHttpRequest.status, textStatus, errorThrown.toString());
             }
+        });
+    };
 
-            // kontener na dane wejściowe do obliczeń
-            responseText = jQuery(soapData).find("return");
 
-            //firefox, chrome
-            if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) {
-                responseText = responseText[0].innerHTML;
-            } else { // IE8
-                responseText = responseText.prevObject[1].innerText;
-            }
+    /**
+     * Parsuje odpowiedź z usługi internetowej na żądanie pobrania danych do zadania
+     * @param soapData odpowiedź usługi sieciowej
+     * @param textStatus statuc usługi sieciowej
+     */
+    var parseResponse = function(soapData, textStatus) {
+        // sprawdzenie, czy pobranie danych przebiegło poprawnie
+        if (textStatus === null || textStatus !== 'success') {
+            logger.onError(Comcute.logErrorTypes.errorBadData, '200', textStatus, '');
+            calculationsEnded();
+            return;
+        }
 
-            if (null === responseText || "NO_DATA_AVAILABLE" === responseText) {
-                logger.onNoData(Comcute.logErrorTypes.warNoData,'200', textStatus, responseText);
-                calculationsEnded();
-                return;
-            }
+        // kontener na dane wejściowe do obliczeń
+        let responseText = jQuery(soapData).find("return");
 
-            //Konwersja odpowiedzi serwera S na zmienne
-            responseJSON = jQuery.parseJSON(responseText);
-            dataTaskID = responseJSON[0]; // id zadania, , zserializowane UUID
-            dataID = responseJSON[1]; // id danych, zserializowane UUID
-            dataObject = responseJSON[2]; // dane
+        // Firefox, Chrome
+        if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
+            responseText = responseText[0].innerHTML;
+        else// IE8
+            responseText = responseText.prevObject[1].innerText;
 
-            if (null !== dataObject) {
-                packageProcessed = false;
-                logger.onInfo(true, dataTaskID);
+        if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
+            logger.onNoData(Comcute.logErrorTypes.warNoData,'200', textStatus, responseText);
+            calculationsEnded();
+            return;
+        }
 
-                //funkcja compute() musi być zdefiniowana w pobranym module obliczeniowym
-                //compute(dataObject);
-                compute2(dataObject);
+        if (!running)
+            return;
 
-                setInterval(function() {
-                    if (packageProcessed) {
-                        packageProcessed = false;
-                        //przygotowanie odpowiedzi
-                        resultArguments = new Array();
-                        resultArguments[0] = dataTaskID; //id zadania, zserializowane UUID
-                        resultArguments[1] = dataID; //id danych, zserializowane UUID
-                        resultArguments[2] = result; // dane wynikowe
-                        resultArguments[3] = navigator.userAgent; // user agent
-                        resultArguments[4] = "JavaScript"; // Informacje o technologii, w której wykonano obliczenia
+        // Konwersja odpowiedzi serwera S na zmienne
+        const responseJSON = jQuery.parseJSON(responseText);
+        const dataTaskID = responseJSON[0]; // id zadania, zserializowane UUID
+        const dataID     = responseJSON[1]; // id danych, zserializowane UUID
+        const dataObject = responseJSON[2];
 
-                        //wysyłanie wyników
-                        jQuery.webservice({
-                            url: sServiceUrlGlobal,
-                            nameSpace: sServiceNamespaceGlobal,
-                            methodName: "SaveResult",
-                            dataType: "text",
-                            data: resultArguments,
-                            success: function() {
-                                logger.onInfo(false, dataTaskID);
-                            },
-                            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                logger.onError(Comcute.logErrorTypes.errorSentResult, XMLHttpRequest.status, textStatus, errorThrown.toString());
-                            }
-                        });
+        if (dataObject !== null) {
+            logger.onInfo(true, dataTaskID);
 
-                        //Ponowne uruchomienie metody getData - zapętlenie obliczen
-                        if (!jsMW.stop)
-                            getData(taskIdGlobal, sServiceUrlGlobal, sServiceNamespaceGlobal);
-                        else {
-                            jsMW.stop = false;
-                        }
+            console.info("Testowanie: [" + dataObject.toString() + "]");
+            //$('#computing-status').html("Testowanie: [" + dataObject.toString() + "]");
+
+            ww.run(dataObject, function(result) {
+                console.log("Wynik obliczeń: " + result);
+
+                const resultArguments = [
+                    dataTaskID,
+                    dataID,
+                    result,
+                    navigator.userAgent,
+                    "JavaScript" // Informacje o technologii, w której wykonano obliczenia
+                ];
+
+                // wysyłanie wyników
+                jQuery.webservice({
+                    url: parent.sServiceUrl,
+                    nameSpace: parent.sServiceNamespace,
+                    methodName: "SaveResult",
+                    dataType: "text",
+                    data: resultArguments,
+                    success: function() {
+                        logger.onInfo(false, dataTaskID);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        logger.onError(Comcute.logErrorTypes.errorSentResult, XMLHttpRequest.status, textStatus, errorThrown.toString());
                     }
-                }, COMPUTATION_INTERVAL * 2);
-            }
-        },
-        calculationsEnded = function() {
-            setTimeout(function() {
-                toFunction();
-            }, 7500);
-        };
+                });
 
-    jsMW.getData = getData;
-    jsMW.stop = false;
-
-    return jsMW;
+                // Ponowne uruchomienie metody getData - zapętlenie obliczen
+                if (running)
+                    fetchModule();
+            });
+        }
+    };
 };
