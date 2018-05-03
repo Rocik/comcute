@@ -41,7 +41,6 @@ $header-width: 900px !default;
 
     line-height: 55px;
     text-align: center;
-    text-shadow: 0px 0px 2px #922;
     text-transform: uppercase;
 
     color: #fff;
@@ -73,6 +72,7 @@ $header-width: 900px !default;
 
 #comcute-start {
     background: #e03d3a;
+    text-shadow: 0px 0px 2px #922;
 
     &:hover {
         background: #ee3d3a;
@@ -86,6 +86,7 @@ $header-width: 900px !default;
 
 #comcute-stop {
     background: #757575;
+    text-shadow: 0px 0px 2px #333;
 
     &:hover {
         background: #808080;
