@@ -73,7 +73,7 @@ function WW(javaScriptFunction) {
 
 
     function getDomainUrl() {
-        const url = window.location.origin;
+        const url = window.location.href;
         if (url.slice(-1) === '/')
             return url;
         return url + '/';
