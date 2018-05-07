@@ -505,13 +505,10 @@ figcaption {
     }
 
     .cover {
-        width: 250px;
-        height: 348px;
+        box-sizing: border-box;
         padding: 4px;
-        background: url('images/okladka_bg.png') no-repeat center center #fff;
         border: 1px solid #dadada;
         margin-bottom: $spacing-unit;
-        text-indent: -999999px;
     }
 }
 
