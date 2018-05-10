@@ -19,11 +19,3 @@
         display: none;
     }
 }
-
-
-.center-on-mobile {
-    @include media-query($on-palm) {
-        display: block;
-        text-align: center;
-    }
-}

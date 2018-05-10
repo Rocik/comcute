@@ -19,6 +19,15 @@ $header-width: 900px !default;
 }
 
 
+.logos {
+    display: inline;
+
+    @include media-query($header-width) {
+        display: block;
+        text-align: center;
+    }
+}
+
 .logo {
     font-size: 0;
 
