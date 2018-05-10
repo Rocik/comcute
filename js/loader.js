@@ -1,6 +1,6 @@
 var Loader = function(settings) {
     // Adres usługi systemu comcute do komunikacji z internautą.
-    const LOADER_SERVICE_URL = "http://w1.comcute.eti.pg.gda.pl:50080/S-war/SIService";
+    const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";
     // Namespace usługi systemu comcute do komunikacji z internautą.
     const LOADER_SERVICE_NAMESPACE = "http://si.webservice/";
     const defaultOptions = {
