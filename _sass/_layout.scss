@@ -1,4 +1,6 @@
 $header-width: 900px !default;
+$side-pane-width: 0.24 !default;
+$side-pane-margins: 21px !default;
 
 .site-header {
     position: relative;
@@ -280,17 +282,17 @@ $header-width: 900px !default;
     color: $grey-color-dark;
     border-top: 1px solid $grey-color-light;
     padding-top: $spacing-unit / 3;
-    width: calc(75% - 20px);
+    width: calc(#{percentage(1 - $side-pane-width)} - #{$side-pane-margins});
 
     @include media-query($on-palm) {
-        width:auto;
+        width: auto;
     }
 
     &.more {
-        width:calc(100% - 20px);
+        width: calc(100% - 20px);
 
         @include media-query($on-palm) {
-            width:auto;
+            width: auto;
         }
     }
 }
@@ -436,9 +438,9 @@ figcaption {
     border-top: 1px solid $grey-color-light;
     border-left: 1px solid $grey-color-light;
     height: 100%;
-    width: 20px;
+    width: $side-pane-margins;
     position: absolute;
-    right: 25%;
+    right: percentage($side-pane-width);
 
     @include media-query($on-palm) {
         display: none;
@@ -472,7 +474,7 @@ figcaption {
 
 #panel {
     float: right;
-    width: 25%;
+    width: percentage($side-pane-width);
     border-top: 1px solid $grey-color-light;
     color: $grey-color-dark;
     font-size: $small-font-size;
@@ -510,7 +512,7 @@ figcaption {
     }
 
     .spacer-panel {
-        padding: 10px 20px 0 0;
+        padding: 10px $side-pane-margins 0 0;
     }
 
     .cover {
