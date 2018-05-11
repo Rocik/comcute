@@ -1,20 +1,19 @@
-var Loader = function(settings) {
+var Loader = function() {
     // Adres usługi systemu comcute do komunikacji z internautą.
     const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";
     // Namespace usługi systemu comcute do komunikacji z internautą.
     const LOADER_SERVICE_NAMESPACE = "http://si.webservice/";
-    const defaultOptions = {
+    const opt = {
         infoId: '#comcute',
-        urlId: '#url',
-        logger: {
-            onInfo: function(isStart, taskId) {},
-            onNoData: function(status, textStatus, warning) {},
-            onNoTask: function(status, textStatus, warning) {},
-            onError: function(status, textStatus, error) {}
-        }
+        urlId: '#url'
     };
-    const opt = jQuery.extend({}, defaultOptions, settings);
-    const jsMW = new jsModuleWrapper(opt.logger);
+    const jsMW = new jsModuleWrapper();
+    const supportedTech = {
+        JavaScript: 1,
+        JavaApplet: 0,
+        Flash: 0,
+        Silverlight: 0
+    };
     let taskId;
     let moduleLocation;
     let sServiceUrl;
@@ -25,8 +24,6 @@ var Loader = function(settings) {
     // Pobiera kod obliczeniowy od serwera S i wysyła dane
     //  o technologiach dostepnych w przglądarce internauty.
     this.registerAndGetModule = function() {
-        const supportedTech = getSupportedTech();
-
         // tablica parametrów przeglądarki internauty
         const browserInfo = [
             navigator.userAgent,
@@ -44,7 +41,7 @@ var Loader = function(settings) {
             data: browserInfo,
             success: installModule,
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                opt.logger.onError(Comcute.logErrorTypes.errorGetModule, XMLHttpRequest.status, textStatus, errorThrown.toString());
+                console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
             }
         });
     };
@@ -60,10 +57,8 @@ var Loader = function(settings) {
      * @param textStatus statuc usługi sieciowej
      */
     function installModule(soapData, textStatus) {
-        if (textStatus === null || textStatus !== "success") {
-            opt.logger.onError(Comcute.logErrorTypes.errorBadNodeSAnswer,'200', textStatus, '');
+        if (textStatus === null || textStatus !== "success")
             return;
-        }
 
         // wyciągnięcie odpowiedzi
         const rawResponseText = jQuery(soapData).find("return");
@@ -71,20 +66,16 @@ var Loader = function(settings) {
             ? rawResponseText[0].innerHTML
             : rawResponseText.prevObject[1].innerText;
 
-        if (responseText === null || responseText === "ERROR") {
-            opt.logger.onError(Comcute.logErrorTypes.errorBadNodeSAnswer, '200', textStatus, responseText);
+        if (responseText === null || responseText === "ERROR")
             return;
-        }
 
         // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
         const embedHtml = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
             ? jQuery(htmlDecode(responseText))
             : jQuery(responseText);
 
-        if (embedHtml.length === 0) {
-            opt.logger.onNoTask(Comcute.logErrorTypes.warNoTask, '200', textStatus, responseText);
+        if (embedHtml.length === 0)
             return;
-        }
 
         // dodanie skryptu osadzającego do seksji head
         const head = document.getElementsByTagName("head")[0];
@@ -124,19 +115,9 @@ var Loader = function(settings) {
                 runComcute();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                opt.logger.onError(Comcute.logErrorTypes.errorGetScript, XMLHttpRequest.status, textStatus, errorThrown.toString());
+                console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
             }
         });
-    }
-
-
-    function getSupportedTech() {
-        return {
-            JavaScript: 1,
-            JavaApplet: 0,
-            Flash: 0,
-            Silverlight: 0
-        };
     }
 
 

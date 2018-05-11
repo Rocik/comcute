@@ -1,12 +1,6 @@
-"use strict";
+'use strict';
 jQuery(document).ready(function($) {
-    var infoId = '#comcute';
-    var logger = new Logger();
-    logger.infoId = infoId;
-    var jsL = new Loader({
-        infoId: infoId,
-        logger: logger
-    });
+    var jsL = new Loader();
 
     $('#comcute-start').click(function(event) {
         $('#comcute-start').css("display", "none");

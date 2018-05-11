@@ -1,11 +1,9 @@
 /**
  *  Pobiera dane do zadania, uruchamia obliczenia
- *  @param logger obiekt logujacy zdarzenia
  */
-var jsModuleWrapper = function(_logger) {
+var jsModuleWrapper = function() {
     "use strict";
     const parent = this;
-    const logger = _logger;
 
     this.sServiceUrl = ""; // adres URL usługi sieciowej znajdującej się na serwerze S, z którym się komunikujemy
     this.sServiceNamespace = ""; // przestrzeń nazw powyższej usługi
@@ -62,8 +60,7 @@ var jsModuleWrapper = function(_logger) {
             data: getDataArguments,
             success: parseResponse, // po przyjściu danych wykonaj obliczenia
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest);
-                logger.onError(Comcute.logErrorTypes.errorGetData, XMLHttpRequest.status, textStatus, errorThrown.toString());
+                console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
             }
         });
     };
@@ -77,7 +74,6 @@ var jsModuleWrapper = function(_logger) {
     var parseResponse = function(soapData, textStatus) {
         // sprawdzenie, czy pobranie danych przebiegło poprawnie
         if (textStatus === null || textStatus !== 'success') {
-            logger.onError(Comcute.logErrorTypes.errorBadData, '200', textStatus, '');
             calculationsEnded();
             return;
         }
@@ -92,7 +88,6 @@ var jsModuleWrapper = function(_logger) {
             responseText = responseText.prevObject[1].innerText;
 
         if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
-            logger.onNoData(Comcute.logErrorTypes.warNoData,'200', textStatus, responseText);
             calculationsEnded();
             return;
         }
@@ -107,8 +102,6 @@ var jsModuleWrapper = function(_logger) {
         const dataObject = responseJSON[2];
 
         if (dataObject !== null) {
-            logger.onInfo(true, dataTaskID);
-
             console.info("Testowanie: [" + dataObject.toString() + "]");
             //$('#computing-status').html("Testowanie: [" + dataObject.toString() + "]");
 
@@ -130,11 +123,8 @@ var jsModuleWrapper = function(_logger) {
                     methodName: "SaveResult",
                     dataType: "text",
                     data: resultArguments,
-                    success: function() {
-                        logger.onInfo(false, dataTaskID);
-                    },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        logger.onError(Comcute.logErrorTypes.errorSentResult, XMLHttpRequest.status, textStatus, errorThrown.toString());
+                        console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
                     }
                 });
 
