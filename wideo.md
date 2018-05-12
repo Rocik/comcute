@@ -13,5 +13,5 @@ permalink: /wideo/
 ## Symulacja rozprzestrzeniania się pyłu po hipotetycznej awarii reaktora atomowego
 
 <video width="640" height="480" loop="loop" controls>
-    <source src="/videos/nuclear.webm" type="video/webm; codecs=vp8,vorbis">
+    <source src="{{ "/videos/nuclear.webm" | relative_url }}" type="video/webm; codecs=vp8,vorbis">
 </video>
