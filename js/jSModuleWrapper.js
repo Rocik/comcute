@@ -2,7 +2,7 @@
  *  Pobiera dane do zadania, uruchamia obliczenia
  */
 var jsModuleWrapper = function() {
-    "use strict";
+    'use strict';
     const parent = this;
 
     this.sServiceUrl = ""; // adres URL usługi sieciowej znajdującej się na serwerze S, z którym się komunikujemy
@@ -10,6 +10,7 @@ var jsModuleWrapper = function() {
     var taskId = ""; // id rozwiązywanego zadania, zserializowane UUID
 
     var running = true;
+    var getStatus;
     var ww;
 
     /**
@@ -20,7 +21,7 @@ var jsModuleWrapper = function() {
      * @param string sServiceUrl
      * @param string sServiceNamespace
      */
-    this.getData = function(newTaskId, computeModule) {
+    this.getData = function(newTaskId, computeModule, computeGetStatus) {
         taskId = newTaskId;
 
         if (ww === undefined) {
@@ -29,6 +30,12 @@ var jsModuleWrapper = function() {
             ww.onProgressChanged = (p) => {
                 $('.progress').css("width", p + "%");
             };
+
+            if (isFunction(computeGetStatus)) {
+                getStatus = computeGetStatus
+                $('#computing-status').addClass('visible').removeClass('hidden');
+            } else
+                getStatus = undefined;
         }
 
         running = true;
@@ -42,8 +49,6 @@ var jsModuleWrapper = function() {
 
             ww.dispose();
             ww = undefined;
-
-            $('.progress').css("width", "0%");
         }
     }
 
@@ -81,11 +86,8 @@ var jsModuleWrapper = function() {
         // kontener na dane wejściowe do obliczeń
         let responseText = jQuery(soapData).find("return");
 
-        // Firefox, Chrome
         if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
             responseText = responseText[0].innerHTML;
-        else// IE8
-            responseText = responseText.prevObject[1].innerText;
 
         if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
             calculationsEnded();
@@ -103,7 +105,9 @@ var jsModuleWrapper = function() {
 
         if (dataObject !== null) {
             console.info("Testowanie: [" + dataObject.toString() + "]");
-            //$('#computing-status').html("Testowanie: [" + dataObject.toString() + "]");
+
+            if (getStatus !== undefined)
+                $('#text-status').html(getStatus(dataObject));
 
             ww.run(dataObject, function(result) {
                 console.log("Wynik obliczeń: " + result);
@@ -134,4 +138,9 @@ var jsModuleWrapper = function() {
             });
         }
     };
+
+
+    function isFunction(functionToCheck) {
+        return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+    }
 };

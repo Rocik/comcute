@@ -139,8 +139,9 @@ $side-pane-margins: 21px !default;
 
 .expanded {
     height: 8px;
-    animation: fadein 1s;
     border: 1px solid #ddd;
+
+    animation: fadein 1s;
 }
 
 
@@ -151,8 +152,42 @@ $side-pane-margins: 21px !default;
 
 .collapsed {
     height: 0px;
-    animation: fadeout 1s;
     border: none;
+
+    animation: fadeout 1s;
+}
+
+
+#computing-status {
+    font-family: Arial, sans-serif;
+    background: #fcfcfc;
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,.2);
+    overflow: hidden;
+
+    #text-status {
+        line-height: 1;
+        margin: $spacing-unit * 0.5;
+    }
+
+    @include media-query($header-width) {
+        box-shadow: none;
+    }
+}
+
+.visible {
+    max-height: 720px;
+    margin-top: $spacing-unit / 2;
+    margin-bottom: $spacing-unit / 3;
+
+    @include transition((margin 0.3s, max-height 1s ease-in));
+    animation: fadein 1s;
+}
+
+.hidden {
+    max-height: 0;
+    margin: 0;
+
+    @include transition((margin 0.4s, max-height 0.2s));
 }
 
 
@@ -173,8 +208,9 @@ $side-pane-margins: 21px !default;
 
 
 .site-nav {
+    font-family: Arial, sans-serif;
     text-transform: uppercase;
-    padding-top: $spacing-unit * 0.6 + 2;
+    padding-top: $spacing-unit * 0.6;
     padding-bottom: $spacing-unit * 0.6;
     line-height: 1;
 

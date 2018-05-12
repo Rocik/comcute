@@ -4,16 +4,23 @@
  * @author Waldemar Korłub, na bazie implementacji PrimeCode.js Adama Polaka
  */
 
+function comcuteGetStatus(input) {
+     var dataRange = input.split(" ");
+     var start = new BigInteger(dataRange[0]);
+     var size = new BigInteger(dataRange[1]);
+
+     return "Testowanie od " + start.toString() + " do " + start.add(size).toString();
+ }
+
 function collatzIntervals(dataObject) {
-    var progress = 0;
-    var result = "";
+    let progress = 0;
 
     /**
      * Funkcja wykonująca obliczenia, jest wywoływana przez JSModuleWrapper
      *
      * @param input dane wejściowe dla problemu
      */
-    function compute2(input) {
+    function compute(input) {
         var dataRange = input.split(" ");
 
         var start = new BigInteger(dataRange[0]);
@@ -22,14 +29,10 @@ function collatzIntervals(dataObject) {
         progress = 0;
         step = 1 / dataRange[1] * 100;
 
-        //if(window.$ !== undefined){
-        //    $('#computing-status').html("Testowanie: [" + start.toString() + ", " + start.add(size).toString() + "]");
-        //}
-
-        return testRange2(start, start.add(size), step);
+        return testRange(start, start.add(size), step);
     }
 
-    function testRange2(start, end, step){
+    function testRange(start, end, step){
         one = new BigInteger("1");
         potentiallyNonconforming = "";
 
@@ -45,22 +48,13 @@ function collatzIntervals(dataObject) {
 
             progress += step;
             updateProgress(progress);
-            /*$('.progress').css("width", progress + "%");
-
-            currentTime = new Date().getTime();
-
-            if(currentTime - startTime > COMPUTATION_TIME){
-                //alert("testRange(new BigInteger(\"" + n + "\"), new BigInteger(\"" + end + "\"))");
-                setTimeout("testRange2(new BigInteger(\"" + n + "\"), new BigInteger(\"" + end + "\"), " + step + ")", COMPUTATION_INTERVAL);
-                break;
-            }*/
         }
 
         if (n.compareTo(end) > 0) {
             packageProcessed = true;
         }
 
-        result += potentiallyNonconforming + " ";
+        return potentiallyNonconforming;
     }
 
 
@@ -90,6 +84,5 @@ function collatzIntervals(dataObject) {
         return true;
     }
 
-    compute2(dataObject);
-    return result;
+    return compute(dataObject);
 }

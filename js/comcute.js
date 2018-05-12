@@ -13,6 +13,8 @@ jQuery(document).ready(function($) {
         $('#comcute-start').removeAttr("style");
         $('#comcute-stop').css("display", "none");
         $('#progressbar').addClass('collapsed').removeClass('expanded');
+        $('.progress').css("width", "0%");
+        $('#computing-status').addClass('hidden').removeClass('visible');
         jsL.unregister();
     });
 

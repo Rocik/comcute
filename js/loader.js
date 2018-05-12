@@ -19,6 +19,7 @@ var Loader = function() {
     let sServiceUrl;
     let sServiceNamespace;
     let computeModule;
+    let computeStatusFunction;
 
     // Główna funkcja JsLoader'a wywoływana po załadowaniu strony.
     // Pobiera kod obliczeniowy od serwera S i wysyła dane
@@ -99,11 +100,6 @@ var Loader = function() {
     }
 
 
-    function runComcute() {
-        jsMW.getData(taskId, computeModule);
-    }
-
-
     function fetchComcute(newLocation, newTaskId) {
         jQuery.ajax({
             url: newLocation,
@@ -112,12 +108,18 @@ var Loader = function() {
                 taskId = newTaskId;
                 moduleLocation = newLocation;
                 computeModule = collatzIntervals;
+                computeStatusFunction = comcuteGetStatus;
                 runComcute();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
             }
         });
+    }
+
+
+    function runComcute() {
+        jsMW.getData(taskId, computeModule, computeStatusFunction);
     }
 
 
