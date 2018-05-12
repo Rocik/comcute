@@ -6,9 +6,13 @@ $side-pane-margins: 21px !default;
     position: relative;
     min-height: $spacing-unit * 1.865;
 
-    padding-top: $spacing-unit * 0.75;
+    padding-top: $spacing-unit * 0.5;
 
     @include animation(fadein 0.3s both 0.15s);
+
+    @include media-query($header-width) {
+        padding-top: $spacing-unit * 0.25;
+    }
 
     a {
         text-decoration: none;
