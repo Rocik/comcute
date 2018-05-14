@@ -23,13 +23,17 @@ function WW(javaScriptFunction) {
     this.import = function() {
         const baseUrl = getBaseDomainUrl();
 
-        for (var argument of arguments) {
-            const argUrl = new URL(argument, baseUrl);
-            const fullPath = argUrl.href;
+        for (var argument of arguments) { // TODO: test different domain scripts
+            let argUrl = new URL(argument, baseUrl);
+            let fullPath = argUrl.href;
             includes.push(fullPath);
 
             if (Array.isArray(workers) && workers.length)
-                workers[0].postMessage({type: 'import', data: fullPath});
+                workers[0].postMessage({
+                    type: 'import',
+                    data: fullPath,
+                    location: window.location.toString()
+                });
         }
     }
 
@@ -92,6 +96,11 @@ function WW(javaScriptFunction) {
                 workers[0].callback(msg.data.data);
                 workers[0].isBusy = false;
                 break;
+            case 'import':
+                var index = includes.indexOf(msg.data.oldFilename);
+                if (index !== -1)
+                    includes[index] = msg.data.newFilename;
+                break;
             default:
                 throw 'Unknown worker message type';
         }
@@ -122,14 +131,49 @@ function WW(javaScriptFunction) {
                     break;
                 case "import":
                     const includes = msg.data.data;
+
                     if (Array.isArray(includes) && includes.length)
                         self.importScripts(includes);
-                    else if (typeof includes === 'string')
-                        self.importScripts(includes);
+                    else if (typeof includes === 'string') {
+                        try {
+                            self.importScripts(includes);
+                        } catch (e) {
+                            const url = new URL(includes);
+                            const selfUrl = new URL(msg.data.location);
+                            if (!loadScriptOnSubdomainFolder(url, selfUrl))
+                                throw e;
+                        }
+                    }
                     break;
                 default:
                     throw "";
             }
+        }
+
+
+        function loadScriptOnSubdomainFolder(url, selfUrl) {
+            if (url.origin == selfUrl.origin) {
+                const subdir = selfUrl.pathname.split('/', 2)[1];
+
+                if (subdir != url.pathname.split('/', 2)[1]) {
+                    const newPath = url.origin + '/' + subdir + url.pathname;
+
+                    try {
+                        self.importScripts(newPath);
+                    } catch (e) {
+                        return false;
+                    }
+
+                    self.postMessage({
+                        type: 'import',
+                        oldFilename: url.toString(),
+                        newFilename: newPath
+                    });
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
