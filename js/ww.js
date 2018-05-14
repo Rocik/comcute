@@ -21,13 +21,15 @@ function WW(javaScriptFunction) {
 
 
     this.import = function() {
-        const url = getDomainUrl();
+        const baseUrl = getBaseDomainUrl();
 
         for (var argument of arguments) {
-            const script = url + argument;
-            includes.push(script);
+            const argUrl = new URL(argument, baseUrl);
+            const fullPath = argUrl.href;
+            includes.push(fullPath);
+
             if (Array.isArray(workers) && workers.length)
-                workers[0].postMessage({type: 'import', data: script});
+                workers[0].postMessage({type: 'import', data: fullPath});
         }
     }
 
@@ -72,8 +74,8 @@ function WW(javaScriptFunction) {
     }
 
 
-    function getDomainUrl() {
-        const url = window.location.href;
+    function getBaseDomainUrl() {
+        const url = window.location.origin;
         if (url.slice(-1) === '/')
             return url;
         return url + '/';

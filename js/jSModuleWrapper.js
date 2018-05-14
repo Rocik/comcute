@@ -26,7 +26,7 @@ var jsModuleWrapper = function() {
 
         if (ww === undefined) {
             ww = new WW(computeModule);
-            ww.import('/js/jsbn.js', '/js/jsbn2.js');
+            ww.import('/js/jsbn.js', 'js/jsbn2.js');
             ww.onProgressChanged = (p) => {
                 $('.progress').css("width", p + "%");
             };
