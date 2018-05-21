@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Efektywne zrównoleglanie obliczeń w systemie klasy grid na przykładzie hipotezy Collatza"
-date:   2018-03-14 22:45:58 +0100
+lang: pl
+title: "Efektywne zrównoleglanie obliczeń w systemie klasy grid na przykładzie hipotezy Collatza"
+date: 2018-03-14 22:00:00 +0100
 categories: comcute
 ---
 W rozdziale zaprezentowano problem Collatza oraz sposób jego adaptacji, pozwalający na realizację obliczeń w systemie typu grid. Zidentyfikowano również pożądane cechy problemów obliczeniowych, dzięki którym mogą one zostać zrównoleglone w sposób efektywny w systemach typu grid i porównano je z cechami zadań realizowanych typowo przy użyciu klastrów obliczeniowych.

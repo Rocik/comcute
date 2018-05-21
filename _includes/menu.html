@@ -1,9 +1,8 @@
-<div class="spacer">
+{% assign lang = site.active_lang %}
 {%- assign default_paths = site.pages | map: "path" -%}
 {%- assign page_paths = site.header_pages | default: default_paths -%}
-
-{%- if page_paths -%}
-<nav class="site-nav">
+<div class="spacer">
+<div class="nav-container">
     <input type="checkbox" id="nav-trigger" class="nav-trigger" />
     <label for="nav-trigger">
         <span class="menu-icon noselect">
@@ -14,8 +13,8 @@
             </svg>
         </span>
     </label>
-
-    <div class="trigger">
+    {%- if page_paths -%}
+    <nav class="site-nav trigger">
         {%- for path in page_paths -%}
             {%- assign my_page = site.pages | where: "path", path | first -%}
             {%- if my_page.title and my_page.url == page.url -%}
@@ -24,7 +23,20 @@
                 <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
             {%- endif -%}
         {% endfor -%}
-    </div>
-</nav>
-{%- endif -%}
+    </nav>
+    {%- endif -%}
+    <span id="languages" class="trigger">
+        {% for tongue in site.languages %}
+        <span>
+            {% if tongue == site.default_lang %}
+            <a hreflang="{{ tongue }}" href='{{ site.baseurl | append: page.url }}'>
+            {% else %}
+            <a hreflang="{{ tongue }}" href="{{ site.baseurl | append: '/' | append: tongue | append: page.url }}">
+            {% endif %}
+                <img src="{{ "/images/" | append: tongue | append: ".png" | relative_url }}"/>
+            </a>
+        </span>
+        {% endfor %}
+    </span>
+</div>
 </div>

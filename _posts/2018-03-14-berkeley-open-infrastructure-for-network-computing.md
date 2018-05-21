@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Berkeley Open Infrastructure for Network Computing"
-date:   2018-03-14 14:44:58 +0100
+lang: pl
+title: "Berkeley Open Infrastructure for Network Computing"
+date: 2018-03-14 14:00:00 +0100
 categories: comcute
 authors:
  - name: "Piotr Brudło"

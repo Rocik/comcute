@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Bezpieczeństwo w monitoringu"
-date:   2018-03-14 21:44:58 +0100
+lang: pl
+title: "Bezpieczeństwo w monitoringu"
+date: 2018-03-14 21:00:00 +0100
 categories: comcute
 authors:
  - name: "Piotr Brudło"

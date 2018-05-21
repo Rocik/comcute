@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych"
-date:   2018-03-14 18:44:58 +0100
+lang: pl
+title: "Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych"
+date: 2018-03-14 18:00:00 +0100
 categories: comcute
 authors:
  - name: "Jerzy Balicki"

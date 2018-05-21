@@ -3,7 +3,7 @@
         <a href="{{ include.file | relative_url }}">
             <img src="{{ include.file | relative_url }}" alt="{{ include.alt }}" title="{{ include.caption }}"/>
         </a>
-        {% if include.caption %}
+        {% if include.caption and include.nodisp != true %}
         <figcaption>{{ include.caption }}</figcaption>
         {% endif %}
         {% if include.rcaption %}

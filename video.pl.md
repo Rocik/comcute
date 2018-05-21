@@ -1,7 +1,8 @@
 ---
 layout: default
 title: Wideo
-permalink: /wideo/
+lang: pl
+permalink: /video/
 ---
 
 ## Symulacja rozprzestrzeniania się ognia

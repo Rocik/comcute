@@ -192,9 +192,6 @@ table {
 }
 
 
-/**
- * Description list
- */
 dl {
     margin-left: $spacing-unit / 2;
 }
@@ -202,4 +199,38 @@ dl {
 dd {
     margin-left: $spacing-unit / 2;
     margin-bottom: $spacing-unit / 3;
+}
+
+
+.flex-table {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: $spacing-unit / 1.5;
+
+    div {
+        flex: auto;
+        width: 50%;
+    }
+
+    p {
+        width: 100%;
+        text-align: center;
+    }
+
+    .caption {
+        font-weight: bold;
+    }
+}
+
+
+.flex-center {
+    div:nth-of-type(odd) figure {
+        margin-left: auto;
+        margin-right: $spacing-unit / 2;
+    }
+
+    div:nth-of-type(even) figure {
+        margin-left: $spacing-unit / 2;
+        margin-right: auto;
+    }
 }

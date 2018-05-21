@@ -1,0 +1,47 @@
+pg_title:
+   pl: Politechnika Gdańska
+   en: Gdansk University of Technology
+
+eti_title:
+    pl: Wydział Elektroniki, Telekomunikacji i Informatyki
+    en: Faculty of Electronics, Telecommunications and Informatics
+
+eti_alt:
+    pl: Wydział ETI
+    en: ETI Faculty
+
+comcute_button_start:
+    pl: Rozpocznij przetwarzanie
+    en: Start computing
+
+comcute_button_stop:
+    pl: Przerwij przetwarzanie
+    en: Stop computing
+
+side_pane_h1:
+    pl: Systemy obliczeń rozproszonych
+    en: Distributed computing systems
+side_pane_h2:
+    pl: System COMCUTE
+    en: COMCUTE System
+side_pane_h3:
+    pl: Wybrane zastosowania
+    en: Selected applications
+side_pane_h4:
+    pl: Uczestnicy projektu
+    en: Project’s participants
+side_pane_h5:
+    pl: Podobne projekty
+    en: Similar projects
+
+footer_kask:
+    pl: Katedra Architektury Systemów Komputerowych
+    en: Department of Computer Architecture
+
+footer_project_text:
+    pl: Projekt finansowany ze środków na naukę przez NCBIR MNISW w latach 2010-2012 jako projekt rozwojowy numer OR00010811.
+    en: This research work was partially supported by the Ministry of Science and Higher Education of Poland under Grant OR00010811.
+
+footer_authors:
+    pl: Wykonane przez zespół Comcute.
+    en: Made by the Comcute team.

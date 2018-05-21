@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Rozproszone łamanie szyfrów"
-date:   2018-03-14 21:45:58 +0100
+lang: pl
+title: "Rozproszone łamanie szyfrów"
+date: 2018-03-14 21:00:00 +0100
 categories: comcute
 authors:
  - name: "Piotr Szpryngier"

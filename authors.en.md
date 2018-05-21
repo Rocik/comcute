@@ -1,10 +1,11 @@
 ---
 layout: default
-title: Autorzy
+title: Authors
+lang: en
 permalink: /authors/
 ---
 
-## Zespół Comcute:
+## Comcute Team:
  - [Waldemar Korłub](mailto:stawrul@gmail.com)
  - [Piotr Brudło](mailto:pebrd@eti.pg.gda.pl)
  - [Paweł Czarnul](mailto:pczarnul@eti.pg.gda.pl)
@@ -13,6 +14,6 @@ permalink: /authors/
  - [Piotr Szpryngier](mailto:piotrs@eti.pg.gda.pl)
  - [Tomasz Boiński](mailto:tobo@eti.pg.gda.pl)
 
-## Autorzy strony:
+## Webpage authors:
  - Radosław Rott
  - Mateusz Kujawski

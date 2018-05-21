@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Mechanizmy bezpieczeństwa w systemie Comcute"
-date:   2018-03-14 19:44:58 +0100
+lang: pl
+title: "Mechanizmy bezpieczeństwa w systemie Comcute"
+date: 2018-03-14 19:00:00 +0100
 categories: comcute
 authors:
  - name: "Piotr Szpryngier"
@@ -48,29 +49,30 @@ Ogólny model warstwowy zarządzania bezpieczeństwem można przedstawiono w tab
 **Tab. 12.1. Warstwy ogólnego systemu zarządzania bezpieczeństwem**
 {: style="text-align: center;"}
 
-Zarządzanie bezpieczeństwem<br/>(aplikacje, bazy danych, EDE, e-mail, itp.)
+Zarządzanie bezpieczeństwem
+<br />
+(aplikacje, bazy danych, EDE, e-mail, itp.)
 {: style="text-align: center;"}
-
 ---
-
-Agenci bezpieczeństwa, Protokoły bezpieczeństwa<br/>(uwierzytelnianie, zarządzanie kluczami, itp)
+Agenci bezpieczeństwa, Protokoły bezpieczeństwa
+<br />
+(uwierzytelnianie, zarządzanie kluczami, itp)
 {: style="text-align: center;"}
-
 ---
-
-Usługi bezpieczeństwa<br/>(poufność, integralność, niezaprzeczalność, itp.)
+Usługi bezpieczeństwa
+<br />
+(poufność, integralność, niezaprzeczalność, itp.)
 {: style="text-align: center;"}
-
 ---
-
-Mechanizmy bezpieczeństwa<br/>(podpis cyfrowy, uwierzytelnianie)
+Mechanizmy bezpieczeństwa
+<br />
+(podpis cyfrowy, uwierzytelnianie)
 {: style="text-align: center;"}
-
 ---
-
-Moduły podstawowe<br/>(algorytmy, tryby pracy)
+Moduły podstawowe
+<br />
+(algorytmy, tryby pracy)
 {: style="text-align: center;"}
-
 ---
 
 W ramach niniejszego rozdziału przedyskutowano elementy z warstwy 3 (usługi bezpieczeństwa) wraz z mechanizmami (warstwa 2 – powszechnie znane i opracowane) i częściowo protokoły bezpieczeństwa (warstwa 4). Elementy zarządzania bezpieczeństwem muszą być powiązane z polityką bezpieczeństwa (której tu nie opisujemy), natomiast podstawowe moduły bezpieczeństwa (algorytmy, tryby pracy, generatory kluczy, itp.) są powszechnie znane i opracowane [3,4,5,6]. Objaśnimy tu jedynie dwa podstawowe protokoły służące do budowy podstawowych mechanizmów bezpieczeństwa. Pierwszy z nich to protokół przesyłania wiadomości zaszyfrowanej łącznie z sesyjnym kluczem szyfrującym [3,4,5,6]. Celem tego protokołu jest zapewnienie poufności treści przesyłanej wiadomości, a także wiarygodności jej odbiorcy. Przebiega on następująco:

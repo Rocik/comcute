@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Analiza istniejących obliczeń uruchamianych w ramach systemów rozproszonych"
-date:   2018-03-14 15:44:58 +0100
+lang: pl
+title: "Analiza istniejących obliczeń uruchamianych w ramach systemów rozproszonych"
+date: 2018-03-14 15:00:00 +0100
 categories: comcute
 authors:
  - name: "Paweł Czarnul"

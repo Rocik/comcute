@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Optymalizacja równoważenia obciążeń w systemach klasy grid"
-date:   2018-03-14 20:44:58 +0100
+lang: pl
+title: "Optymalizacja równoważenia obciążeń w systemach klasy grid"
+date: 2018-03-14 20:00:00 +0100
 categories: comcute
 authors:
  - name: "Jerzy Balicki"

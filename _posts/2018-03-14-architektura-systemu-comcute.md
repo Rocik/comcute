@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Architektura systemu Comcute"
-date:   2018-03-14 17:44:58 +0100
+lang: pl
+title: "Architektura systemu Comcute"
+date: 2018-03-14 17:00:00 +0100
 categories: comcute
 authors:
  - name: "Mariusz Matuszek"

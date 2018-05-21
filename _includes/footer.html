@@ -1,26 +1,20 @@
 <footer class="site-footer">
-
     <div class="spacer">
-
         <div class="footer-wrapper">
-            <a href="https://eti.pg.edu.pl/katedra-architektury-systemow-komputerowych" title="Katedra Architektury Systemów Komputerowych" rel="external">Katedra Architektury Systemów Komputerowych</a>
-            |
-            <a href="https://eti.pg.edu.pl" title="Wydział Elektroniki, Telekomunikacji i Informatyki" rel="external">Wydział Elektroniki, Telekomunikacji i Informatyki</a>
-            |
-            <a href="https://pg.edu.pl" title="Politechnika Gdańska" rel="external" class="footer-next-link">Politechnika Gdańska</a>
+            <a href="https://eti.pg.edu.pl/katedra-architektury-systemow-komputerowych" title="{% tl footer_kask %}" rel="external">{% tl footer_kask %}</a>
+            <span>|</span>
+            <a href="https://eti.pg.edu.pl" title="{% tl eti_title %}" rel="external">{% tl eti_title %}</a>
+            <span>|</span>
+            <a href="https://pg.edu.pl" title="{% tl pg_title %}" rel="external" class="footer-next-link">{% tl pg_title %}</a>
 
             <div class="footer-about">
                 <p>
+                    <div>{% tl footer_project_text %}</div>
                     <div>
-                        Projekt finansowany ze środków na naukę przez NCBIR MNISW w latach 2010-2012 jako projekt rozwojowy numer OR00010811.
-                    </div>
-                    <div>
-                        <a title="Wykonane przez zespół Comcute" href="{{ "/authors/" | relative_url }}">Wykonane przez zespół Comcute</a>
+                        <a title="Wykonane przez zespół Comcute" href="{{ "/authors/" | relative_url }}">{% tl footer_authors %}</a>
                     </div>
                 </p>
             </div>
         </div>
-
     </div>
-
 </footer>

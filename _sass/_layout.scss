@@ -32,6 +32,11 @@ $side-pane-margins: 21px !default;
         display: block;
         text-align: center;
     }
+
+    @include media-query($header-width) {
+        margin-left: $spacing-unit * 0.5;
+        margin-right: $spacing-unit * 0.5;
+    }
 }
 
 .logo {
@@ -211,12 +216,13 @@ $side-pane-margins: 21px !default;
 }
 
 
-.site-nav {
-    font-family: Arial, sans-serif;
-    text-transform: uppercase;
-    padding-top: $spacing-unit * 0.6;
-    padding-bottom: $spacing-unit * 0.6;
-    line-height: 1;
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 2em;
+    padding-top: $spacing-unit * 0.3;
+    padding-bottom: $spacing-unit * 0.3;
 
     .nav-trigger {
         display: none;
@@ -240,18 +246,30 @@ $side-pane-margins: 21px !default;
         }
     }
 
-    #page-current {
-        border-bottom: 2px solid #5178BC;
+
+    #languages {
+        font-size: 0px;
+
+        span {
+            margin-left: $spacing-unit * 0.5;
+        }
     }
 
+
     @include media-query($on-palm) {
+        display: block;
         float: right;
+        height: auto;
         margin-top: $spacing-unit / 4;
         padding: 0;
-        background-color: $background-color;
         border: 1px solid $grey-color-light;
         border-radius: 5px;
+        background-color: $background-color;
         text-align: right;
+
+        .site-nav {
+            padding: 0;
+        }
 
         label[for="nav-trigger"] {
             display: block;
@@ -293,13 +311,32 @@ $side-pane-margins: 21px !default;
             &:not(:last-child) {
                 margin-right: 0;
             }
-            margin-left: 20px;
+            margin-left: 10px;
         }
 
         #page-current {
             border-bottom: none;
             font-weight: bold;
         }
+
+        #languages {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+
+.site-nav {
+    display: inline-block;
+    flex-grow: 1;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    line-height: 1;
+    vertical-align: middle;
+
+    #page-current {
+        border-bottom: 2px solid #5178BC;
     }
 }
 
@@ -501,7 +538,7 @@ figcaption {
     top: 6px;
     height: 20px;
     width: 20px;
-    background: url("images/more_less.png") no-repeat scroll top right transparent;
+    background: url("/images/more_less.png") no-repeat scroll top right transparent;
     color: #4A4A4A;
     cursor: pointer;
     opacity: 0.2;
@@ -556,7 +593,7 @@ figcaption {
     }
 
     .spacer-panel {
-        padding: 10px $side-pane-margins 0 0;
+        padding: $spacing-unit * 0.5 $side-pane-margins 0 0;
     }
 
     .cover {
@@ -586,4 +623,7 @@ figcaption {
 .footer-about {
     color: $grey-color;
     margin-top: $spacing-unit / 2;
+    a {
+        color: $grey-color;
+    }
 }
