@@ -538,7 +538,7 @@ figcaption {
     top: 6px;
     height: 20px;
     width: 20px;
-    background: url("/images/more_less.png") no-repeat scroll top right transparent;
+    background: url($baseurl + "/images/more_less.png") no-repeat scroll top right transparent;
     color: #4A4A4A;
     cursor: pointer;
     opacity: 0.2;
