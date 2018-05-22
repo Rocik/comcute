@@ -34,7 +34,7 @@ var Loader = function() {
         ];
 
         // Pobranie kodu obliczeniowego od serwera S
-        jQuery.webservice({
+        $.webservice({
             url: LOADER_SERVICE_URL,
             nameSpace: LOADER_SERVICE_NAMESPACE,
             methodName: "GetTask",
@@ -62,7 +62,7 @@ var Loader = function() {
             return;
 
         // wyciągnięcie odpowiedzi
-        const rawResponseText = jQuery(soapData).find("return");
+        const rawResponseText = $(soapData).find("return");
         const responseText = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
             ? rawResponseText[0].innerHTML
             : rawResponseText.prevObject[1].innerText;
@@ -72,8 +72,8 @@ var Loader = function() {
 
         // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
         const embedHtml = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
-            ? jQuery(htmlDecode(responseText))
-            : jQuery(responseText);
+            ? $(htmlDecode(responseText))
+            : $(responseText);
 
         if (embedHtml.length === 0)
             return;
@@ -85,7 +85,7 @@ var Loader = function() {
         eval(sResponse);
 
         // pobranie i umieszczenie na stronie skryptu kodu osadzającego
-        jQuery('#container').append(jQuery("#embedScript"));
+        $('#container').append($("#embedScript"));
 
         // utworzenie i załadowanie skryptu obliczeniowego
         if (MODULE_TYPE === "JavaScript") {
@@ -101,7 +101,7 @@ var Loader = function() {
 
 
     function fetchComcute(newLocation, newTaskId) {
-        jQuery.ajax({
+        $.ajax({
             url: newLocation,
             dataType: 'script',
             success: function(data) {
@@ -125,6 +125,6 @@ var Loader = function() {
 
     // dekoduje string do tagów html
     function htmlDecode(value) {
-        return jQuery('<p/>').html(value).text();
+        return $('<p/>').html(value).text();
     }
 };

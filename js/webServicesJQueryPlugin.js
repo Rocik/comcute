@@ -107,11 +107,7 @@ jQuery.webservice = function (options) {
                 break;
         }
 
-        /*
-        *Podstawowa wersja pluginu wyrzuca błąd bo wywołaniu $.ajax(...)
-        *dla IE 8 dlatego dla tej przeglądarki używany jest inny kod
-        */
-        if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) { // firefox, chrome
+        if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) {
             $.ajax({ type: settings.methodType,
                 cache: false,
                 url: settings.url,
@@ -127,20 +123,6 @@ jQuery.webservice = function (options) {
                     }
                 }
             });
-        } else { // IE 8
-            var xdr = new XDomainRequest();
-            xdr.open(settings.methodType, settings.url);
-            xdr.onload = function () {
-                if (undefined !== settings.success) {
-                    settings.success(this.responseText, 'success');
-                }
-            }
-            xdr.onerror = function () {
-               if (undefined !== settings.error) {
-                    settings.error('0', '', xdr.responseText);
-                }
-            }
-            xdr.send(settings.requestData);
         }
     }
     catch (err) {

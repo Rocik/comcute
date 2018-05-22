@@ -57,7 +57,7 @@ var jsModuleWrapper = function() {
         const getDataArguments = [taskId];
 
         // Pobranie danych obliczeniowych
-        jQuery.webservice({
+        $.webservice({
             url: parent.sServiceUrl,
             nameSpace: parent.sServiceNamespace,
             methodName: "GetData",
@@ -84,7 +84,7 @@ var jsModuleWrapper = function() {
         }
 
         // kontener na dane wejściowe do obliczeń
-        let responseText = jQuery(soapData).find("return");
+        let responseText = $(soapData).find("return");
 
         if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
             responseText = responseText[0].innerHTML;
@@ -98,7 +98,7 @@ var jsModuleWrapper = function() {
             return;
 
         // Konwersja odpowiedzi serwera S na zmienne
-        const responseJSON = jQuery.parseJSON(responseText);
+        const responseJSON = $.parseJSON(responseText);
         const dataTaskID = responseJSON[0]; // id zadania, zserializowane UUID
         const dataID     = responseJSON[1]; // id danych, zserializowane UUID
         const dataObject = responseJSON[2];
@@ -121,7 +121,7 @@ var jsModuleWrapper = function() {
                 ];
 
                 // wysyłanie wyników
-                jQuery.webservice({
+                $.webservice({
                     url: parent.sServiceUrl,
                     nameSpace: parent.sServiceNamespace,
                     methodName: "SaveResult",
