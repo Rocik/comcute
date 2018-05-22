@@ -33,7 +33,7 @@
             {% else %}
             <a hreflang="{{ tongue }}" href="{{ site.baseurl | append: '/' | append: tongue | append: page.url }}">
             {% endif %}
-                <img src="{{ "/images/" | append: tongue | append: ".png" | relative_url }}"/>
+                <img src="{{ "/images/" | append: tongue | append: ".png" | relative_url }}" alt="{{ tongue }}"/>
             </a>
         </span>
         {% endfor %}
