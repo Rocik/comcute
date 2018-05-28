@@ -36,7 +36,7 @@ header_pages:
 
 languages: ["pl", "en"]
 default_lang: "pl"
-exclude_from_localization: ["js", "images", "main.css", "videos", "en"]
+exclude_from_localization: ["js", "images", "videos", "css"]
 parallel_localization: false
 
 # Exclude from processing.
