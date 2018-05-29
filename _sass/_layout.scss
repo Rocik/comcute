@@ -608,15 +608,13 @@ figcaption {
 .site-footer {
     border-top: 1px solid $grey-color-light;
     padding-top: $spacing-unit / 1.5;
+    padding-bottom: $spacing-unit / 1.5;
 
     @include relative-font-size(0.8);
 }
 
 .footer-wrapper {
     color: $grey-color-dark;
-    padding-left: $spacing-unit / 2;
-    margin-left: -$spacing-unit / 2;
-    margin-bottom: $spacing-unit / 2;
     @extend %clearfix;
 }
 
