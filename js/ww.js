@@ -32,7 +32,7 @@ function WW(javaScriptFunction) {
                 workers[0].postMessage({
                     type: 'import',
                     data: fullPath,
-                    location: window.location.toString()
+                    location: getStringifiedLocation()
                 });
         }
     }
@@ -86,6 +86,13 @@ function WW(javaScriptFunction) {
     }
 
 
+    const getStringifiedLocation = () => {
+        if (this.testLocation !== undefined)
+            return this.testLocation;
+        return window.location.toString();
+    }
+
+
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
             case 'progress':
@@ -136,6 +143,7 @@ function WW(javaScriptFunction) {
                         self.importScripts(includes);
                     else if (typeof includes === 'string') {
                         try {
+                            console.log(msg.data.location);
                             self.importScripts(includes);
                         } catch (e) {
                             const url = new URL(includes);
