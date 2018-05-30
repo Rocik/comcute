@@ -4,9 +4,7 @@ lang: en
 title: "Multi Agent Grid Systems"
 date: 2018-03-14 10:00:00 +0100
 categories: comcute
-authors:
- - name: "Michał Wójcik"
-   email: michal.wojcik@eti.pg.gda.pl
+authors: [ MichalWojcik ]
 ---
 
 This chapter presents an idea of merging grid and volunteer systems with multi agent systems. It gives some basics concerning multi agent system and the most followed standard. Some deliberations concerning such an existing systems were made in order to finally present possibilities of introducing agents into the Comcute system.

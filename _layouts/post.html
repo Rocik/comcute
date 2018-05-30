@@ -13,12 +13,13 @@ layout: default
         {% elsif authorCount > 1 %} Autorzy:
         {% endif %}
         {% for author in page.authors %}
+            {% assign authorData = site.data.authors[author] %}
             <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                {% if author.email %}
-                <a href="mailto:{{ author.email }}" title="{{ author.name }}">
+                {% if authorData.email %}
+                <a href="mailto:{{ authorData.email }}" title="{{ authorData.name }}">
                 {% endif %}
                 <span class="p-author h-card" itemprop="name">
-                    {{ author.name }}</span>{% if author.email %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
+                    {{ authorData.name }}</span>{% if authorData.email %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
         {% endfor %}
         </p>
     </header>

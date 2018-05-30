@@ -2,7 +2,7 @@
 layout: post
 lang: pl
 title: "Bezpieczeństwo transferu zestrukturalizowanych plików XML w sieci grid w oparciu o usługi Web Service poprzez protokół SOAP"
-date:   2018-03-14 16:00:00 +0100
+date: 2018-03-14 16:00:00 +0100
 categories: comcute
 ---
 Niezależny protokół SOAP (ang. Simple Object Access Protocol) działający głównie ponad protokołem HTTP (inne protokoły transportowe to np. MSMQ, MQ Series, SMTP lub TCP/IP) posiada na dzień dzisiejszy wiele rozwiązań dotyczących bezpieczeństwa transferu zestrukturalizowanych plików XML (ang. Extensible Markup Language).W rozdziale zaprezentowano sposoby zapobiegania nieautoryzowanym dostępom do danych przesyłanych w sieci grid przy pomocy rozproszonych komponentów udostępniających usługi Web Service poprzez protokół SOAP.

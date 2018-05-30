@@ -4,9 +4,7 @@ lang: en
 title: "Security Mechanisms in the Comcute System"
 date: 2018-03-14 19:00:00 +0100
 categories: comcute
-authors:
- - name: "Piotr Szpryngier"
-   email: piotrs@eti.pg.edu.pl
+authors: [ PiotrSzpryngier ]
 ---
 
 The aim of this paper is pointing out the basic security problems and mechanisms in the Comcute system – maintenance system of large computing power in the face of critical crisis. Moreover security mechanism and tools useful to apply in laboratory model as well as target version of the Comcute system are presented.

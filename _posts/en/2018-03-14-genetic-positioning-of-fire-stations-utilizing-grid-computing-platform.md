@@ -4,13 +4,7 @@ lang: en
 title: "Genetic Positioning of Fire Stations Utilizing Grid-computing Platform "
 date: 2018-03-14 21:00:00 +0100
 categories: comcute
-authors:
- - name: "Jerzy Balicki"
-   email: pebrd@eti.pg.gda.pl
- - name: "Waldemar Korłub"
-   email: stawrul@gmail.com
- - name: "Henryk Krawczyk"
-   email: hkrawk@eti.pg.gda.pl
+authors: [ JerzyBalicki, WaldemarKorlub, HenrykKrawczyk ]
 ---
 
 A chapter presents a model for determining near-optimal locations of fire stations based on topography of a given area and location of forests, rivers, lakes and other elements of the site. The model is based on principals of genetic algorithms and utilizes the power of the grid to distribute and execute in parallel most performance-demanding computations involved in the algorithm.

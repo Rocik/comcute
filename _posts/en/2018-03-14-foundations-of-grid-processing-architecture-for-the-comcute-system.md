@@ -4,9 +4,7 @@ lang: en
 title: "Foundations of Grid Processing Architecture for the Comcute System"
 date: 2018-03-14 20:00:00 +0100
 categories: comcute
-authors:
- - name: "Piotr Brudło"
-   email: pebrd@eti.pg.gda.pl
+authors: [ PiotrBrudlo ]
 ---
 
 In the chapter, fundamental system algorithms and structures implemented in the Comcute system are described and analysed in detail. Layered architecture of the system model is highlighted. System tasks of the layers are elaborated, presented and described. Operational details of communication interfaces among layers are worked out and examined. The focus is put onto implemented system components with regard to their operability and efficiency. Scalability and system openness, as the key design factors of the implementation, are deliberatively taken into account. Important aspects of operability are addressed and the issues of validation, verification and deployment of the adopted system solutions are discussed. Practical application aspects of the Comcute system are described with respect to its final implementation and target installation in the form of grid processing in the open worldwide Internet.

@@ -4,9 +4,7 @@ lang: pl
 title: "Architektura systemu Comcute"
 date: 2018-03-14 17:00:00 +0100
 categories: comcute
-authors:
- - name: "Mariusz Matuszek"
-   email: Mariusz.Matuszek@pg.edu.pl
+authors: [ MariuszMatuszek ]
 ---
 
 W rozdziale przedstawiono architekturę systemu Comcute realizującego masywne przetwarzanie rozproszone wykorzystujące powszechny wolontariat użytkowników komputerów w sieciach rozległych.

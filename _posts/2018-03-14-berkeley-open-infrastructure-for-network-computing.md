@@ -4,9 +4,7 @@ lang: pl
 title: "Berkeley Open Infrastructure for Network Computing"
 date: 2018-03-14 14:00:00 +0100
 categories: comcute
-authors:
- - name: "Piotr Brudło"
-   email: pebrd@eti.pg.edu.pl
+authors: [ PiotrBrudlo ]
 ---
 
 W rozdziale skoncentrowano się na systemie BOINC (ang. *BerkeleyOpen Infrastructure for Network Computing*) jako interesującym rozwiązaniu integrującym rozproszone moce obliczeniowe osobistych komputerów typu PC w Internecie. Przedstawiono zasadę działania opisywanej platformy [1]. W dalszej części zaprezentowano kilka wybranych projektów naukowych wykorzystujących BOINC, które są reprezentatywne w zakresie zastosowania systemu w ujęciu założonego paradygmatu przetwarzania. Celem jest wprowadzenie w zagadnienia internetowego przetwarzania rozproszonego ze szczególnym zwróceniem uwagi na aspekty praktyczne. Pokazano szereg realizowanych projektów demonstrujących praktyczne wykorzystanie tego typu rozwiązań w przedsięwzięciach dużej skali [2].
