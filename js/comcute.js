@@ -1,5 +1,6 @@
-'use strict';
-jQuery(document).ready(function($) {
+$(document).ready(function() {
+    'use strict';
+
     var jsL = new Loader();
 
     $('#comcute-start').click(function(event) {
@@ -31,4 +32,4 @@ jQuery(document).ready(function($) {
             $('#panel').addClass('hidden');
         }
     });
-}(jQuery));
+}());

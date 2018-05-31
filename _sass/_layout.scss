@@ -178,6 +178,10 @@ $side-pane-margins: 21px !default;
         margin: $spacing-unit * 0.5;
     }
 
+    p {
+        margin: 0.2em 0 0 0.5em;
+    }
+
     @include media-query($header-width) {
         box-shadow: none;
     }

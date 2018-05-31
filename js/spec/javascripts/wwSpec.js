@@ -35,11 +35,14 @@ describe("Web Workers library", function() {
 
             ww.run(1, function(result) {
                 expect(result).toBe(2);
+                expect(ww.getUsedWorkers()).toBe(0);
                 ww.run(2, function(result) {
                     expect(result).toBe(3);
                     done();
                 });
+                expect(ww.getUsedWorkers()).toBe(1);
             });
+            expect(ww.getUsedWorkers()).toBe(1);
         });
 
         it("string function should increment value by 1", function(done) {
@@ -57,7 +60,7 @@ describe("Web Workers library", function() {
                     updateProgress(i, 100);
             });
 
-            var progress = 0;
+            let progress = 0;
             ww.onProgressChanged = (p) => {
                 progress++;
                 expect(p).toBeCloseTo(progress);
@@ -80,9 +83,7 @@ describe("Web Workers library", function() {
                 expect(p).toBeCloseTo(progress);
             };
 
-            ww.run(1, function(result) {
-                done();
-            });
+            ww.run(1, function() { done(); });
         });
     });
 
@@ -91,25 +92,9 @@ describe("Web Workers library", function() {
             const ww = new WW(inc);
             ww.dispose();
 
-            ww.run(1, function(result) {
+            ww.run(1, function() {
                 done.fail("Function has executed");
             });
-
-            setTimeout(function() {
-                expect(true).toBe(true);
-                done();
-            }, 500);
-        });
-
-        it("should do nothing when set while running", function(done) {
-            const ww = new WW(inc);
-
-            ww.run(1, function(result) {
-                done.fail("Function has executed");
-            });
-            setTimeout(function() {
-                ww.dispose();
-            }, 20);
 
             setTimeout(function() {
                 expect(true).toBe(true);
@@ -169,6 +154,143 @@ describe("Web Workers library", function() {
                 expect(result).toBe(true);
                 done();
             });
+        });
+
+        it("should work for multiple workers", function(done) {
+            const ww = new WW(testLib);
+            ww.import('jsbn.js');
+
+            let counter = 0;
+
+            ww.run(1, function(result) {
+                expect(result).toBe(true);
+                counter++;
+                if (counter == 2)
+                    done();
+            });
+
+            ww.run(1, function(result) {
+                expect(result).toBe(true);
+                counter++;
+                if (counter == 2)
+                    done();
+            });
+        });
+    });
+
+    describe("Running multiple jobs", function() {
+        beforeEach(function(done) {
+            setTimeout(function() {
+                done();
+            }, 1000);
+        });
+
+        it("can be queued on a single worker", function(done) {
+            const ww = new WW(inc);
+            ww.setWorkersAmount(1);
+
+            ww.run(1, function(result) {
+                expect(result).toBe(2);
+            });
+
+            ww.run(3, function(result) {
+                expect(result).toBe(4);
+                done();
+            });
+
+            expect(ww.getUsedWorkers()).toBe(1);
+        });
+
+        it("can be queued on a multiple workers", function(done) {
+            const ww = new WW(inc);
+            ww.setWorkersAmount(2);
+
+            let job1Done, job2Done;
+
+            ww.run(1, function(result) {
+                job1Done = true;
+                expect(result).toBe(2);
+            });
+
+            expect(ww.getFreeWorkers()).toBe(1);
+
+            ww.run(3, function(result) {
+                job2Done = true;
+                expect(result).toBe(4);
+            });
+
+            ww.run(5, function(result) {
+                expect(job1Done || job2Done).toBe(true);
+                expect(result).toBe(6);
+            });
+
+            ww.run(7, function(result) {
+                expect(job1Done).toBe(true);
+                expect(job2Done).toBe(true);
+                expect(result).toBe(8);
+                done();
+            });
+
+            expect(ww.getFreeWorkers()).toBe(0);
+            expect(ww.getUsedWorkers()).toBe(2);
+        });
+
+        it("all at once and just once", function(done) {
+            const ww = new WW(inc);
+            ww.setWorkersAmount(3);
+            let results = 0;
+
+            ww.run(1, function(result) {
+                expect(result).toBe(2);
+                results++;
+                if (results === 3)
+                    done();
+            });
+
+            ww.run(3, function(result) {
+                expect(result).toBe(4);
+                results++;
+                if (results === 3)
+                    done();
+            });
+
+            ww.run(5, function(result) {
+                expect(result).toBe(6);
+                results++;
+                if (results === 3)
+                    done();
+            });
+
+            expect(ww.getUsedWorkers()).toBe(3);
+        });
+
+        it("does not allow to alter set workers amount while any is running", function(done) {
+            const ww = new WW(inc);
+            ww.setWorkersAmount(2);
+
+            ww.run(1, function() { });
+
+            expect(function(){
+                ww.setWorkersAmount(1);
+            }).toThrow();
+            done();
+        });
+
+        it("progress is aggregated", function(done) {
+            const ww = new WW(function() {
+                for (i = 1; i <= 100; ++i)
+                    updateProgress(i);
+            });
+            ww.setWorkersAmount(2);
+
+            var progress = 0;
+            ww.onProgressChanged = (p) => {
+                progress++;
+                expect(p).toBeCloseTo(progress / 2);
+            };
+
+            ww.run(1, function() { done(); });
+            ww.run(2, function() { done(); });
         });
     });
 });

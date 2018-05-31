@@ -1,57 +1,102 @@
-"use strict";
-
-// TODO: parameters verification (types)
-
 function WW(javaScriptFunction) {
-    const workers = [];
+    'use strict';
+
+    this.onProgressChanged = function(progressPercentage) {};
+
+    const workers = []; // extenstions to Worker: isBusy, callback
     const includes = [];
+    const jobQueue = []; // { input, callback }
+    const workerCode = __workerLogic.toString();
 
-    this.onProgressChanged = function(p) {;};
+    let workerFunction;
+    let usedWorkers = 0;
+    let totalProgress = 0;
+    let progressGoal = 1;
 
 
-    function construct() {
+    function constructor() {
         if (typeof javaScriptFunction === 'function')
-            var workerUrl = createBlob(javaScriptFunction.toString());
+            workerFunction = javaScriptFunction.toString();
         else
-            var workerUrl = createBlob(javaScriptFunction);
+            workerFunction = javaScriptFunction;
 
-        console.info(workerUrl); // TODO: remove later
-        createWorker(workerUrl);
+        let logicalProcessors = window.navigator.hardwareConcurrency;
+        if (logicalProcessors > 1)
+            logicalProcessors--;
+
+        for (let i = 0; i < logicalProcessors; ++i)
+            spawnWorker();
     }
+
+
+    this.setWorkersAmount = function(amount) {
+        if (usedWorkers > 0)
+            throw new Error("Changing workers amount while some of them are running is not allowed.");
+
+        usedWorkers = 0;
+        progressGoal = amount;
+
+        if (workers.length < amount) {
+            const workersToAdd = amount - workers.length;
+            for (let i = 0; i < workersToAdd; ++i)
+                spawnWorker();
+        } else if (workers.length > amount) {
+            const workersToRemove = workers.length - amount;
+            removeWorkers(workersToRemove);
+        }
+    };
 
 
     this.import = function() {
         const baseUrl = getBaseDomainUrl();
 
-        for (var argument of arguments) { // TODO: test different domain scripts
+        for (var argument of arguments) {
             let argUrl = new URL(argument, baseUrl);
             let fullPath = argUrl.href;
             includes.push(fullPath);
 
-            if (Array.isArray(workers) && workers.length)
-                workers[0].postMessage({
-                    type: 'import',
-                    data: fullPath,
-                    location: getStringifiedLocation()
-                });
+            if (Array.isArray(workers) && workers.length) {
+                for (const worker of workers)
+                    worker.postMessage({
+                        type: 'import',
+                        includes: fullPath,
+                        location: getStringifiedLocation()
+                    });
+            }
         }
-    }
+    };
+
+
+    this.getFreeWorkers = function() {
+        return workers.length - usedWorkers;
+    };
+
+
+    this.getUsedWorkers = function() {
+        return usedWorkers;
+    };
 
 
     this.run = function(input, callback) {
-        workers[0].callback = callback;
-        startWorker(workers[0], input);
-    }
+        for (let i = 0; i < workers.length; ++i) {
+            if (workers[i].isBusy === false) {
+                workers[i].callback = callback;
+                startWorker(i, input);
+                return;
+            }
+        }
+
+        jobQueue.push({ input, callback });
+    };
 
 
     this.dispose = function() {
         for (let worker of workers)
             worker.terminate();
-    }
+    };
 
 
     function createBlob(javaScriptText) {
-        const workerCode = _workerCode.toString();
         const blobParts = [
             '(', workerCode, ')();',
             'function doWork(workerInputData) {',
@@ -63,7 +108,8 @@ function WW(javaScriptFunction) {
     }
 
 
-    function createWorker(workerUrl) {
+    function spawnWorker() {
+        const workerUrl = createBlob(workerFunction);
         const worker = new Worker(workerUrl);
         worker.addEventListener('message', handleMessageFromWorker);
         worker.postMessage({type: 'import', data: includes});
@@ -72,9 +118,35 @@ function WW(javaScriptFunction) {
     }
 
 
-    function startWorker(worker, input) {
-        worker.postMessage({type: 'start', data: input});
-        worker.isBusy = true;
+    function startWorker(workerIndex, input) {
+        workers[workerIndex].postMessage({
+            type: 'start',
+            data: input,
+            index: workerIndex
+        });
+        workers[workerIndex].isBusy = true;
+        usedWorkers++;
+    }
+
+
+    function removeWorkers(amount) {
+        for (let i = 0; i < amount; ++i) {
+            let removed = false;
+
+            for (let j = 0; j < workers.length; ++j) {
+                if (workers[j].isBusy === false) {
+                    workers[j].terminate();
+                    workers.splice(j, 1);
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (!removed) {
+                workers[workers.length - 1].terminate();
+                workers.pop();
+            }
+        }
     }
 
 
@@ -90,18 +162,34 @@ function WW(javaScriptFunction) {
         if (this.testLocation !== undefined)
             return this.testLocation;
         return window.location.toString();
-    }
+    };
 
 
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
             case 'progress':
-                if (typeof this.onProgressChanged === 'function')
-                    this.onProgressChanged(msg.data.data);
+                if (typeof this.onProgressChanged === 'function') {
+                    totalProgress += msg.data.data;
+                    if (totalProgress > 100 * progressGoal) {
+                        totalProgress -= 100 * progressGoal;
+                        progressGoal = usedWorkers;
+                    }
+                    this.onProgressChanged(totalProgress / progressGoal);
+                }
                 break;
             case 'finished':
-                workers[0].callback(msg.data.data);
-                workers[0].isBusy = false;
+                usedWorkers--;
+
+                const wid = msg.data.index;
+                workers[wid].isBusy = false;
+                workers[wid].callback(msg.data.result);
+                if (workers[wid].isBusy === false) {
+                    if (jobQueue.length > 0) {
+                        const job = jobQueue.shift();
+                        workers[wid].callback = job.callback;
+                        startWorker(wid, job.input);
+                    }
+                }
                 break;
             case 'import':
                 var index = includes.indexOf(msg.data.oldFilename);
@@ -111,50 +199,63 @@ function WW(javaScriptFunction) {
             default:
                 throw 'Unknown worker message type';
         }
-    }
+    };
 
 
     // This function CANNOT direcly access anything outside it
-    function _workerCode() {
+    function __workerLogic() {
         if (self.document !== undefined) {
             console.error("Executing web worker code outside worker is not allowed.");
             return;
         }
 
-        self.updateProgress = function(value, outOf) {
-            if (arguments.length === 1)
-                var percent = value;
-            else
-                var percent = value / outOf * 100;
+        let workerIndex = -1;
+        let previousProgress = 0;
 
-            self.postMessage({type: 'progress', data: percent});
-        }
+        self.updateProgress = function(value, outOf) {
+            const percent = (arguments.length === 1) ?
+                value : value / outOf * 100;
+
+            const difference = percent - previousProgress;
+            previousProgress = percent;
+
+            self.postMessage({ type: 'progress', data: difference });
+        };
 
         self.onmessage = function (msg) {
             switch (msg.data.type) {
                 case "start":
+                    workerIndex = msg.data.index;
+                    previousProgress = 0;
                     const result = doWork(msg.data.data);
-                    self.postMessage({type: 'finished', data: result});
+                    self.postMessage({
+                        type: 'finished',
+                        result: result,
+                        index: workerIndex
+                    });
                     break;
                 case "import":
-                    const includes = msg.data.data;
-
-                    if (Array.isArray(includes) && includes.length)
-                        self.importScripts(includes);
-                    else if (typeof includes === 'string') {
-                        try {
-                            console.log(msg.data.location);
-                            self.importScripts(includes);
-                        } catch (e) {
-                            const url = new URL(includes);
-                            const selfUrl = new URL(msg.data.location);
-                            if (!loadScriptOnSubdomainFolder(url, selfUrl))
-                                throw e;
-                        }
-                    }
+                    importScripts(msg.data);
                     break;
                 default:
                     throw "";
+            }
+        };
+
+
+        function importScripts(data) {
+            const includes = data.includes;
+            if (Array.isArray(includes) && includes.length)
+                self.importScripts(includes);
+            else if (typeof includes === 'string') {
+                try {
+                    self.importScripts(includes);
+                } catch (e) {
+                    const url = new URL(includes);
+                    const selfUrl = new URL(data.location);
+                    if (!loadScriptOnSubdomainFolder(url, selfUrl))
+                        throw e;
+                }
             }
         }
 
@@ -185,5 +286,6 @@ function WW(javaScriptFunction) {
         }
     }
 
-    construct();
+
+    constructor();
 }

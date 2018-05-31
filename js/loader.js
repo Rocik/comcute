@@ -108,7 +108,10 @@ var Loader = function() {
                 taskId = newTaskId;
                 moduleLocation = newLocation;
                 computeModule = collatzIntervals;
-                computeStatusFunction = comcuteGetStatus;
+                if (typeof comcuteGetStatus === 'undefined')
+                    computeStatusFunction = undefined;
+                else
+                    computeStatusFunction = comcuteGetStatus;
                 runComcute();
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -119,7 +122,7 @@ var Loader = function() {
 
 
     function runComcute() {
-        jsMW.getData(taskId, computeModule, computeStatusFunction);
+        jsMW.startComputing(taskId, computeModule, computeStatusFunction);
     }
 
 

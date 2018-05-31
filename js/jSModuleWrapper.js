@@ -11,35 +11,23 @@ var jsModuleWrapper = function() {
 
     var running = true;
     var getStatus;
+    var statusTexts = {};
     var ww;
+    var previousProgress;
+    var totalThreads;
 
-    /**
-     * Funkcja pobierajaca dane od serwera S.
-     * Jej wywołanie rozpoczyna pracę skryptu.
-     *
-     * @param string taskID
-     * @param string sServiceUrl
-     * @param string sServiceNamespace
-     */
-    this.getData = function(newTaskId, computeModule, computeGetStatus) {
+
+    this.startComputing = function(newTaskId, computeModule, computeGetStatus) {
+        if (ww === undefined)
+            createWW(computeModule, computeGetStatus);
+
         taskId = newTaskId;
-
-        if (ww === undefined) {
-            ww = new WW(computeModule);
-            ww.import('/js/jsbn.js', 'js/jsbn2.js');
-            ww.onProgressChanged = (p) => {
-                $('.progress').css("width", p + "%");
-            };
-
-            if (isFunction(computeGetStatus)) {
-                getStatus = computeGetStatus
-                $('#computing-status').addClass('visible').removeClass('hidden');
-            } else
-                getStatus = undefined;
-        }
-
         running = true;
-        fetchModule();
+        statusTexts = {};
+
+        totalThreads = ww.getFreeWorkers();
+        for (let i = 0; i < totalThreads; ++i)
+            fetchInputData();
     };
 
 
@@ -50,20 +38,17 @@ var jsModuleWrapper = function() {
             ww.dispose();
             ww = undefined;
         }
-    }
+    };
 
 
-    var fetchModule = function() {
-        const getDataArguments = [taskId];
-
-        // Pobranie danych obliczeniowych
+    var fetchInputData = function() {
         $.webservice({
             url: parent.sServiceUrl,
             nameSpace: parent.sServiceNamespace,
             methodName: "GetData",
             dataType: "text",
-            data: getDataArguments,
-            success: parseResponse, // po przyjściu danych wykonaj obliczenia
+            data: [taskId],
+            success: runJob,
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
             }
@@ -71,14 +56,9 @@ var jsModuleWrapper = function() {
     };
 
 
-    /**
-     * Parsuje odpowiedź z usługi internetowej na żądanie pobrania danych do zadania
-     * @param soapData odpowiedź usługi sieciowej
-     * @param textStatus statuc usługi sieciowej
-     */
-    var parseResponse = function(soapData, textStatus) {
+    var runJob = function(soapData, serverTextStatus) {
         // sprawdzenie, czy pobranie danych przebiegło poprawnie
-        if (textStatus === null || textStatus !== 'success') {
+        if (serverTextStatus === null || serverTextStatus !== 'success') {
             calculationsEnded();
             return;
         }
@@ -104,13 +84,12 @@ var jsModuleWrapper = function() {
         const dataObject = responseJSON[2];
 
         if (dataObject !== null) {
-            console.info("Testowanie: [" + dataObject.toString() + "]");
+            console.info("Testowanie: [" + dataObject.toString() + "] " + dataID);
 
-            if (getStatus !== undefined)
-                $('#text-status').html(getStatus(dataObject));
+            updateStatusbar(dataObject, dataID);
 
             ww.run(dataObject, function(result) {
-                console.log("Wynik obliczeń: " + result);
+                console.log("Wynik obliczeń (" + dataID + "): " + result);
 
                 const resultArguments = [
                     dataTaskID,
@@ -132,15 +111,57 @@ var jsModuleWrapper = function() {
                     }
                 });
 
-                // Ponowne uruchomienie metody getData - zapętlenie obliczen
                 if (running)
-                    fetchModule();
+                    fetchInputData();
+
+                delete statusTexts[dataID];
             });
         }
     };
 
 
+    function createWW(computeModule, computeGetStatus) {
+        ww = new WW(computeModule);
+        ww.import('/js/jsbn.js', 'js/jsbn2.js');
+        ww.onProgressChanged = (p) => {
+            p = Math.round(p);
+            if (Math.abs(previousProgress - p) >= 1) {
+                $('.progress').css("width", p + "%");
+                previousProgress = p;
+            }
+        };
+        previousProgress = 0;
+
+        if (isFunction(computeGetStatus))
+            getStatus = computeGetStatus;
+        else
+            getStatus = undefined;
+
+        $('#text-status').html("");
+    }
+
+
+    function updateStatusbar(dataObject, dataID) {
+        $('#computing-status').addClass('visible').removeClass('hidden');
+        if (getStatus !== undefined) {
+            const moduleStatus = getStatus(dataObject, Comcute.currentLanguage);
+            statusTexts[dataID] = moduleStatus.description;
+            let statusText = "";
+            let paragraphs = totalThreads;
+            for (const id in statusTexts) {
+                statusText += "<p>" + statusTexts[id] + "</p>";
+                paragraphs--;
+            }
+            for (let i = 0; i < paragraphs; ++i)
+                statusText += "<p>" + Comcute.messages.awaitingData + "</p>";
+            $('#text-status').html(moduleStatus.prelude + statusText);
+        } else
+            $('#text-status').html(Comcute.messages.computingStart);
+    }
+
+
     function isFunction(functionToCheck) {
-        return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+        return functionToCheck &&
+            {}.toString.call(functionToCheck) === '[object Function]';
     }
 };

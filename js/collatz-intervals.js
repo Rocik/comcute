@@ -1,25 +1,29 @@
 /**
- * Moduł obliczeniowy JavaScript<br/>
+ * Moduł obliczeniowy JavaScript
  * Implementacja testowania hipotezy Collatza
  * @author Waldemar Korłub, na bazie implementacji PrimeCode.js Adama Polaka
  */
 
-function comcuteGetStatus(input) {
+function comcuteGetStatus(input, lang) {
      var dataRange = input.split(" ");
      var start = new BigInteger(dataRange[0]);
      var size = new BigInteger(dataRange[1]);
 
-     return "Testowanie od " + start.toString() + " do " + start.add(size).toString();
+     if (lang === "pl")
+        return {
+            prelude: "Hipoteza Collatza. Testowanie: ",
+            description: start.toString() + " ~ " + start.add(size).toString()
+        };
+     else
+        return {
+            prelude: "Collatz hypothesis. Testing: ",
+            description: start.toString() + " ~ " + start.add(size).toString()
+        };
  }
 
 function collatzIntervals(dataObject) {
-    let progress = 0;
+    var progress = 0;
 
-    /**
-     * Funkcja wykonująca obliczenia, jest wywoływana przez JSModuleWrapper
-     *
-     * @param input dane wejściowe dla problemu
-     */
     function compute(input) {
         var dataRange = input.split(" ");
 
