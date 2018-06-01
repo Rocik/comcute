@@ -5,6 +5,7 @@ title: "Windows 8 client"
 date: 2018-03-14 23:00:00 +0100
 categories: comcute
 ---
+<p></p>
 Results of one of Master Thesis Diploma created at Department of Computer Architecture were applications working in Windows 8 system and its previous versions (Vista, 7) for COMCUTE systems. This applications are attached below.
 
 Archive with source code of application working in Modern UI interface in system Windows 8 is presented below. Application can be installed directly with Visual Studio 2012 development tool with valid developer license or generating binary files and installing this app as trusted (this option is available only on Windows 8 Enterprise).

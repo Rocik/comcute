@@ -1,4 +1,4 @@
-$header-width: 900px !default;
+$max-inline-header-width: 920px !default;
 $side-pane-width: 0.24 !default;
 $side-pane-margins: 21px !default;
 
@@ -10,14 +10,19 @@ $side-pane-margins: 21px !default;
 
     @include animation(fadein 0.3s both 0.15s);
 
-    @include media-query($header-width) {
+    @include media-query-between($content-width, $max-inline-header-width) {
+        padding-left: $spacing-unit * 0.4;
+        padding-right: $spacing-unit * 0.4;
+    }
+
+    @include media-query($max-inline-header-width) {
         padding-top: $spacing-unit * 0.25;
     }
 
     a {
         text-decoration: none;
 
-        @include media-query($header-width) {
+        @include media-query($max-inline-header-width) {
             padding-left: auto;
             padding-right: auto;
         }
@@ -28,14 +33,12 @@ $side-pane-margins: 21px !default;
 .logos {
     display: inline;
 
-    @include media-query($header-width) {
+    @include media-query($max-inline-header-width) {
         display: block;
         text-align: center;
-    }
 
-    @include media-query($header-width) {
-        margin-left: $spacing-unit * 0.5;
-        margin-right: $spacing-unit * 0.5;
+        margin-left: $spacing-unit * 0.4;
+        margin-right: $spacing-unit * 0.4;
     }
 }
 
@@ -44,7 +47,6 @@ $side-pane-margins: 21px !default;
 
     img {
         margin-bottom: $spacing-unit * 0.2;
-        white-space-collapse: discard;
     }
 }
 
@@ -69,7 +71,7 @@ $side-pane-margins: 21px !default;
     letter-spacing: 2px;
     cursor: pointer;
 
-    @include media-query($header-width) {
+    @include media-query($max-inline-header-width) {
         float: none;
         line-height: 50px;
         min-width: 100%;
@@ -129,14 +131,14 @@ $side-pane-margins: 21px !default;
 
     @include transition(height 0.5s);
 
-    @include media-query($header-width) {
+    @include media-query($max-inline-header-width) {
         margin-top: 0;
         border: none;
     }
 
     .progress {
         height: 100%;
-        background: #759eeb;
+        background: #256ee5;
     }
 }
 
@@ -182,7 +184,7 @@ $side-pane-margins: 21px !default;
         margin: 0.2em 0 0 0.5em;
     }
 
-    @include media-query($header-width) {
+    @include media-query($max-inline-header-width) {
         box-shadow: none;
     }
 }
@@ -340,7 +342,7 @@ $side-pane-margins: 21px !default;
     vertical-align: middle;
 
     #page-current {
-        border-bottom: 2px solid #5178BC;
+        border-bottom: 2px solid $brand-color;
     }
 }
 
@@ -562,6 +564,7 @@ figcaption {
     width: percentage($side-pane-width);
     border-top: 1px solid $grey-color-light;
     color: $grey-color-dark;
+    padding-top: $spacing-unit / 3;
     font-size: $small-font-size;
 
     @include media-query($on-palm) {
@@ -597,7 +600,7 @@ figcaption {
     }
 
     .spacer-panel {
-        padding: $spacing-unit * 0.5 $side-pane-margins 0 0;
+        padding: $spacing-unit * 0.7 $side-pane-margins 0 0;
     }
 
     .cover {

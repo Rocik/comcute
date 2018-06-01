@@ -5,6 +5,7 @@ title: "Klient systemu Windows 8"
 date: 2018-03-14 23:00:00 +0100
 categories: comcute
 ---
+<p></p>
 W ramach jednej z prac magisterskich opracowanych na Katedrze Architektury Systemów Komputerowych stworzono klientów projektu COMCUTE dla systemu Windows 8 oraz jego starszych wersji.
 
 Poniżej zamieszczono link do archiwum z kodem źródłowym klienta działającego pod interfejsem Modern UI w systemie Windows 8. Aplikację można zainstalować bezpośrednio przy użyciu narzędzia Visual Studio 2012 z aktualną licencją dewelopera systemu Windows 8 lub generując pliki binarne i instalując aplikację jako zaufaną (opcja ta jest tylko dostępna w wersji Windows 8 Enterprise).
