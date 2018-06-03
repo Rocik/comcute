@@ -8,17 +8,11 @@
             <li>
                 <h3>{% tl side_pane_h1 %}</h3>
                 <ul>
+                    {% for element in site.data.i18n.side_pane_1_elements.[site.active_lang] %}
                     <li>
-                        <a title="BOINC" href="{{ "/comcute/2018/03/14/berkeley-open-infrastructure-for-network-computing.html" | relative_url }}">BOINC</a>
+                        <a title="{{ element.title }}" href="{{ element.link | relative_url }}">{{ element.title }}</a>
                     </li>
-
-                    <li>
-                        <a title="Analiza algorytmów" href="{{ "/comcute/2018/03/14/analiza-istniejacych-obliczen-uruchamianych-w-ramach-systemow-rozproszonych.html" | relative_url }}">Analiza algorytmów</a>
-                    </li>
-
-                    <li>
-                        <a title="Bezpieczeństwo transferu" href="{{ "/comcute/2018/03/14/bezpieczenstwo-transferu-zestrukturalizowanych-plikow-xml-w-sieci-grid-w-oparciu-o-uslugi-web-service-poprzez-protokol-soap.html" | relative_url }}">Bezpieczeństwo transferu</a>
-                    </li>
+                    {% endfor %}
                 </ul>
 
             </li>
@@ -26,42 +20,22 @@
             <li>
                 <h3>{% tl side_pane_h2 %}</h3>
                 <ul>
+                    {% for element in site.data.i18n.side_pane_2_elements.[site.active_lang] %}
                     <li>
-                        <a title="Klient systemu Windows 8" href="{{ "/comcute/2018/03/14/klient-systemu-windows-8.html" | relative_url }}">Klient systemu Windows 8</a>
+                        <a title="{{ element.title }}" href="{{ element.link | relative_url }}">{{ element.title }}</a>
                     </li>
-
-                    <li>
-                        <a title="Architektura systemu Comcute" href="{{ "/comcute/2018/03/14/architektura-systemu-comcute.html" | relative_url }}">Architektura systemu Comcute</a>
-                    </li>
-
-                    <li>
-                        <a title="Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych" href="{{ "/comcute/2018/03/14/rozpraszanie-obliczen-za-pomoca-serwerow-dystrybucyjnych.html" | relative_url }}">Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych</a>
-                    </li>
-
-                    <li>
-                        <a title="Mechanizmy bezpieczeństwa w systemie Comcute" href="{{ "/comcute/2018/03/14/mechanizmy-bezpieczenstwa-w-systemie-comcute.html" | relative_url }}">Mechanizmy bezpieczeństwa w systemie Comcute</a>
-                    </li>
-
-                    <li>
-                        <a title="Równoważenie obciążeń" href="{{ "/comcute/2018/03/14/optymalizacja-rownowazenia-obciazen-w-systemach-klasy-grid.html" | relative_url }}">Równoważenie obciążeń</a>
-                    </li>
+                    {% endfor %}
                 </ul>
             </li>
 
             <li>
                 <h3>{% tl side_pane_h3 %}</h3>
                 <ul>
+                    {% for element in site.data.i18n.side_pane_3_elements.[site.active_lang] %}
                     <li>
-                        <a title="Bezpieczeństwo w monitoringu" href="{{ "/comcute/2018/03/14/bezpieczenstwo-w-monitoringu.html" | relative_url }}">Bezpieczeństwo w monitoringu</a>
+                        <a title="{{ element.title }}" href="{{ element.link | relative_url }}">{{ element.title }}</a>
                     </li>
-
-                    <li>
-                        <a title="Rozproszone łamanie szyfrów" href="{{ "/comcute/2018/03/14/rozproszone-lamanie-szyfrow.html" | relative_url }}">Rozproszone łamanie szyfrów</a>
-                    </li>
-
-                    <li>
-                        <a title="Hipoteza Collatza" href="{{ "/comcute/2018/03/14/efektywne-zrownoleglanie-obliczen-w-systemie-klasy-grid-na-przykladzie-hipotezy-collatza.html" | relative_url }}">Hipoteza Collatza</a>
-                    </li>
+                    {% endfor %}
                 </ul>
             </li>
 

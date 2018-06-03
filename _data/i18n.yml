@@ -34,6 +34,48 @@ side_pane_h5:
     pl: Podobne projekty
     en: Similar projects
 
+side_pane_1_elements:
+    pl:
+        - title: BOINC
+          link: /comcute/2018/03/14/berkeley-open-infrastructure-for-network-computing.html
+        - title: Analiza algorytmów
+          link: /comcute/2018/03/14/analiza-istniejacych-obliczen-uruchamianych-w-ramach-systemow-rozproszonych.html
+        - title: Bezpieczeństwo transferu
+          link: /comcute/2018/03/14/bezpieczenstwo-transferu-zestrukturalizowanych-plikow-xml-w-sieci-grid-w-oparciu-o-uslugi-web-service-poprzez-protokol-soap.html
+    en:
+        - title: Multi Agent Grid Systems
+          link: /comcute/2018/03/14/multi-agent-grid-systems.html
+side_pane_2_elements:
+    pl:
+        - title: Klient systemu Windows 8
+          link: /comcute/2018/03/14/windows-8-client.html
+        - title: Architektura systemu Comcute
+          link: /comcute/2018/03/14/architektura-systemu-comcute.html
+        - title: Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych
+          link: /comcute/2018/03/14/rozpraszanie-obliczen-za-pomoca-serwerow-dystrybucyjnych.html
+        - title: Mechanizmy bezpieczeństwa w systemie Comcute
+          link: /comcute/2018/03/14/security-mechanisms.html
+        - title: Równoważenie obciążeń
+          link: /comcute/2018/03/14/optymalizacja-rownowazenia-obciazen-w-systemach-klasy-grid.html
+    en:
+        - title: Windows 8 client
+          link: /comcute/2018/03/14/windows-8-client.html
+        - title: Foundations of Grid Processing Architecture for the Comcute System
+          link: /comcute/2018/03/14/foundations-of-grid-processing-architecture-for-the-comcute-system.html
+        - title: Security Mechanisms in the Comcute System
+          link: /comcute/2018/03/14/security-mechanisms.html
+side_pane_3_elements:
+    pl:
+        - title: Bezpieczeństwo w monitoringu
+          link: /comcute/2018/03/14/bezpieczenstwo-w-monitoringu.html
+        - title: Rozproszone łamanie szyfrów
+          link: /comcute/2018/03/14/rozproszone-lamanie-szyfrow.html
+        - title: Hipoteza Collatza
+          link: /comcute/2018/03/14/efektywne-zrownoleglanie-obliczen-w-systemie-klasy-grid-na-przykladzie-hipotezy-collatza.html
+    en:
+        - title: Genetic Positioning of Fire Stations Utilizing Grid-computing Platform
+          link: /comcute/2018/03/14/genetic-positioning-of-fire-stations-utilizing-grid-computing-platform.html
+
 footer_kask:
     pl: Katedra Architektury Systemów Komputerowych
     en: Department of Computer Architecture
