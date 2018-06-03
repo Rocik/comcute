@@ -4,6 +4,9 @@ lang: pl
 title: System utrzymania wielkiej mocy obliczeniowej w sytuacjach kryzysowych
 categories: home
 ---
+
+<script src="{{ "/js/redirect.js" | relative_url }}"></script>
+
 Comcute jest projektem realizowanym przez naukowców Politechniki Gdańskiej, który ma ambicje stać się realną polską alternatywą dla platformy obliczeń typu voluteer computing BOINC. Zadaniem systemów takich jak ten jest rozwiązywanie złożonych problemów naukowych i dostarczania klientom dużej mocy obliczeniowej niewielkim kosztem. Comcute spełnia te założenia, jednak jako swój główny cel wykorzystania potencjału obliczeń gridowych stawia sobie zapewnienie nieprzerwanej pracy procesorów w przypadku kryzysu (takiego jak chociażby wybuch elektrowni jądrowej w Fukushimie).
 
 # Jak działają systemy gridowe?
