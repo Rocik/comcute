@@ -87,7 +87,7 @@ describe("Web Workers library", function() {
         });
     });
 
-    describe("Running job in disposed worker", function() {
+    describe("Allows running job in disposed worker", function() {
         it("should do nothing when set before running", function(done) {
             const ww = new WW(inc);
             ww.dispose();
@@ -178,7 +178,7 @@ describe("Web Workers library", function() {
         });
     });
 
-    describe("Running multiple jobs", function() {
+    describe("Allows running multiple jobs", function() {
         beforeEach(function(done) {
             setTimeout(function() {
                 done();
@@ -291,6 +291,35 @@ describe("Web Workers library", function() {
 
             ww.run(1, function() { done(); });
             ww.run(2, function() { done(); });
+        });
+    });
+
+    describe("Allows returning results via", function() {
+        beforeEach(function(done) {
+            setTimeout(function() {
+                done();
+            }, 1000);
+        });
+
+        it("callback", function(done) {
+            const ww = new WW(inc);
+
+            const returnedValue = ww.run(1, function(result) {
+                expect(result).toBe(2);
+                done();
+            });
+
+            expect(returnedValue).toBeUndefined();
+        });
+
+        it("promise object when callback not passed", function(done) {
+            const ww = new WW(inc);
+
+            ww.run(1)
+            .then(function(result) {
+                expect(result).toBe(2);
+                done();
+            });
         });
     });
 });

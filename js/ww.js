@@ -78,15 +78,14 @@ function WW(javaScriptFunction) {
 
 
     this.run = function(input, callback) {
-        for (let i = 0; i < workers.length; ++i) {
-            if (workers[i].isBusy === false) {
-                workers[i].callback = callback;
-                startWorker(i, input);
-                return;
-            }
+        if (callback === undefined) {
+            return new Promise((resolve, reject) => {
+                this.run(input, resolve);
+            });
         }
 
-        jobQueue.push({ input, callback });
+        if (!runOnUnoccupiedWorker(input, callback))
+            jobQueue.push({ input, callback });
     };
 
 
@@ -115,6 +114,19 @@ function WW(javaScriptFunction) {
         worker.postMessage({type: 'import', data: includes});
         worker.isBusy = false;
         workers.push(worker);
+    }
+
+
+    function runOnUnoccupiedWorker(input, callback) {
+        for (let i = 0; i < workers.length; ++i) {
+            if (workers[i].isBusy === false) {
+                workers[i].callback = callback;
+                startWorker(i, input);
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -168,28 +180,14 @@ function WW(javaScriptFunction) {
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
             case 'progress':
-                if (typeof this.onProgressChanged === 'function') {
-                    totalProgress += msg.data.data;
-                    if (totalProgress > 100 * progressGoal) {
-                        totalProgress -= 100 * progressGoal;
-                        progressGoal = usedWorkers;
-                    }
-                    this.onProgressChanged(totalProgress / progressGoal);
-                }
+                const valueChanged = msg.data.data;
+                parseProgressUpdate(valueChanged);
                 break;
             case 'finished':
                 usedWorkers--;
 
                 const wid = msg.data.index;
-                workers[wid].isBusy = false;
-                workers[wid].callback(msg.data.result);
-                if (workers[wid].isBusy === false) {
-                    if (jobQueue.length > 0) {
-                        const job = jobQueue.shift();
-                        workers[wid].callback = job.callback;
-                        startWorker(wid, job.input);
-                    }
-                }
+                parseFinishedWorker(wid, msg.data.result);
                 break;
             case 'import':
                 var index = includes.indexOf(msg.data.oldFilename);
@@ -198,6 +196,34 @@ function WW(javaScriptFunction) {
                 break;
             default:
                 throw 'Unknown worker message type';
+        }
+    };
+
+
+    const parseProgressUpdate = (valueChanged) => {
+        if (typeof this.onProgressChanged === 'function') {
+            totalProgress += valueChanged;
+            if (totalProgress > 100 * progressGoal) {
+                totalProgress -= 100 * progressGoal;
+                progressGoal = usedWorkers;
+            }
+            this.onProgressChanged(totalProgress / progressGoal);
+        }
+    };
+
+
+    const parseFinishedWorker = (wid, result) => {
+        const worker = workers[wid];
+        worker.isBusy = false;
+        if (typeof worker.callback === 'function')
+            worker.callback(result);
+
+        if (worker.isBusy === false) {
+            if (jobQueue.length > 0) {
+                const job = jobQueue.shift();
+                worker.callback = job.callback;
+                startWorker(wid, job.input);
+            }
         }
     };
 
