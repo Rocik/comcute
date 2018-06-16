@@ -15,11 +15,11 @@ layout: default
         {% for author in page.authors %}
             {% assign authorData = site.data.authors[author] %}
             <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                {% if authorData.email %}
-                <a href="mailto:{{ authorData.email }}" title="{{ authorData.name }}">
+                {% if authorData.homepage %}
+                <a href="{{ authorData.homepage }}" title="{{ authorData.name }}">
                 {% endif %}
                 <span class="p-author h-card" itemprop="name">
-                    {{ authorData.name }}</span>{% if authorData.email %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
+                    {{ authorData.name }}</span>{% if authorData.homepage %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
         {% endfor %}
         </p>
     </header>
@@ -27,6 +27,4 @@ layout: default
     <div class="post-content e-content" itemprop="articleBody">
         {{ content }}
     </div>
-
-    <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
