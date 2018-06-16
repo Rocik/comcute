@@ -1,25 +1,30 @@
 $(document).ready(function() {
     'use strict';
 
-    var jsL = new Loader();
+    const loader = new Loader();
 
-    $('#comcute-start').click(function(event) {
-        $('#comcute-start').css("display", "none");
-        $('#comcute-stop').removeAttr("style");
-        $('#progressbar').addClass('expanded').removeClass('collapsed');
-        jsL.registerAndGetModule();
-    });
-
-    $('#comcute-stop').click(function(event) {
+    function resetUI() {
         $('#comcute-start').removeAttr("style");
         $('#comcute-stop').css("display", "none");
         $('#progressbar').addClass('collapsed').removeClass('expanded');
         $('.progress').css("width", "0%");
         $('#computing-status').addClass('hidden').removeClass('visible');
-        jsL.unregister();
+    }
+
+    $('#comcute-start').click(function() {
+        $('#comcute-start').css("display", "none");
+        $('#comcute-stop').removeAttr("style");
+        $('#progressbar').addClass('expanded').removeClass('collapsed');
+        loader.setFailureEvent(resetUI);
+        loader.registerAndGetModule();
     });
 
-    $('#more-less').click(function(event) {
+    $('#comcute-stop').click(function() {
+        resetUI();
+        loader.unregister();
+    });
+
+    $('#more-less').click(function() {
         if ($('#more-less').hasClass('less')) {
             $('#more-less').removeClass('less');
             $('#line').removeClass('less');

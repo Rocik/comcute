@@ -14,6 +14,7 @@ var Loader = function() {
         Flash: 0,
         Silverlight: 0
     };
+    let errorCallback;
     let taskId;
     let moduleLocation;
     let sServiceUrl;
@@ -21,11 +22,19 @@ var Loader = function() {
     let computeModule;
     let computeStatusFunction;
 
-    // Główna funkcja JsLoader'a wywoływana po załadowaniu strony.
-    // Pobiera kod obliczeniowy od serwera S i wysyła dane
-    //  o technologiach dostepnych w przglądarce internauty.
+
+    this.setFailureEvent = function(callback) {
+        errorCallback = function(xmlHttpRequest, textStatus, errorThrown) {
+            console.error(xmlHttpRequest + " " + textStatus + " " + errorThrown);
+            alert(Comcute.messages.error);
+            if (typeof callback === 'function')
+                callback();
+        };
+    };
+    this.setFailureEvent();
+
+
     this.registerAndGetModule = function() {
-        // tablica parametrów przeglądarki internauty
         const browserInfo = [
             navigator.userAgent,
             // trzeba ładować wynik do tablicy bo inaczej plugin js do ws'ów
@@ -41,16 +50,14 @@ var Loader = function() {
             dataType: "text",
             data: browserInfo,
             success: installModule,
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
-            }
+            error: errorCallback
         });
     };
 
 
     this.unregister = function () {
         jsMW.stop();
-    }
+    };
 
     /**
      * Instaluje otrzymany od węzła S moduł obliczeniowy.
@@ -63,17 +70,17 @@ var Loader = function() {
 
         // wyciągnięcie odpowiedzi
         const rawResponseText = $(soapData).find("return");
-        const responseText = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
-            ? rawResponseText[0].innerHTML
-            : rawResponseText.prevObject[1].innerText;
+        const responseText = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) ?
+            rawResponseText[0].innerHTML :
+            rawResponseText.prevObject[1].innerText;
 
         if (responseText === null || responseText === "ERROR")
             return;
 
         // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
-        const embedHtml = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
-            ? $(htmlDecode(responseText))
-            : $(responseText);
+        const embedHtml = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) ?
+            $(htmlDecode(responseText)) :
+            $(responseText);
 
         if (embedHtml.length === 0)
             return;
@@ -94,13 +101,13 @@ var Loader = function() {
             else {
                 jsMW.sServiceUrl = S_SERVICE_URL;
                 jsMW.sServiceNamespace = S_SERVICE_NAMESPACE;
-                fetchComcute(MODULE_LOCATION, TASK_ID);
+                fetchComcuteModule(MODULE_LOCATION, TASK_ID);
             }
         }
     }
 
 
-    function fetchComcute(newLocation, newTaskId) {
+    function fetchComcuteModule(newLocation, newTaskId) {
         $.ajax({
             url: newLocation,
             dataType: 'script',
@@ -114,14 +121,13 @@ var Loader = function() {
                     computeStatusFunction = comcuteGetStatus;
                 runComcute();
             },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
-            }
+            error: errorCallback
         });
     }
 
 
     function runComcute() {
+        jsMW.errorCallback = errorCallback;
         jsMW.startComputing(taskId, computeModule, computeStatusFunction);
     }
 

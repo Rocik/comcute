@@ -17,6 +17,9 @@ var jsModuleWrapper = function() {
     var totalThreads;
 
 
+    this.errorCallback = () => {};
+
+
     this.startComputing = function(newTaskId, computeModule, computeGetStatus) {
         if (ww === undefined)
             createWW(computeModule, computeGetStatus);
@@ -49,9 +52,7 @@ var jsModuleWrapper = function() {
             dataType: "text",
             data: [taskId],
             success: runJob,
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
-            }
+            error: parent.errorCallback
         });
     };
 
@@ -65,9 +66,7 @@ var jsModuleWrapper = function() {
 
         // kontener na dane wejściowe do obliczeń
         let responseText = $(soapData).find("return");
-
-        if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1)
-            responseText = responseText[0].innerHTML;
+        responseText = responseText[0].innerHTML;
 
         if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
             calculationsEnded();
@@ -106,9 +105,7 @@ var jsModuleWrapper = function() {
                     methodName: "SaveResult",
                     dataType: "text",
                     data: resultArguments,
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        console.error(XMLHttpRequest + " " + textStatus + " " + errorThrown);
-                    }
+                    error: parent.errorCallback
                 });
 
                 if (running)
