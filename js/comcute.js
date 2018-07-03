@@ -12,11 +12,15 @@ $(document).ready(function() {
     }
 
     $('#comcute-start').click(function() {
+        loader.setFailureEvent(resetUI);
+        loader.registerAndGetModule();
+
         $('#comcute-start').css("display", "none");
         $('#comcute-stop').removeAttr("style");
         $('#progressbar').addClass('expanded').removeClass('collapsed');
-        loader.setFailureEvent(resetUI);
-        loader.registerAndGetModule();
+        $('#sim-canvas').css('display', 'none');
+        $('#computing-status').addClass('visible').removeClass('hidden');
+        $('#text-status').html(Comcute.messages.awaitingData);
     });
 
     $('#comcute-stop').click(function() {

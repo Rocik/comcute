@@ -4,89 +4,94 @@
  * @author Waldemar Korłub, na bazie implementacji PrimeCode.js Adama Polaka
  */
 
-function comcuteGetStatus(input, lang) {
-     var dataRange = input.split(" ");
-     var start = new BigInteger(dataRange[0]);
-     var size = new BigInteger(dataRange[1]);
+const comcuteModule = {
 
-     if (lang === "pl")
-        return {
-            prelude: "Hipoteza Collatza. Testowanie: ",
-            description: start.toString() + " ~ " + start.add(size).toString()
-        };
-     else
-        return {
-            prelude: "Collatz hypothesis. Testing: ",
-            description: start.toString() + " ~ " + start.add(size).toString()
-        };
- }
+    parallelTaskJobs: true,
 
-function collatzIntervals(dataObject) {
-    var progress = 0;
+    getStatus: function(input, lang) {
+         var dataRange = input.split(" ");
+         var start = new BigInteger(dataRange[0]);
+         var size = new BigInteger(dataRange[1]);
 
-    function compute(input) {
-        var dataRange = input.split(" ");
+         if (lang === "pl")
+            return {
+                description: "Hipoteza Collatza. Testowanie: ",
+                taskStatus: start.toString() + " ~ " + start.add(size).toString()
+            };
+         else
+            return {
+                description: "Collatz hypothesis. Testing: ",
+                taskStatus: start.toString() + " ~ " + start.add(size).toString()
+            };
+    },
 
-        var start = new BigInteger(dataRange[0]);
-        var size = new BigInteger(dataRange[1]);
+    task: function(dataObject) {
+        var progress = 0;
 
-        progress = 0;
-        step = 1 / dataRange[1] * 100;
+        function compute(input) {
+            var dataRange = input.split(" ");
 
-        return testRange(start, start.add(size), step);
-    }
+            var start = new BigInteger(dataRange[0]);
+            var size = new BigInteger(dataRange[1]);
 
-    function testRange(start, end, step){
-        one = new BigInteger("1");
-        potentiallyNonconforming = "";
+            progress = 0;
+            step = 1 / dataRange[1] * 100;
 
-        n = start;
-        startTime = new Date().getTime();
-
-        while (n.compareTo(end) <= 0) {
-
-            if (!conformsCollatzConjecture(n)) {
-                potentiallyNonconforming += n + " ";
-            }
-            n = n.add(one);
-
-            progress += step;
-            updateProgress(progress);
+            return testRange(start, start.add(size), step);
         }
 
-        if (n.compareTo(end) > 0) {
-            packageProcessed = true;
-        }
+        function testRange(start, end, step){
+            one = new BigInteger("1");
+            potentiallyNonconforming = "";
 
-        return potentiallyNonconforming;
-    }
+            n = start;
+            startTime = new Date().getTime();
 
+            while (n.compareTo(end) <= 0) {
 
-    function conformsCollatzConjecture(n) {
-        zero = new BigInteger("0");
-        one = new BigInteger("1");
-        two = new BigInteger("2");
-        three = new BigInteger("3");
-        three_thousand = new BigInteger("3000");
+                if (!conformsCollatzConjecture(n)) {
+                    potentiallyNonconforming += n + " ";
+                }
+                n = n.add(one);
 
-        loopCnt = new BigInteger("0");
-
-        while (!n.equals(one)) {
-            loopCnt = loopCnt.add(one);
-
-            if (n.mod(two).equals(zero)) {
-                n = n.divide(two);
-            } else {
-                n = n.multiply(three).add(one);
+                progress += step;
+                updateProgress(progress);
             }
 
-            if (loopCnt.compareTo(three_thousand) > 0) {
-                return false;
+            if (n.compareTo(end) > 0) {
+                packageProcessed = true;
             }
+
+            return potentiallyNonconforming;
         }
 
-        return true;
-    }
 
-    return compute(dataObject);
+        function conformsCollatzConjecture(n) {
+            zero = new BigInteger("0");
+            one = new BigInteger("1");
+            two = new BigInteger("2");
+            three = new BigInteger("3");
+            three_thousand = new BigInteger("3000");
+
+            loopCnt = new BigInteger("0");
+
+            while (!n.equals(one)) {
+                loopCnt = loopCnt.add(one);
+
+                if (n.mod(two).equals(zero)) {
+                    n = n.divide(two);
+                } else {
+                    n = n.multiply(three).add(one);
+                }
+
+                if (loopCnt.compareTo(three_thousand) > 0) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return compute(dataObject);
+    }
 }

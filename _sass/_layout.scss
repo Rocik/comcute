@@ -170,14 +170,20 @@ $side-pane-margins: 21px !default;
 
 
 #computing-status {
+    width: 100%;
+    max-width: 660px;
+    margin-left: auto;
+    margin-right: auto;
+
+    overflow: hidden;
     font-family: Arial, sans-serif;
     background: #fcfcfc;
-    box-shadow: 0 2px 6px 0 rgba(0,0,0,.2);
-    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
 
     #text-status {
         line-height: 1;
         margin: $spacing-unit * 0.5;
+        text-align: center;
     }
 
     p {
@@ -187,6 +193,16 @@ $side-pane-margins: 21px !default;
     @include media-query($max-inline-header-width) {
         box-shadow: none;
     }
+}
+
+#sim-canvas {
+    display: block;
+    width: 600px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: $spacing-unit * 0.75;
+    margin-bottom: $spacing-unit * 0.75;
 }
 
 .visible {
@@ -255,6 +271,7 @@ $side-pane-margins: 21px !default;
 
     #languages {
         font-size: 0px;
+        margin-right: 3px;
 
         span {
             margin-left: $spacing-unit * 0.5;
@@ -547,11 +564,11 @@ figcaption {
     background: url($baseurl + "/images/more_less.png") no-repeat scroll top right transparent;
     color: #4A4A4A;
     cursor: pointer;
-    opacity: 0.2;
+    opacity: 0.15;
     transition: opacity 0.25s ease-out;
 
     &:hover {
-        opacity: 0.8;
+        opacity: 0.6;
     }
 
     &.less {

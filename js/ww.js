@@ -60,6 +60,7 @@ function WW(javaScriptFunction) {
                     worker.postMessage({
                         type: 'import',
                         includes: fullPath,
+                        // self.location inside Worker does not include subdirectory
                         location: getStringifiedLocation()
                     });
             }
@@ -179,9 +180,15 @@ function WW(javaScriptFunction) {
 
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
+            case 'import':
+                var index = includes.indexOf(msg.data.oldFilename);
+                if (index !== -1)
+                    includes[index] = msg.data.newFilename;
+                break;
             case 'progress':
-                const valueChanged = msg.data.data;
-                parseProgressUpdate(valueChanged);
+                const valueChanged = msg.data.difference;
+                const extraData = msg.data.extra;
+                parseProgressUpdate(valueChanged, extraData);
                 break;
             case 'finished':
                 usedWorkers--;
@@ -189,25 +196,20 @@ function WW(javaScriptFunction) {
                 const wid = msg.data.index;
                 parseFinishedWorker(wid, msg.data.result);
                 break;
-            case 'import':
-                var index = includes.indexOf(msg.data.oldFilename);
-                if (index !== -1)
-                    includes[index] = msg.data.newFilename;
-                break;
             default:
                 throw 'Unknown worker message type';
         }
     };
 
 
-    const parseProgressUpdate = (valueChanged) => {
+    const parseProgressUpdate = (valueChanged, extraData) => {
         if (typeof this.onProgressChanged === 'function') {
             totalProgress += valueChanged;
             if (totalProgress > 100 * progressGoal) {
                 totalProgress -= 100 * progressGoal;
                 progressGoal = usedWorkers;
             }
-            this.onProgressChanged(totalProgress / progressGoal);
+            this.onProgressChanged(totalProgress / progressGoal, extraData);
         }
     };
 
@@ -238,18 +240,25 @@ function WW(javaScriptFunction) {
         let workerIndex = -1;
         let previousProgress = 0;
 
-        self.updateProgress = function(value, outOf) {
+        self.updateProgress = function(value, outOf, extraData) {
             const percent = (arguments.length === 1) ?
                 value : value / outOf * 100;
 
             const difference = percent - previousProgress;
             previousProgress = percent;
 
-            self.postMessage({ type: 'progress', data: difference });
+            self.postMessage({
+                type: 'progress',
+                difference: difference,
+                extra: extraData
+            });
         };
 
         self.onmessage = function (msg) {
             switch (msg.data.type) {
+                case "import":
+                    importScripts(msg.data);
+                    break;
                 case "start":
                     workerIndex = msg.data.index;
                     previousProgress = 0;
@@ -259,9 +268,6 @@ function WW(javaScriptFunction) {
                         result: result,
                         index: workerIndex
                     });
-                    break;
-                case "import":
-                    importScripts(msg.data);
                     break;
                 default:
                     throw "";
@@ -291,7 +297,8 @@ function WW(javaScriptFunction) {
                 const subdir = selfUrl.pathname.split('/', 2)[1];
 
                 if (subdir != url.pathname.split('/', 2)[1]) {
-                    const newPath = url.origin + '/' + subdir + url.pathname;
+                    const rootDir = url.origin + '/' + subdir;
+                    const newPath = rootDir + url.pathname;
 
                     try {
                         self.importScripts(newPath);
@@ -299,6 +306,7 @@ function WW(javaScriptFunction) {
                         return false;
                     }
 
+                    console.warn("Imported scripts are on a different root location: " + rootDir + "/");
                     self.postMessage({
                         type: 'import',
                         oldFilename: url.toString(),

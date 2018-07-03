@@ -9,8 +9,8 @@ var Loader = function() {
     };
     const jsMW = new jsModuleWrapper();
     const supportedTech = {
-        JavaScript: 1,
-        JavaApplet: 0,
+        JavaScript: 0,
+        JavaApplet: 1,
         Flash: 0,
         Silverlight: 0
     };
@@ -24,9 +24,14 @@ var Loader = function() {
 
 
     this.setFailureEvent = function(callback) {
-        errorCallback = function(xmlHttpRequest, textStatus, errorThrown) {
-            console.error(xmlHttpRequest + " " + textStatus + " " + errorThrown);
-            alert(Comcute.messages.error);
+        errorCallback = function() {
+            console.error(Array.prototype.slice.call(arguments).join(" "));
+
+            if (arguments.length > 0 && arguments[0] == "NO_DATA_AVAILABLE")
+                alert(Comcute.messages.noTask);
+            else
+                alert(Comcute.messages.error);
+
             if (typeof callback === 'function')
                 callback();
         };
@@ -70,18 +75,13 @@ var Loader = function() {
 
         // wyciągnięcie odpowiedzi
         const rawResponseText = $(soapData).find("return");
-        const responseText = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) ?
-            rawResponseText[0].innerHTML :
-            rawResponseText.prevObject[1].innerText;
+        const responseText = rawResponseText[0].innerHTML;
 
         if (responseText === null || responseText === "ERROR")
             return;
 
         // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
-        const embedHtml = (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) ?
-            $(htmlDecode(responseText)) :
-            $(responseText);
-
+        const embedHtml = $(htmlDecode(responseText));
         if (embedHtml.length === 0)
             return;
 
@@ -91,11 +91,8 @@ var Loader = function() {
         const sResponse = embedHtml[0].childNodes[0].textContent;
         eval(sResponse);
 
-        // pobranie i umieszczenie na stronie skryptu kodu osadzającego
-        $('#container').append($("#embedScript"));
-
         // utworzenie i załadowanie skryptu obliczeniowego
-        if (MODULE_TYPE === "JavaScript") {
+        //if (MODULE_TYPE === "JavaScript") {
             if (taskId === TASK_ID && moduleLocation === MODULE_LOCATION)
                 runComcute();
             else {
@@ -103,7 +100,7 @@ var Loader = function() {
                 jsMW.sServiceNamespace = S_SERVICE_NAMESPACE;
                 fetchComcuteModule(MODULE_LOCATION, TASK_ID);
             }
-        }
+        //}
     }
 
 
@@ -114,11 +111,9 @@ var Loader = function() {
             success: function(data) {
                 taskId = newTaskId;
                 moduleLocation = newLocation;
-                computeModule = collatzIntervals;
-                if (typeof comcuteGetStatus === 'undefined')
-                    computeStatusFunction = undefined;
-                else
-                    computeStatusFunction = comcuteGetStatus;
+                //computeModule = comcuteModule;
+                computeModule = comcuteModuleFire;
+
                 runComcute();
             },
             error: errorCallback
@@ -128,7 +123,7 @@ var Loader = function() {
 
     function runComcute() {
         jsMW.errorCallback = errorCallback;
-        jsMW.startComputing(taskId, computeModule, computeStatusFunction);
+        jsMW.startComputing(taskId, computeModule);
     }
 
 
