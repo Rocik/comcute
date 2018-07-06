@@ -39,6 +39,16 @@ default_lang: "pl"
 exclude_from_localization: ["js", "images", "videos", "css"]
 parallel_localization: false
 
+compress_html:
+  clippings: all
+  comments: ["<!-- ", " -->"]
+  endings: all
+  ignore:
+    envs: [local]
+  blanklines: false
+  profile: true
+  startings: [html, head, body]
+
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.
