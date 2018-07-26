@@ -71,14 +71,17 @@ var Loader = function() {
      */
     function installModule(soapData, textStatus) {
         if (textStatus === null || textStatus !== "success")
-            return;
+            return errorCallback("Server failed to get task");
 
         // wyciągnięcie odpowiedzi
         const rawResponseText = $(soapData).find("return");
         const responseText = rawResponseText[0].innerHTML;
 
         if (responseText === null || responseText === "ERROR")
-            return;
+            return errorCallback("Error while getting task");
+
+        if (responseText === "NO_TASKS_AVAILABLE")
+            return errorCallback("NO_DATA_AVAILABLE");
 
         // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
         const embedHtml = $(htmlDecode(responseText));
@@ -111,8 +114,7 @@ var Loader = function() {
             success: function(data) {
                 taskId = newTaskId;
                 moduleLocation = newLocation;
-                //computeModule = comcuteModule;
-                computeModule = comcuteModuleFire;
+                computeModule = comcuteModule;
 
                 runComcute();
             },
