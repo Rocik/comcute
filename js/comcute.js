@@ -19,6 +19,8 @@ $(document).ready(function() {
         $('#comcute-stop').removeAttr("style");
         $('#progressbar').addClass('expanded').removeClass('collapsed');
         $('#sim-canvas').css('display', 'none');
+        $('#sim-canvas .all').empty();
+        $('#sim-canvas .selected').empty();
         $('#computing-status').addClass('visible').removeClass('hidden');
         $('#text-status').html(Comcute.messages.awaitingData);
     });

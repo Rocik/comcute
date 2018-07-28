@@ -78,9 +78,10 @@ describe("Web Workers library", function() {
             });
 
             let progress = 0;
-            ww.onProgressChanged = (p, d) => {
+            ww.onProgressChanged = (p, id, d) => {
                 progress++;
                 expect(p).toBeCloseTo(progress);
+                expect(id).toBe(0);
                 expect(d).toBe("extraData");
             };
 

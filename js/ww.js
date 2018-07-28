@@ -180,36 +180,40 @@ function WW(javaScriptFunction) {
 
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
-            case 'import':
+            case 'import': {
                 var index = includes.indexOf(msg.data.oldFilename);
                 if (index !== -1)
                     includes[index] = msg.data.newFilename;
                 break;
-            case 'progress':
+            }
+            case 'progress': {
                 const valueChanged = msg.data.difference;
+                const wid = msg.data.index;
                 const extraData = msg.data.extra;
-                parseProgressUpdate(valueChanged, extraData);
+                parseProgressUpdate(valueChanged, wid, extraData);
                 break;
-            case 'finished':
+            }
+            case 'finished': {
                 usedWorkers--;
 
                 const wid = msg.data.index;
                 parseFinishedWorker(wid, msg.data.result);
                 break;
+            }
             default:
                 throw 'Unknown worker message type';
         }
     };
 
 
-    const parseProgressUpdate = (valueChanged, extraData) => {
+    const parseProgressUpdate = (valueChanged, workerId, extraData) => {
         if (typeof this.onProgressChanged === 'function') {
             totalProgress += valueChanged;
             if (totalProgress > 100 * progressGoal) {
                 totalProgress -= 100 * progressGoal;
                 progressGoal = usedWorkers;
             }
-            this.onProgressChanged(totalProgress / progressGoal, extraData);
+            this.onProgressChanged(totalProgress / progressGoal, workerId, extraData);
         }
     };
 
@@ -250,11 +254,12 @@ function WW(javaScriptFunction) {
             self.postMessage({
                 type: 'progress',
                 difference: difference,
+                index: workerIndex,
                 extra: extraData
             });
         };
 
-        self.onmessage = function (msg) {
+        self.onmessage = function(msg) {
             switch (msg.data.type) {
                 case "import":
                     importScripts(msg.data);

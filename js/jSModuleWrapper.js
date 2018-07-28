@@ -15,7 +15,14 @@ var jsModuleWrapper = function() {
     var ww;
     var previousProgress;
     var totalThreads;
-    var canvas;
+
+    const canvases = $('#sim-canvas');
+    const canvasDelayTimeouts = [];
+    const canvasDelayMs = 500;
+
+    var inputTaskIndex;
+    var inputTaskGoal;
+    var results;
 
 
     this.errorCallback = () => {};
@@ -30,13 +37,7 @@ var jsModuleWrapper = function() {
         running = true;
         statusTexts = {};
 
-        if (computeModule.parallelTaskJobs === true) {
-            totalThreads = ww.getFreeWorkers();
-            for (let i = 0; i < totalThreads; ++i)
-                fetchInputData();
-        } else
-            // fetchInputData();
-            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"c97bb22f-fcb5-4ee0-be6c-b2bde5951e4c\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf709\",\"http://comcute.eti.pg.gda.pl/maps/map_small.png 3 494 11 667 743 958 942 12 2 580 667 602 615 2 151 984 587 94 2 24 662 504 825 3 451 931 351 879 150 913 2 237 819 34 530 4 375 744 712 812 1004 884 125 400 3 874 827 10 423 465 689 3 191 496 531 980 208 978 4 111 532 954 759 474 709 477 780 4 327 786 192 769 693 848 22 576 4 78 268 579 685 409 789 262 763 2 463 869 400 758\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "success");
+        populateWorkers();
     };
 
 
@@ -48,6 +49,17 @@ var jsModuleWrapper = function() {
             ww = undefined;
         }
     };
+
+
+    var populateWorkers = function() {
+        if (computeModule.parallelTaskJobs === true) {
+            totalThreads = ww.getFreeWorkers();
+            for (let i = 0; i < totalThreads; ++i)
+                fetchInputData();
+        } else
+            // fetchInputData();
+            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"c97bb22f-fcb5-4ee0-be6c-b2bde5951e4c\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf709\",\"http://comcute.eti.pg.gda.pl/maps/map_small.png 3 494 11 667 743 958 942 12 2 580 667 602 615 2 151 984 587 94 2 24 662 504 825 3 451 931 351 879 150 913 2 237 819 34 530 4 375 744 712 812 1004 884 125 400 3 874 827 10 423 465 689 3 191 496 531 980 208 978 4 111 532 954 759 474 709 477 780 4 327 786 192 769 693 848 22 576 4 78 268 579 685 409 789 262 763 2 463 869 400 758\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "success");
+    }
 
 
     var fetchInputData = function() {
@@ -96,7 +108,30 @@ var jsModuleWrapper = function() {
 
             updateStatusbar(dataObject, dataID);
 
+            inputTaskIndex = 0;
+            if (typeof computeModule.getInputTasksAmount === 'function') {
+                inputTaskGoal = computeModule.getInputTasksAmount(dataObject);
+                results = [];
+            } else
+                inputTaskGoal = 0;
+
             const onRunFinished = function(result) {
+                if (inputTaskGoal > 0) {
+                    results.push(result);
+                    if (inputTaskIndex == inputTaskGoal) {
+                        if (ww.getUsedWorkers() > 0) {
+                            return;
+                        }
+                        if (typeof computeModule.getInputTasksAmount === 'function')
+                            result = computeModule.setResponse(results);
+                        else
+                            result = results;
+                    } else {
+                        startTask(dataObject, onRunFinished);
+                        return;
+                    }
+                }
+
                 console.log("Wynik obliczeń (" + dataID + "): " + result);
 
                 const resultArguments = [
@@ -117,30 +152,55 @@ var jsModuleWrapper = function() {
                     error: parent.errorCallback
                 });
 
-                if (running)
+                if (inputTaskGoal > 0)
                     fetchInputData();*/
 
                 delete statusTexts[dataID];
             }
 
-            if (typeof computeModule.prepare === 'function')
-                runPrepared(dataObject, onRunFinished);
-            else
-                ww.run(dataObject, onRunFinished);
+            if (inputTaskGoal > 0) {
+                const threads = ww.getFreeWorkers();
+                for (let i = 0; i < threads; ++i)
+                    startTask(dataObject, onRunFinished);
+            } else
+                startTask(dataObject, onRunFinished);
         }
     };
 
 
-    function runPrepared(dataObject, onRunFinished) {
+    function startTask(dataObject, onRunFinished) {
+        const prepare = typeof computeModule.prepare === 'function';
+
+        let inputData;
+        if (inputTaskGoal > 0) {
+            inputData = {
+                data: dataObject,
+                inputTaskIndex: inputTaskIndex,
+            }
+            inputTaskIndex++;
+        } else if (prepare) {
+            inputData = {
+                data: dataObject
+            }
+        } else {
+            inputData = dataObject;
+        }
+
+        if (prepare)
+            startPrepared(inputData, onRunFinished);
+        else
+            ww.run(inputData, onRunFinished);
+    }
+
+
+    function startPrepared(inputData, onRunFinished) {
         (new Promise((resolve, reject) => {
-            computeModule.prepare(dataObject, resolve);
+            computeModule.prepare(inputData.data, resolve);
             setTimeout(reject, 1000);
         }))
         .then((preparedData) => {
-            ww.run({
-                data: dataObject,
-                preparedData: preparedData
-            }, onRunFinished);
+            inputData.preparedData = preparedData;
+            ww.run(inputData, onRunFinished);
         }, parent.errorCallback);
     }
 
@@ -148,25 +208,61 @@ var jsModuleWrapper = function() {
     function createWW() {
         ww = new WW(computeModule.task);
         ww.import('/js/jsbn.js', 'js/jsbn2.js');
-        ww.onProgressChanged = (p, extraData) => {
-            p = Number(p.toFixed(2));
-            if (Math.abs(previousProgress - p) >= 0.01) {
-                $('.progress').css("width", p + "%");
-                previousProgress = p;
-            }
-
-            if (computeModule.getStatus === undefined)
-                $('#text-status').css("display", "none");
-
-            if (typeof extraData !== 'undefined'
-             && typeof computeModule.drawCanvas === 'function') {
-                computeModule.drawCanvas(parent.canvas[0], extraData);
-                parent.canvas.removeAttr('style');
-            }
-        };
+        ww.onProgressChanged = handleProgressChanged;
         previousProgress = 0;
 
-        parent.canvas = $('#sim-canvas');
+        const threads = ww.getFreeWorkers();
+        const canvasList = canvases.find(".all");
+        $("<canvas>", {
+            id: 'canvas' + 0,
+            class: "canvas",
+            click: selectCanvas,
+        }).appendTo(canvases.find(".selected"));
+        for (let i = 1; i < threads; ++i)
+            $("<canvas>", {
+                id: 'canvas' + i,
+                class: "thumbnail",
+                click: selectCanvas,
+            }).appendTo(canvasList);
+
+        for (let i = 0; i < threads; ++i)
+            canvasDelayTimeouts.push(false);
+    }
+
+
+    function handleProgressChanged(p, workerIndex, extraData) {
+        updateProgress(p);
+        if (computeModule.getStatus === undefined)
+            $('#text-status').css("display", "none");
+        updateCanvas(workerIndex, extraData);
+    };
+
+
+    function updateProgress(p) {
+        p = Number(p.toFixed(2));
+        if (Math.abs(previousProgress - p) >= 0.01) {
+            $('.progress').css("width", p + "%");
+            previousProgress = p;
+        }
+    }
+
+
+    function updateCanvas(workerIndex, extraData) {
+        if (typeof extraData !== 'undefined'
+         && typeof computeModule.drawCanvas === 'function') {
+            const current = $("#sim-canvas .selected canvas");
+            const canvas = $("#canvas" + workerIndex);
+            if (!canvas.is(current)) {
+                if (!canvasDelayTimeouts[workerIndex])
+                    canvasDelayTimeouts[workerIndex] = setTimeout(() => {
+                        canvasDelayTimeouts[workerIndex] = null;
+                    }, canvasDelayMs);
+                else
+                    return;
+            }
+            computeModule.drawCanvas(canvas[0], extraData);
+            canvases.removeAttr('style');
+        }
     }
 
 
@@ -200,6 +296,20 @@ var jsModuleWrapper = function() {
 
     function willDrawCanvas() {
         return typeof computeModule.drawCanvas === 'function'
-         && parent.canvas.attr("style").includes("display: none");
+         && canvases.attr("style").includes("display: none");
+    }
+
+
+    function selectCanvas() {
+        if ($(this).parent().attr('class') == "all") {
+            const current = $("#sim-canvas .selected canvas");
+            const newCanvas = $(this);
+            newCanvas.replaceWith(current);
+            $("#sim-canvas .selected").append(newCanvas);
+
+            current.addClass("thumbnail");
+            newCanvas.removeClass("thumbnail");
+            current.click(selectCanvas);
+        }
     }
 };

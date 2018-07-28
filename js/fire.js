@@ -22,6 +22,12 @@ window.comcuteModule = {
             };
     },
 
+    getInputTasksAmount: function(input) {
+        const inputWords = input.split(" ");
+        const firefightersCount = inputWords[1];
+        return inputWords[2 + firefightersCount * 2];
+    },
+
     drawCanvas: function(canvas, pixels) {
         const ctx = canvas.getContext("2d");
         if (canvas.width != imgWidth || canvas.height != imgHeight) {
@@ -30,7 +36,7 @@ window.comcuteModule = {
         }
 
         const img = ctx.getImageData(0, 0, imgWidth, imgHeight);
-        img.data.set(new Uint8ClampedArray(pixels));
+        img.data.set(pixels);
         ctx.putImageData(img, 0, 0);
     },
 
@@ -55,6 +61,22 @@ window.comcuteModule = {
         //img.src = dataObject.substr(0, dataObject.indexOf(" ")); // TODO: switch on deployment
     },
 
+    setResponse: function(results) {
+        const firefighters = results[0].firefighters;
+
+        let coveredWithFireTotalCnt = 0;
+        for (const result of results)
+            coveredWithFireTotalCnt += result.damage;
+
+        let response = coveredWithFireTotalCnt + " " + firefighters.length + " ";
+        for (var firefighter of firefighters) {
+            response += firefighter._x + " "
+                      + firefighter._y + " ";
+        }
+
+        return response;
+    },
+
     task: function(dataObject) {
         const FIREFIGHTER_AMOUNT_LIMIT = 72.0;
         const BLOCK_SIZE = 32;
@@ -75,43 +97,42 @@ window.comcuteModule = {
         let evenCPU = 1;
         const mapData = [];
 
+
         function start() {
             const inputData = parseInput(dataObject.data);
             loadMapDataFromImage(inputData.imageURL);
 
-            let coveredWithFireTotalCnt = 0;
+            const fire = inputData.fires[dataObject.inputTaskIndex];
+            evenCPU = 1;
+            activeBlocks = {};
+            initializeSimulationData(inputData.firefighters, fire);
+            printMap();
 
-            for (var fires of inputData.fires) {
-                evenCPU = 1;
-                activeBlocks = {};
-                initializeSimulationData(inputData.firefighters, fires);
-                printMap();
-
-                console.time('updateFires');
-                for (var i = 0; i <= 1500; i++) {
-                    updateFire(i);
-                    if (i % 2 == 0)
-                        updateProgress(i, 1500, pixels.buffer);
+            console.time('updateFires');
+            for (var i = 0; i <= 1500; i++) {
+                updateFire(i);
+                if (i % 4 == 0) {
+                    updateProgress(i, 1500, pixels);
+                } else {
+                    updateProgress(i, 1500);
                 }
-                console.timeEnd('updateFires');
+            }
+            console.timeEnd('updateFires');
 
-                let coveredWithFireCnt = 0;
-                for (var x = 0; x < mapWidth; x++) {
-                    for (var y = 0; y < mapHeight; y++) {
-                        if (internalCellsData[x][y].height > 0 && resultCellsData[x][y].maxFireAmount > 0)
-                            coveredWithFireCnt++;
-                    }
+            let coveredWithFireCnt = 0;
+            for (var x = 0; x < mapWidth; x++) {
+                for (var y = 0; y < mapHeight; y++) {
+                    if (internalCellsData[x][y].height > 0 && resultCellsData[x][y].maxFireAmount > 0)
+                        coveredWithFireCnt++;
                 }
-
-                coveredWithFireTotalCnt += coveredWithFireCnt;
-
-                console.log("Damage: " + coveredWithFireCnt / (mapHeight * mapWidth) * 100 + "%");
             }
 
-            const response = buildResponse(coveredWithFireTotalCnt, inputData.firefighters);
-            console.log(response);
+            console.log("Damage: " + coveredWithFireCnt / (mapHeight * mapWidth) * 100 + "%");
 
-            return response;
+            return {
+                damage: coveredWithFireCnt,
+                firefighters: inputData.firefighters,
+            }
         }
 
         function loadMapDataFromImage() {
@@ -296,7 +317,7 @@ window.comcuteModule = {
                 }
             }
 
-            updateProgress(0, 1, pixels.buffer);
+            updateProgress(0, 1, pixels);
         }
 
         function updateFire(updateCnt) {
@@ -464,16 +485,6 @@ window.comcuteModule = {
             return 0;
         }
 
-        function buildResponse(score, firefighters) {
-            let response = score + " " + firefighters.length + " ";
-
-            for (var firefighter of firefighters) {
-                response += firefighter.x + " "
-                          + firefighter.y + " ";
-            }
-
-            return response;
-        }
 
         class Point {
             constructor(x, y) {
@@ -511,6 +522,6 @@ window.comcuteModule = {
             set maxFireAmount(v) { this._maxFireAmount = v; }
         }
 
-        start();
+        return start();
     }
 }})();

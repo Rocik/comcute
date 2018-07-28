@@ -80,6 +80,11 @@ var Loader = function() {
         if (responseText === null || responseText === "ERROR")
             return errorCallback("Error while getting task");
 
+        // TODO: REMOVE! JUST FOR TESTING WITHOUT SERVER
+                computeModule = comcuteModule;
+                runComcute();
+                return;
+
         if (responseText === "NO_TASKS_AVAILABLE")
             return errorCallback("NO_DATA_AVAILABLE");
 
