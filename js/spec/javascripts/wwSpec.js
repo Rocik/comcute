@@ -56,8 +56,9 @@ describe("Web Workers library", function() {
 
         it("function which reports progress using x outOf y", function(done) {
             const ww = new WW(function() {
+                setProgressGoal(100);
                 for (i = 1; i <= 100; ++i)
-                    updateProgress(i, 100);
+                    updateProgress(i);
             });
 
             let progress = 0;
@@ -73,8 +74,9 @@ describe("Web Workers library", function() {
 
         it("function which reports progress using x outOf y and sends extra data", function(done) {
             const ww = new WW(function() {
+                setProgressGoal(100);
                 for (i = 1; i <= 100; ++i)
-                    updateProgress(i, 100, "extraData");
+                    updateProgress(i, "extraData");
             });
 
             let progress = 0;
@@ -90,7 +92,7 @@ describe("Web Workers library", function() {
             });
         });
 
-        it("function which reports direct progress", function(done) {
+        it("function which reports progress", function(done) {
             const ww = new WW(function() {
                 for (i = 1; i <= 100; ++i)
                     updateProgress(i);

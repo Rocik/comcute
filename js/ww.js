@@ -243,10 +243,16 @@ function WW(javaScriptFunction) {
 
         let workerIndex = -1;
         let previousProgress = 0;
+        let progressGoal = -1;
 
-        self.updateProgress = function(value, outOf, extraData) {
-            const percent = (arguments.length === 1) ?
-                value : value / outOf * 100;
+
+        self.setProgressGoal = function(goal) {
+            progressGoal = goal;
+        }
+
+        self.updateProgress = function(value, extraData) {
+            const percent = (progressGoal > 0) ?
+                value / progressGoal * 100 : value;
 
             const difference = percent - previousProgress;
             previousProgress = percent;
@@ -267,6 +273,7 @@ function WW(javaScriptFunction) {
                 case "start":
                     workerIndex = msg.data.index;
                     previousProgress = 0;
+                    progressGoal = -1;
                     const result = doWork(msg.data.data);
                     self.postMessage({
                         type: 'finished',

@@ -108,14 +108,15 @@ window.comcuteModule = {
             initializeSimulationData(inputData.firefighters, fire);
             printMap();
 
-            const progressGoal = 1500 * inputData.fires.length;
+            setProgressGoal(1500 * inputData.fires.length);
+
             console.time('updateFires');
             for (var i = 0; i <= 1500; i++) {
                 updateFire(i);
                 if (i % 4 == 0) {
-                    updateProgress(i, progressGoal, pixels);
+                    updateProgress(i, pixels);
                 } else {
-                    updateProgress(i, progressGoal);
+                    updateProgress(i);
                 }
             }
             console.timeEnd('updateFires');
