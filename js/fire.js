@@ -319,7 +319,7 @@ window.comcuteModule = {
                 }
             }
 
-            updateProgress(0, 1, pixels);
+            updateProgress(0, pixels);
         }
 
         function updateFire(updateCnt) {

@@ -7,7 +7,7 @@ var Loader = function() {
         infoId: '#comcute',
         urlId: '#url'
     };
-    const jsMW = new jsModuleWrapper();
+    const runner = new jsRunner();
     const supportedTech = {
         JavaScript: 0,
         JavaApplet: 1,
@@ -61,7 +61,7 @@ var Loader = function() {
 
 
     this.unregister = function () {
-        jsMW.stop();
+        runner.stop();
     };
 
     /**
@@ -104,8 +104,8 @@ var Loader = function() {
             if (taskId === TASK_ID && moduleLocation === MODULE_LOCATION)
                 runComcute();
             else {
-                jsMW.sServiceUrl = S_SERVICE_URL;
-                jsMW.sServiceNamespace = S_SERVICE_NAMESPACE;
+                runner.sServiceUrl = S_SERVICE_URL;
+                runner.sServiceNamespace = S_SERVICE_NAMESPACE;
                 fetchComcuteModule(MODULE_LOCATION, TASK_ID);
             }
         //}
@@ -129,8 +129,8 @@ var Loader = function() {
 
 
     function runComcute() {
-        jsMW.errorCallback = errorCallback;
-        jsMW.startComputing(taskId, computeModule);
+        runner.errorCallback = errorCallback;
+        runner.startComputing(taskId, computeModule);
     }
 
 

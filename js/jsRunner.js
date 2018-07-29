@@ -1,28 +1,28 @@
 /**
  *  Pobiera dane do zadania, uruchamia obliczenia
  */
-var jsModuleWrapper = function() {
+var jsRunner = function() {
     'use strict';
-    const parent = this;
+    const self = this;
 
     this.sServiceUrl = ""; // adres URL usługi sieciowej znajdującej się na serwerze S, z którym się komunikujemy
     this.sServiceNamespace = ""; // przestrzeń nazw powyższej usługi
-    var taskId = ""; // id rozwiązywanego zadania, zserializowane UUID
+    let taskId = ""; // id rozwiązywanego zadania, zserializowane UUID
 
-    var running = true;
-    var computeModule;
-    var statusTexts = {};
-    var ww;
-    var previousProgress;
-    var totalThreads;
+    let running = true;
+    let computeModule;
+    let statusTexts = {};
+    let ww;
+    let previousProgress;
+    let totalThreads;
 
     const canvases = $('#sim-canvas');
     const canvasDelayTimeouts = [];
     const canvasDelayMs = 500;
 
-    var inputTaskIndex;
-    var inputTaskGoal;
-    var results;
+    let inputTaskIndex;
+    let inputTaskGoal;
+    let results;
 
 
     this.errorCallback = () => {};
@@ -51,7 +51,7 @@ var jsModuleWrapper = function() {
     };
 
 
-    var populateWorkers = function() {
+    function populateWorkers() {
         if (computeModule.parallelTaskJobs === true) {
             totalThreads = ww.getFreeWorkers();
             for (let i = 0; i < totalThreads; ++i)
@@ -62,23 +62,23 @@ var jsModuleWrapper = function() {
     }
 
 
-    var fetchInputData = function() {
+    function fetchInputData() {
         $.webservice({
-            url: parent.sServiceUrl,
-            nameSpace: parent.sServiceNamespace,
+            url: self.sServiceUrl,
+            nameSpace: self.sServiceNamespace,
             methodName: "GetData",
             dataType: "text",
             data: [taskId],
             success: runJob,
-            error: parent.errorCallback
+            error: self.errorCallback
         });
     };
 
 
-    var runJob = function(soapData, serverTextStatus) {
+    function runJob(soapData, serverTextStatus) {
         // sprawdzenie, czy pobranie danych przebiegło poprawnie
         if (serverTextStatus === null || serverTextStatus !== 'success') {
-            parent.errorCallback("Getting job's data failed");
+            self.errorCallback("Getting job's data failed");
             return;
         }
 
@@ -88,9 +88,9 @@ var jsModuleWrapper = function() {
 
         if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
             if (responseText === "NO_DATA_AVAILABLE")
-                parent.errorCallback(responseText);
+                self.errorCallback(responseText);
             else
-                parent.errorCallback("Got empty job");
+                self.errorCallback("Got empty job");
             return;
         }
 
@@ -107,6 +107,10 @@ var jsModuleWrapper = function() {
             console.info("Testowanie (" + dataID + "): " + dataObject);
 
             updateStatusbar(dataObject, dataID);
+
+            const threadsAmount = ww.getFreeWorkers();
+            for (let i = 0; i < threadsAmount; ++i)
+                canvasDelayTimeouts[i] = false;
 
             inputTaskIndex = 0;
             if (typeof computeModule.getInputTasksAmount === 'function') {
@@ -144,12 +148,12 @@ var jsModuleWrapper = function() {
 
                 // wysyłanie wyników
                 /*$.webservice({
-                    url: parent.sServiceUrl,
-                    nameSpace: parent.sServiceNamespace,
+                    url: self.sServiceUrl,
+                    nameSpace: self.sServiceNamespace,
                     methodName: "SaveResult",
                     dataType: "text",
                     data: resultArguments,
-                    error: parent.errorCallback
+                    error: self.errorCallback
                 });
 
                 if (inputTaskGoal > 0)
@@ -159,8 +163,7 @@ var jsModuleWrapper = function() {
             }
 
             if (inputTaskGoal > 0) {
-                const threads = ww.getFreeWorkers();
-                for (let i = 0; i < threads; ++i)
+                for (let i = 0; i < threadsAmount; ++i)
                     startTask(dataObject, onRunFinished);
             } else
                 startTask(dataObject, onRunFinished);
@@ -201,7 +204,7 @@ var jsModuleWrapper = function() {
         .then((preparedData) => {
             inputData.preparedData = preparedData;
             ww.run(inputData, onRunFinished);
-        }, parent.errorCallback);
+        }, self.errorCallback);
     }
 
 
@@ -211,21 +214,21 @@ var jsModuleWrapper = function() {
         ww.onProgressChanged = handleProgressChanged;
         previousProgress = 0;
 
-        const threads = ww.getFreeWorkers();
+        const threadsAmount = ww.getFreeWorkers();
         const canvasList = canvases.find(".all");
         $("<canvas>", {
             id: 'canvas' + 0,
             class: "canvas",
             click: selectCanvas,
         }).appendTo(canvases.find(".selected"));
-        for (let i = 1; i < threads; ++i)
+        for (let i = 1; i < threadsAmount; ++i)
             $("<canvas>", {
                 id: 'canvas' + i,
                 class: "thumbnail",
                 click: selectCanvas,
             }).appendTo(canvasList);
 
-        for (let i = 0; i < threads; ++i)
+        for (let i = 0; i < threadsAmount; ++i)
             canvasDelayTimeouts.push(false);
     }
 
@@ -301,7 +304,7 @@ var jsModuleWrapper = function() {
 
 
     function selectCanvas() {
-        if ($(this).parent().attr('class') == "all") {
+        if ($(this).self().attr('class') == "all") {
             const current = $("#sim-canvas .selected canvas");
             const newCanvas = $(this);
             newCanvas.replaceWith(current);
