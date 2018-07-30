@@ -1,19 +1,55 @@
+/**
+ * Web Workers wrapper.
+ * @param  {string|Function} javaScriptFunction Script to run in the workers.
+ * @constructor
+ */
 function WW(javaScriptFunction) {
     'use strict';
 
-    this.onProgressChanged = function(progressPercentage) {};
+    /**
+     * Event handler executed when any worker changes their progress.
+     * @param  {number} progressPercentage - Amount of work done from 0 to 100.
+     * @param  {number} workerIndex - Internal worker id.
+     * @param  {*} [extraData] - Anything passed from worker.
+     */
+    this.onProgressChanged = function(progressPercentage, workerIndex, extraData) {};
 
-    const workers = []; // extenstions to Worker: isBusy, callback
+    /**
+     * Pool of all Web Workers extended with:
+     * isBusy - task is running
+     * callback - function execetured on finish
+     * @type {Array.<Worker>}
+     */
+    const workers = [];
+    /**
+     * List of scripts to include in each worker.
+     * @type {Array.<string>}
+     */
     const includes = [];
-    const jobQueue = []; // { input, callback }
+    /**
+     * Tasks queue used when no workers are free to store future jobs.
+     * @type {Array.<{input: *, callback: Function}>}
+     */
+    const jobQueue = [];
+    /**
+     * Worker controller function.
+     * @type {string}
+     */
     const workerCode = __workerLogic.toString();
 
+    /**
+     * Worker user's function.
+     * @type {string}
+     */
     let workerFunction;
     let usedWorkers = 0;
     let totalProgress = 0;
     let progressGoal = 1;
 
 
+    /**
+     * @constructor
+     */
     function constructor() {
         if (typeof javaScriptFunction === 'function')
             workerFunction = javaScriptFunction.toString();
@@ -29,6 +65,12 @@ function WW(javaScriptFunction) {
     }
 
 
+    /**
+     * Sets maximum amount of Web Workers (threads) in the pool.
+     * Works on any point of execution when no tasks are running.
+     * By default the pool has size of logical processors - 1.
+     * @param  {number} amount - desired workers count.
+     */
     this.setWorkersAmount = function(amount) {
         if (usedWorkers > 0)
             throw new Error("Changing workers amount while some of them are running is not allowed.");
@@ -47,6 +89,10 @@ function WW(javaScriptFunction) {
     };
 
 
+    /**
+     * Sends script files to all workers.
+     * @param  {...string} filename_args - Relative or absolute filenames to scripts.
+     */
     this.import = function() {
         const baseUrl = getBaseDomainUrl();
 
@@ -68,16 +114,28 @@ function WW(javaScriptFunction) {
     };
 
 
+    /**
+     * @return {number}
+     */
     this.getFreeWorkers = function() {
         return workers.length - usedWorkers;
     };
 
 
+    /**
+     * @return {number}
+     */
     this.getUsedWorkers = function() {
         return usedWorkers;
     };
 
 
+    /**
+     * Start task on first first unoccupied worker.
+     * @param  {*} input - Any data direcly sent to the worker.
+     * @param  {Function} [callback] - Executed after the task is done.
+     * @return {Promise} When callback is null Promise is returned.
+     */
     this.run = function(input, callback) {
         if (callback === undefined) {
             return new Promise((resolve, reject) => {
@@ -90,12 +148,20 @@ function WW(javaScriptFunction) {
     };
 
 
+    /**
+     * Terminate all workers.
+     */
     this.dispose = function() {
         for (let worker of workers)
             worker.terminate();
     };
 
 
+    /**
+     * Create blob "file" with merged controller and user's function that runs at the start.
+     * @param  {string} javaScriptText - The user's script to attach.
+     * @return {URL} Blob location.
+     */
     function createBlob(javaScriptText) {
         const blobParts = [
             '(', workerCode, ')();',
@@ -108,6 +174,9 @@ function WW(javaScriptFunction) {
     }
 
 
+    /**
+     * Creates initalized Worker object.
+     */
     function spawnWorker() {
         const workerUrl = createBlob(workerFunction);
         const worker = new Worker(workerUrl);
@@ -118,6 +187,12 @@ function WW(javaScriptFunction) {
     }
 
 
+    /**
+     * Start a task on the first unoccupied Worker.
+     * @param  {*} input - Any data direcly sent to the worker.
+     * @param  {Function} [callback] - Executed after the task is done.
+     * @return {boolean}  True if found free worker.
+     */
     function runOnUnoccupiedWorker(input, callback) {
         for (let i = 0; i < workers.length; ++i) {
             if (workers[i].isBusy === false) {
@@ -131,6 +206,11 @@ function WW(javaScriptFunction) {
     }
 
 
+    /**
+     * Command Worker to start processing data.
+     * @param  {number} workerIndex
+     * @param  {*} input - Any data direcly sent to the worker.
+     */
     function startWorker(workerIndex, input) {
         workers[workerIndex].postMessage({
             type: 'start',
@@ -142,6 +222,11 @@ function WW(javaScriptFunction) {
     }
 
 
+    /**
+     * Remove desired amount of Workers from the pool.
+     * Prioritize unoccupied Workers.
+     * @param  {number} amount - How many workers will be removed.
+     */
     function removeWorkers(amount) {
         for (let i = 0; i < amount; ++i) {
             let removed = false;
@@ -163,6 +248,9 @@ function WW(javaScriptFunction) {
     }
 
 
+    /**
+     * @return {string} - Domain without subdirectory.
+     */
     function getBaseDomainUrl() {
         const url = window.location.origin;
         if (url.slice(-1) === '/')
@@ -178,7 +266,12 @@ function WW(javaScriptFunction) {
     };
 
 
+    /**
+     * Parses all messages from Workers.
+     * @param  {Object.data.{type: string, ...*}} msg - Worker message.
+     */
     const handleMessageFromWorker = (msg) => {
+        console.log(msg);
         switch (msg.data.type) {
             case 'import': {
                 var index = includes.indexOf(msg.data.oldFilename);
@@ -206,6 +299,11 @@ function WW(javaScriptFunction) {
     };
 
 
+    /**
+     * @param  {[type]} valueChanged - How much progress has changed.
+     * @param  {[type]} workerId
+     * @param  {[type]} [extraData]
+     */
     const parseProgressUpdate = (valueChanged, workerId, extraData) => {
         if (typeof this.onProgressChanged === 'function') {
             totalProgress += valueChanged;
@@ -218,6 +316,10 @@ function WW(javaScriptFunction) {
     };
 
 
+    /**
+     * @param  {number} wid - Worker index / id.
+     * @param  {*} result - Task results from Worker.
+     */
     const parseFinishedWorker = (wid, result) => {
         const worker = workers[wid];
         worker.isBusy = false;
@@ -234,7 +336,11 @@ function WW(javaScriptFunction) {
     };
 
 
-    // This function CANNOT direcly access anything outside it
+    /**
+     * !!!  This function CANNOT direcly access anything outside it  !!!
+     *
+     * Insides of this function are script which controls data flow within Worker.
+     */
     function __workerLogic() {
         if (self.document !== undefined) {
             console.error("Executing web worker code outside worker is not allowed.");
@@ -246,10 +352,19 @@ function WW(javaScriptFunction) {
         let progressGoal = -1;
 
 
+        /**
+         * Sets value that represents 100% of progress.
+         * @param  {number} [goal=100]
+         */
         self.setProgressGoal = function(goal) {
             progressGoal = goal;
         }
 
+
+        /**
+         * @param  {number} value - Current progress value.
+         * @param  {*} extraData
+         */
         self.updateProgress = function(value, extraData) {
             const percent = (progressGoal > 0) ?
                 value / progressGoal * 100 : value;
@@ -265,6 +380,11 @@ function WW(javaScriptFunction) {
             });
         };
 
+
+        /**
+         * Parses message from main thread.
+         * @param  {Object.data.{type: string, ...*}} msg - Main thread message.
+         */
         self.onmessage = function(msg) {
             switch (msg.data.type) {
                 case "import":
@@ -282,11 +402,16 @@ function WW(javaScriptFunction) {
                     });
                     break;
                 default:
-                    throw "";
+                    throw 'Unknown main thread message type';
             }
         };
 
 
+        /**
+         * Loads additional script files.
+         * With relative paths tries finding them on subdirectories.
+         * @param  {string[]} data List of script filenames.
+         */
         function importScripts(data) {
             const includes = data.includes;
             if (Array.isArray(includes) && includes.length)
@@ -304,6 +429,11 @@ function WW(javaScriptFunction) {
         }
 
 
+        /**
+         * @param  {URL} url     - Script file location.
+         * @param  {URL} selfUrl - Worker blob location.
+         * @return {boolean}     - True if loaded something.
+         */
         function loadScriptOnSubdomainFolder(url, selfUrl) {
             if (url.origin == selfUrl.origin) {
                 const subdir = selfUrl.pathname.split('/', 2)[1];
