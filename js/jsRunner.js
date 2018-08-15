@@ -304,7 +304,7 @@ var jsRunner = function() {
 
 
     function selectCanvas() {
-        if ($(this).self().attr('class') == "all") {
+        if ($(this).parent().attr('class') == "all") {
             const current = $("#sim-canvas .selected canvas");
             const newCanvas = $(this);
             newCanvas.replaceWith(current);

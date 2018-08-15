@@ -1,8 +1,7 @@
 /**
- * Moduł obliczeniowy JavaScript
- * Implementacja testowania hipotezy Collatza
- * @author Waldemar Korłub, na bazie implementacji PrimeCode.js Adama Polaka
+ * var in some functions and some strange structures gave significant performance boost
  */
+"use strict";
 
 (function() {
 
@@ -84,12 +83,8 @@ window.comcuteModule = {
         const mapHeight = dataObject.preparedData.h;
         const mapHorizontalBlocks = mapWidth / BLOCK_SIZE;
         const mapVerticalBlocks = mapHeight / BLOCK_SIZE;
-        const simulationData = {
-            mapWidth: 1024,
-            humidity: 0.0,
-            windDirectionX: 0.5,
-            windDirectionY: -0.5
-        };
+        const windDirX = 0.5;
+        const windDirY = -0.5;
         let pixels = dataObject.preparedData.pixels;
         let activeBlocks = {};
         let resultCellsData = [];
@@ -112,8 +107,9 @@ window.comcuteModule = {
 
             console.time('updateFires');
             for (var i = 0; i <= 1500; i++) {
-                updateFire(i);
+                simulateCPU();
                 if (i % 4 == 0) {
+                    updateFire(i);
                     updateProgress(i, pixels);
                 } else {
                     updateProgress(i);
@@ -212,24 +208,27 @@ window.comcuteModule = {
                     if (md.urban > 0)
                         md.urban = 200;
 
-                    const rcd = new ResultCellData();
+                    const rcd = {
+                        fireAmount: 0.0,
+                        firefightersAmount: 0.0,
+                        maxFireAmount: 0.0,
+                        calories: md.forestation,
+                    };
 
-                    rcd.calories = md.forestation;
                     if (md.height > 0) {
                         rcd.calories += (10.0 + 100.0 / md.height) +
                             Math.floor(Math.random() * 20);
                     }
-                    rcd.fireAmount = 0;
 
                     resultCellsData[x].push(rcd);
 
                     let icd = {
+                        fireAmountEven: 0.0,
+                        fireAmountOdd: 0.0,
+                        firefightersAmountEven: 0.0,
+                        firefightersAmountOdd: 0.0,
                         height: md.height,
                         maxCalories: rcd.calories,
-                        fireAmountEven: 0,
-                        fireAmountOdd: 0,
-                        firefightersAmountEven: 0,
-                        firefightersAmountOdd: 0
                     };
                     internalCellsData[x].push(icd);
                 }
@@ -243,7 +242,7 @@ window.comcuteModule = {
         }
 
         function initializeFire(x, y) {
-            resultCellsData[x][y].fireAmount = 5;
+            setFireAmount(resultCellsData[x][y], 5);
 
             const fireBlock = new Point(x / BLOCK_SIZE, y / BLOCK_SIZE);
             addToBlocks(activeBlocks, fireBlock);
@@ -265,26 +264,26 @@ window.comcuteModule = {
             const xRest = x % BLOCK_SIZE;
             const yRest = y % BLOCK_SIZE;
 
-            if (xRest == 0 && block.x > 0) { // lewy
+            if (xRest == 0 && block.x > 0) {
                 addToBlocks(blocksObject, new Point(block.x - 1, block.y));
 
-                if (yRest == BLOCK_SIZE - 1 && block.y < yRest - 1) { // lewy-dolny
+                if (yRest == BLOCK_SIZE - 1 && block.y < yRest - 1) {
                     addToBlocks(blocksObject, new Point(block.x - 1, block.y + 1));
                     addToBlocks(blocksObject, new Point(block.x, block.y + 1));
                     return;
-                } else if (yRest == 0 && block.y > 0) { // lewy-górny
+                } else if (yRest == 0 && block.y > 0) {
                     addToBlocks(blocksObject, new Point(block.x - 1, block.y - 1));
                     addToBlocks(blocksObject, new Point(block.x, block.y - 1));
                     return;
                 }
-            } else if (xRest == BLOCK_SIZE - 1 && block.x < mapHorizontalBlocks - 1) { // prawy
+            } else if (xRest == BLOCK_SIZE - 1 && block.x < mapHorizontalBlocks - 1) {
                 addToBlocks(blocksObject, new Point(block.x + 1, block.y));
 
-                if (yRest == 0 && block.y > 0) { // prawy-górny
+                if (yRest == 0 && block.y > 0) {
                     addToBlocks(blocksObject, new Point(block.x + 1, block.y - 1));
                     addToBlocks(blocksObject, new Point(block.x, block.y - 1));
                     return;
-                } else if (yRest == BLOCK_SIZE - 1 && block.y < mapVerticalBlocks - 1) { // prawy-dolny
+                } else if (yRest == BLOCK_SIZE - 1 && block.y < mapVerticalBlocks - 1) {
                     addToBlocks(blocksObject, new Point(block.x + 1, block.y + 1));
                     addToBlocks(blocksObject, new Point(block.x, block.y + 1));
                     return;
@@ -322,25 +321,23 @@ window.comcuteModule = {
             updateProgress(0, pixels);
         }
 
-        function updateFire(updateCnt) {
-            simulateCPU();
+        function updateFire() {
+            var rcd = null;
 
-            if (updateCnt % 2 == 0) {
-                for (var key in activeBlocks) {
-                    const block = activeBlocks[key];
-                    const nextBlockX = (block.x + 1) * BLOCK_SIZE;
-                    const nextBlockY = (block.y + 1) * BLOCK_SIZE;
+            for (var key in activeBlocks) {
+                var block = activeBlocks[key];
+                var nextBlockX = (block.x + 1) * BLOCK_SIZE;
+                var nextBlockY = (block.y + 1) * BLOCK_SIZE;
 
-                    for (var x = block.x * BLOCK_SIZE; x < nextBlockX; x++) {
-                        for (var y = block.y * BLOCK_SIZE; y < nextBlockY; y++) {
-                            const index = (y * mapWidth + x) * 4;
+                for (var x = block.x * BLOCK_SIZE; x < nextBlockX; x++) {
+                    for (var y = block.y * BLOCK_SIZE; y < nextBlockY; y++) {
+                        var index = (y * mapWidth + x) * 4;
 
-                            if (internalCellsData[x][y].height > 0) {
-                                const rcd = resultCellsData[x][y];
-                                pixels[index    ] = rcd.fireAmount;
-                                pixels[index + 1] = rcd.calories;
-                                pixels[index + 2] = rcd.firefightersAmount;
-                            }
+                        if (internalCellsData[x][y].height > 0) {
+                            rcd = resultCellsData[x][y];
+                            pixels[index    ] = rcd.fireAmount;
+                            pixels[index + 1] = rcd.calories;
+                            pixels[index + 2] = rcd.firefightersAmount;
                         }
                     }
                 }
@@ -350,40 +347,45 @@ window.comcuteModule = {
         function simulateCPU() {
             evenCPU = (evenCPU + 1) % 2;
 
-            simulate(evenCPU);
+            simulate(evenCPU == 1);
         }
 
         function simulate(even) {
-            const windDirX = simulationData.windDirectionX;
-            const windDirY = simulationData.windDirectionY;
-
             newActiveBlocks = {};
 
+            var internalCellsDataX = null;
+            var resultCellsDataX = null;
+            var internalCellData = null;
+            var resultCellData = null;
+            var block = null;
+
             for (var key in activeBlocks) {
-                const block = activeBlocks[key];
-                const nextBlockX = (block.x + 1) * BLOCK_SIZE;
-                const nextBlockY = (block.y + 1) * BLOCK_SIZE;
+                block = activeBlocks[key];
+                var nextBlockX = (block.x + 1) * BLOCK_SIZE;
+                var nextBlockY = (block.y + 1) * BLOCK_SIZE;
 
                 newActiveBlocks[key] = new Point(block.x, block.y);
 
-                let stillActive = false;
+                var stillActive = false;
 
                 for (var x = block.x * BLOCK_SIZE; x < nextBlockX; x++) {
-                    for (var y = block.y * BLOCK_SIZE; y < nextBlockY; y++) {
+                    internalCellsDataX = internalCellsData[x];
+                    resultCellsDataX = resultCellsData[x];
 
-                        const internalCellData = internalCellsData[x][y];
+                    for (var y = block.y * BLOCK_SIZE; y < nextBlockY; y++) {
+                        internalCellData = internalCellsDataX[y];
                         if (internalCellData.height < 0)
                             continue;
 
-                        const resultCellData = resultCellsData[x][y];
+                        resultCellData = resultCellsDataX[y];
 
-                        let calories = resultCellData.calories;
-                        if (calories <= 0)
-                            resultCellData.fireAmount = 0;
+                        var calories = resultCellData.calories;
+                        if (calories <= 0.0)
+                            resultCellData.fireAmount = 0.0;
 
-                        const maxCalories = internalCellData.maxCalories;
+                        var maxCalories = internalCellData.maxCalories;
 
-                        const spreadFire
+                        var spreadFire
                             = calcSpreadFire(0.35, -windDirX - windDirY, x - 1, y - 1, even)
                             + calcSpreadFire(0.5,  -windDirY,            x,     y - 1, even)
                             + calcSpreadFire(0.35,  windDirX - windDirY, x + 1, y - 1, even)
@@ -392,52 +394,54 @@ window.comcuteModule = {
                             + calcSpreadFire(0.5,   windDirY,            x,     y + 1, even)
                             + calcSpreadFire(0.35, -windDirX + windDirY, x - 1, y + 1, even)
                             + calcSpreadFire(0.5,  -windDirX,            x - 1, y,     even);
-                        const spreadFirefighters
-                            = calcSpreadFirefighters(0.35, x - 1, y - 1, even)
-                            + calcSpreadFirefighters(0.5,  x,     y - 1, even)
-                            + calcSpreadFirefighters(0.35, x + 1, y - 1, even)
-                            + calcSpreadFirefighters(0.5,  x + 1, y,     even)
-                            + calcSpreadFirefighters(0.35, x + 1, y + 1, even)
-                            + calcSpreadFirefighters(0.5,  x,     y + 1, even)
-                            + calcSpreadFirefighters(0.35, x - 1, y + 1, even)
-                            + calcSpreadFirefighters(0.5,  x - 1, y,     even);
+                        var spreadFirefighters
+                            = calcSpreadFirefighters(0.175, x - 1, y - 1, even)
+                            + calcSpreadFirefighters(0.25,  x,     y - 1, even)
+                            + calcSpreadFirefighters(0.175, x + 1, y - 1, even)
+                            + calcSpreadFirefighters(0.25,  x + 1, y,     even)
+                            + calcSpreadFirefighters(0.175, x + 1, y + 1, even)
+                            + calcSpreadFirefighters(0.25,  x,     y + 1, even)
+                            + calcSpreadFirefighters(0.175, x - 1, y + 1, even)
+                            + calcSpreadFirefighters(0.25,  x - 1, y,     even);
 
-                        let firefightersAmount = resultCellData.firefightersAmount;
-                        firefightersAmount += 1.0 * (firefightersAmount / 5.0 + spreadFirefighters / 2.0);
+                        var firefightersAmount = resultCellData.firefightersAmount;
+                        firefightersAmount += firefightersAmount / 5.0 + spreadFirefighters / 2.0;
                         if (firefightersAmount > FIREFIGHTER_AMOUNT_LIMIT)
                             firefightersAmount = FIREFIGHTER_AMOUNT_LIMIT;
 
-                        let fireAmount = resultCellData.fireAmount;
-                        if (calories > maxCalories / 2.0)
+                        var fireAmount = resultCellData.fireAmount;
+                        if (calories > maxCalories / 2.0) {
                             fireAmount += maxCalories / 156.0 * (fireAmount / 5.0 + spreadFire / 2.0);
-                        else
+                        } else {
                             fireAmount -= calories / 256.0;
+                        }
 
                         if (fireAmount > (maxCalories + 250.0) / 2.0)
                             fireAmount = (maxCalories + 250.0) / 2.0;
 
-                        if (fireAmount > firefightersAmount)
+                        if (fireAmount <= firefightersAmount) {
+                            fireAmount = 0.0;
+                        } else {
                             fireAmount -= firefightersAmount;
-                        else
-                            fireAmount = 0;
+                        }
 
                         if ((fireAmount > 0 || firefightersAmount > 0) &&
                             !(fireAmount <= 0 && firefightersAmount >= FIREFIGHTER_AMOUNT_LIMIT)) {
                             stillActive = true;
                             propagateToNeighborBlocks(newActiveBlocks, x, y);
 
-                            calories = calories - fireAmount * 0.001;
+                            calories -= fireAmount * 0.001;
                             if (calories <= 0) {
-                                fireAmount = 0;
-                                calories = 0;
+                                fireAmount = 0.0;
+                                calories = 0.0;
                             }
                         }
 
                         resultCellData.calories = calories;
-                        resultCellData.fireAmount = fireAmount;
+                        setFireAmount(resultCellData, fireAmount);
                         resultCellData.firefightersAmount = firefightersAmount;
 
-                        if (even == 1) {
+                        if (even) {
                             internalCellData.fireAmountOdd = fireAmount;
                             internalCellData.firefightersAmountOdd = firefightersAmount;
                         } else {
@@ -452,76 +456,50 @@ window.comcuteModule = {
             }
 
             activeBlocks = newActiveBlocks;
-
         }
 
         function calcSpreadFire(amount, wind, x, y, even) {
             if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
-                return 0;
+                return 0.0;
 
-            let fireAmount;
-            if (even == 1)
+            var fireAmount;
+            if (even)
                 fireAmount = internalCellsData[x][y].fireAmountEven;
             else
                 fireAmount = internalCellsData[x][y].fireAmountOdd;
 
-            if (fireAmount > 2)
-                return Math.abs(fireAmount * amount * (1.0 + wind));
+            if (fireAmount <= 2)
+                return 0.0;
 
-            return 0;
+            return Math.abs(fireAmount * amount * (1.0 + wind));
         }
 
         function calcSpreadFirefighters(amount, x, y, even) {
             if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight)
-                return 0;
+                return 0.0;
 
-            let firefightersAmount;
-            if (even == 1)
+            var firefightersAmount;
+            if (even)
                 firefightersAmount = internalCellsData[x][y].firefightersAmountEven;
             else
                 firefightersAmount = internalCellsData[x][y].firefightersAmountOdd;
 
-            if (firefightersAmount > 2)
-                return Math.abs(firefightersAmount * (amount / 2));
+            if (firefightersAmount <= 2)
+                return 0.0;
 
-            return 0;
+            return firefightersAmount * amount;
         }
 
-
-        class Point {
-            constructor(x, y) {
-                this._x = x << 0;
-                this._y = y << 0;
-
-                this._hash = 7;
-                this._hash = 71 * this._hash + this._x;
-                this._hash = 71 * this._hash + this._y;
-            }
-
-            get x() { return this._x; }
-            get y() { return this._y; }
-            get hash() { return this._hash; }
+        function Point(x, y) {
+            this.x = x << 0;
+            this.y = y << 0;
+            this.hash = 71 * (497 + this.x) + this.y;
         }
 
-        class ResultCellData {
-            constructor() {
-                this._calories = 0.0;
-                this._firefightersAmount = 0.0;
-                this._maxFireAmount = 0.0;
-            }
-
-            get calories() { return this._calories; }
-            set calories(v) { this._calories = v; }
-            get firefightersAmount() { return this._firefightersAmount; }
-            set firefightersAmount(v) { this._firefightersAmount = v; }
-            get fireAmount() { return this._fireAmount; }
-            set fireAmount(v) {
-                this._fireAmount = v;
-                if(this._fireAmount > this._maxFireAmount)
-                    this._maxFireAmount = this._fireAmount;
-            }
-            get maxFireAmount() { return this._maxFireAmount; }
-            set maxFireAmount(v) { this._maxFireAmount = v; }
+        function setFireAmount(rcd, v) {
+            rcd.fireAmount = v;
+            if (rcd.fireAmount > rcd.maxFireAmount)
+                rcd.maxFireAmount = rcd.fireAmount;
         }
 
         return start();

@@ -271,7 +271,6 @@ function WW(javaScriptFunction) {
      * @param  {Object.data.{type: string, ...*}} msg - Worker message.
      */
     const handleMessageFromWorker = (msg) => {
-        console.log(msg);
         switch (msg.data.type) {
             case 'import': {
                 var index = includes.indexOf(msg.data.oldFilename);

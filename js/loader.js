@@ -47,6 +47,13 @@ var Loader = function() {
             JSON.stringify(supportedTech)
         ];
 
+        // TODO: REMOVE! JUST FOR TESTING WITHOUT SERVER
+                setTimeout(() => {
+                    computeModule = comcuteModule;
+                    runComcute();
+                }, 1000);
+                return;
+
         // Pobranie kodu obliczeniowego od serwera S
         $.webservice({
             url: LOADER_SERVICE_URL,
@@ -79,11 +86,6 @@ var Loader = function() {
 
         if (responseText === null || responseText === "ERROR")
             return errorCallback("Error while getting task");
-
-        // TODO: REMOVE! JUST FOR TESTING WITHOUT SERVER
-                computeModule = comcuteModule;
-                runComcute();
-                return;
 
         if (responseText === "NO_TASKS_AVAILABLE")
             return errorCallback("NO_DATA_AVAILABLE");
