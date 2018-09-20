@@ -3,10 +3,6 @@ var Loader = function() {
     const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";
     // Namespace usługi systemu comcute do komunikacji z internautą.
     const LOADER_SERVICE_NAMESPACE = "http://si.webservice/";
-    const opt = {
-        infoId: '#comcute',
-        urlId: '#url'
-    };
     const runner = new jsRunner();
     const supportedTech = {
         JavaScript: 0,
@@ -17,10 +13,7 @@ var Loader = function() {
     let errorCallback;
     let taskId;
     let moduleLocation;
-    let sServiceUrl;
-    let sServiceNamespace;
     let computeModule;
-    let computeStatusFunction;
 
 
     this.setFailureEvent = function(callback) {
@@ -77,23 +70,27 @@ var Loader = function() {
      * @param textStatus statuc usługi sieciowej
      */
     function installModule(soapData, textStatus) {
-        if (textStatus === null || textStatus !== "success")
+        if (textStatus === null || textStatus !== "success") {
             return errorCallback("Server failed to get task");
+        }
 
         // wyciągnięcie odpowiedzi
         const rawResponseText = $(soapData).find("return");
         const responseText = rawResponseText[0].innerHTML;
 
-        if (responseText === null || responseText === "ERROR")
+        if (responseText === null || responseText === "ERROR") {
             return errorCallback("Error while getting task");
+        }
 
-        if (responseText === "NO_TASKS_AVAILABLE")
+        if (responseText === "NO_TASKS_AVAILABLE") {
             return errorCallback("NO_DATA_AVAILABLE");
+        }
 
         // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
         const embedHtml = $(htmlDecode(responseText));
-        if (embedHtml.length === 0)
+        if (embedHtml.length === 0) {
             return;
+        }
 
         // dodanie skryptu osadzającego do seksji head
         const head = document.getElementsByTagName("head")[0];
@@ -103,9 +100,9 @@ var Loader = function() {
 
         // utworzenie i załadowanie skryptu obliczeniowego
         //if (MODULE_TYPE === "JavaScript") {
-            if (taskId === TASK_ID && moduleLocation === MODULE_LOCATION)
+            if (taskId === TASK_ID && moduleLocation === MODULE_LOCATION) {
                 runComcute();
-            else {
+            } else {
                 runner.sServiceUrl = S_SERVICE_URL;
                 runner.sServiceNamespace = S_SERVICE_NAMESPACE;
                 fetchComcuteModule(MODULE_LOCATION, TASK_ID);
@@ -136,8 +133,10 @@ var Loader = function() {
     }
 
 
-    // dekoduje string do tagów html
+    // Dekoduje string do tagów html
     function htmlDecode(value) {
-        return $('<p/>').html(value).text();
+        const p = document.createElement(p);
+        p.innerHTML = value;
+        return p.innerText || p.textContent;
     }
 };

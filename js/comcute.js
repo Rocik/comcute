@@ -1,46 +1,70 @@
-$(document).ready(function() {
+window.onload = function() {
     'use strict';
 
     const loader = new Loader();
 
-    function resetUI() {
-        $('#comcute-start').removeAttr("style");
-        $('#comcute-stop').css("display", "none");
-        $('#progressbar').addClass('collapsed').removeClass('expanded');
-        $('.progress').css("width", "0%");
-        $('#computing-status').addClass('hidden').removeClass('visible');
-    }
+    const comcuteStart = document.getElementById('comcute-start');
+    const comcuteStop = document.getElementById('comcute-stop');
+    const progressBar = document.getElementById('progressbar');
+    const progress = progressBar.getElementsByClassName('progress')[0];
+    const computingStatus = document.getElementById('computing-status');
+    const simCanvas = document.getElementById('sim-canvas');
+    const textStatus = document.getElementById('text-status');
 
-    $('#comcute-start').click(function() {
+    const moreLess = document.getElementById('more-less');
+    const line = document.getElementById('line');
+    const firstPageContent = document.getElementsByClassName('page-content')[0];
+    const panel = document.getElementById('panel');
+
+
+    comcuteStart.onclick = function() {
         loader.setFailureEvent(resetUI);
         loader.registerAndGetModule();
 
-        $('#comcute-start').css("display", "none");
-        $('#comcute-stop').removeAttr("style");
-        $('#progressbar').addClass('expanded').removeClass('collapsed');
-        $('#sim-canvas').css('display', 'none');
-        $('#sim-canvas .all').empty();
-        $('#sim-canvas .selected').empty();
-        $('#computing-status').addClass('visible').removeClass('hidden');
-        $('#text-status').html(Comcute.messages.awaitingData);
-    });
+        comcuteStart.style.display = "none";
+        comcuteStop.removeAttribute("style");
+        progressBar.classList.replace('collapsed', 'expanded')
+        simCanvas.style.display = "none";
+        empty(simCanvas.getElementsByClassName('all')[0]);
+        empty(simCanvas.getElementsByClassName('selected')[0]);
+        computingStatus.classList.replace('hidden', 'visible')
+        textStatus.innerHTML = Comcute.messages.awaitingData;
+    };
 
-    $('#comcute-stop').click(function() {
+
+    comcuteStop.onclick = function() {
         resetUI();
         loader.unregister();
-    });
+    };
 
-    $('#more-less').click(function() {
-        if ($('#more-less').hasClass('less')) {
-            $('#more-less').removeClass('less');
-            $('#line').removeClass('less');
-            $('.page-content').removeClass('more');
-            $('#panel').removeClass('hidden');
+
+    moreLess.onclick = function() {
+        if (moreLess.classList.contains('less')) {
+            moreLess.classList.remove('less');
+            line.classList.remove('less');
+            firstPageContent.classList.remove('more');
+            panel.classList.remove('hidden');
         } else {
-            $('#more-less').addClass('less');
-            $('#line').addClass('less');
-            $('.page-content').addClass('more');
-            $('#panel').addClass('hidden');
+            moreLess.classList.add('less');
+            line.classList.add('less');
+            firstPageContent.classList.add('more');
+            panel.classList.add('hidden');
         }
-    });
-}());
+    };
+
+
+    function resetUI() {
+        comcuteStart.removeAttribute("style");
+        comcuteStop.style.display = "none";
+        progressBar.classList.replace('expanded', 'collapsed')
+        progress.style.width = "0%";
+        computingStatus.classList.replace('visible', 'hidden')
+    }
+
+
+    function empty(element) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+};

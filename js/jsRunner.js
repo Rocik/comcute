@@ -16,7 +16,8 @@ var jsRunner = function() {
     let previousProgress;
     let totalThreads;
 
-    const canvases = $('#sim-canvas');
+    const canvases = document.getElementById('sim-canvas');
+    const selectedCanvas = canvases.getElementsByClassName("selected")[0];
     const canvasDelayTimeouts = [];
     const canvasDelayMs = 500;
 
@@ -98,7 +99,7 @@ var jsRunner = function() {
             return;
 
         // Konwersja odpowiedzi serwera S na zmienne
-        const responseJSON = $.parseJSON(responseText);
+        const responseJSON = JSON.parse(responseText);
         const dataTaskID = responseJSON[0]; // id zadania, zserializowane UUID
         const dataID     = responseJSON[1]; // id danych, zserializowane UUID
         const dataObject = responseJSON[2];
@@ -189,10 +190,11 @@ var jsRunner = function() {
             inputData = dataObject;
         }
 
-        if (prepare)
+        if (prepare) {
             startPrepared(inputData, onRunFinished);
-        else
+        } else {
             ww.run(inputData, onRunFinished);
+        }
     }
 
 
@@ -214,37 +216,42 @@ var jsRunner = function() {
         ww.onProgressChanged = handleProgressChanged;
         previousProgress = 0;
 
-        const threadsAmount = ww.getFreeWorkers();
-        const canvasList = canvases.find(".all");
-        $("<canvas>", {
-            id: 'canvas' + 0,
-            class: "canvas",
-            click: selectCanvas,
-        }).appendTo(canvases.find(".selected"));
-        for (let i = 1; i < threadsAmount; ++i)
-            $("<canvas>", {
-                id: 'canvas' + i,
-                class: "thumbnail",
-                click: selectCanvas,
-            }).appendTo(canvasList);
+        let newCanvas = document.createElement("canvas");
+        newCanvas.setAttribute("id", "canvas" + 0);
+        newCanvas.setAttribute("class", "canvas");
+        newCanvas.onclick = selectCanvas;
+        selectedCanvas.appendChild(newCanvas);
 
-        for (let i = 0; i < threadsAmount; ++i)
+        const threadsAmount = ww.getFreeWorkers();
+        const canvasList = canvases.getElementsByClassName("all")[0];
+
+        for (let i = 1; i < threadsAmount; ++i) {
+            newCanvas = document.createElement("canvas");
+            newCanvas.setAttribute("id", "canvas" + i);
+            newCanvas.setAttribute("class", "thumbnail");
+            newCanvas.onclick = selectCanvas;
+            canvasList.appendChild(newCanvas);
+        }
+
+        for (let i = 0; i < threadsAmount; ++i) {
             canvasDelayTimeouts.push(false);
+        }
     }
 
 
     function handleProgressChanged(p, workerIndex, extraData) {
         updateProgress(p);
-        if (computeModule.getStatus === undefined)
-            $('#text-status').css("display", "none");
+        if (computeModule.getStatus === undefined) {
+            document.getElementById('text-status').style.display = "none";
+        }
         updateCanvas(workerIndex, extraData);
-    };
+    }
 
 
     function updateProgress(p) {
         p = Number(p.toFixed(2));
         if (Math.abs(previousProgress - p) >= 0.01) {
-            $('.progress').css("width", p + "%");
+            document.getElementsByClassName('progress')[0].style.width = p + "%";
             previousProgress = p;
         }
     }
@@ -253,25 +260,26 @@ var jsRunner = function() {
     function updateCanvas(workerIndex, extraData) {
         if (typeof extraData !== 'undefined'
          && typeof computeModule.drawCanvas === 'function') {
-            const current = $("#sim-canvas .selected canvas");
-            const canvas = $("#canvas" + workerIndex);
-            if (!canvas.is(current)) {
-                if (!canvasDelayTimeouts[workerIndex])
+            const current = selectedCanvas.getElementsByTagName("canvas")[0];
+            const canvas = document.getElementById("canvas" + workerIndex);
+            if (!canvas.isEqualNode(current)) {
+                if (!canvasDelayTimeouts[workerIndex]) {
                     canvasDelayTimeouts[workerIndex] = setTimeout(() => {
                         canvasDelayTimeouts[workerIndex] = null;
                     }, canvasDelayMs);
-                else
+                } else {
                     return;
+                }
             }
-            computeModule.drawCanvas(canvas[0], extraData);
-            canvases.removeAttr('style');
+            computeModule.drawCanvas(canvas, extraData);
+            canvases.removeAttribute('style');
         }
     }
 
 
     function updateStatusbar(dataObject, dataID) {
-        $('#computing-status').addClass('visible').removeClass('hidden');
-        $('#text-status').removeAttr("style");
+        document.getElementById('computing-status').classList.replace('hidden', 'visible');
+        document.getElementById('text-status').removeAttribute("style");
 
         if (computeModule.getStatus !== undefined) {
             const moduleStatus = computeModule.getStatus(dataObject, Comcute.currentLanguage);
@@ -285,34 +293,36 @@ var jsRunner = function() {
                 }
             }
 
-            for (let i = 0; i < paragraphs; ++i)
+            for (let i = 0; i < paragraphs; ++i) {
                 statusText += "<p>" + Comcute.messages.awaitingData + "</p>";
+            }
 
             const moduleDescription = moduleStatus.description || "";
-            $('#text-status').html(moduleDescription + statusText);
-        } else if (willDrawCanvas())
-            $('#text-status').html(Comcute.messages.awaitingData);
-        else
-            $('#text-status').html(Comcute.messages.computingStart);
+            document.getElementById('text-status').innerHTML = moduleDescription + statusText;
+        } else if (willDrawCanvas()) {
+            document.getElementById('text-status').innerHTML = Comcute.messages.awaitingData;
+        } else {
+            document.getElementById('text-status').innerHTML = Comcute.messages.computingStart;
+        }
     }
 
 
     function willDrawCanvas() {
         return typeof computeModule.drawCanvas === 'function'
-         && canvases.attr("style").includes("display: none");
+            && canvases.attr("style").includes("display: none");
     }
 
 
     function selectCanvas() {
-        if ($(this).parent().attr('class') == "all") {
-            const current = $("#sim-canvas .selected canvas");
-            const newCanvas = $(this);
+        if (this.parentNode.getAttribute("class") == "all") {
+            const current = selectedCanvas.getElementsByTagName("canvas")[0];
+            const newCanvas = this;
             newCanvas.replaceWith(current);
-            $("#sim-canvas .selected").append(newCanvas);
+            selectedCanvas.append(newCanvas);
 
-            current.addClass("thumbnail");
-            newCanvas.removeClass("thumbnail");
-            current.click(selectCanvas);
+            current.classList.add("thumbnail");
+            newCanvas.classList.remove("thumbnail");
+            current.onclick = selectCanvas;
         }
     }
 };
