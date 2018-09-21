@@ -1,13 +1,32 @@
+// Requires 'Jekyll Problem Matchers' extenstion
 {
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Start jekyll server",
+            "label": "Serve",
             "type": "shell",
-            "command": "bundle exec jekyll serve",
-            "presentation": {
-                "reveal": "always",
-                "panel": "dedicated"
+            "command": "bundle exec jekyll serve --livereload",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "isBackground": true,
+            "problemMatcher": [
+                "$jekyll-error-watch",
+                "$jekyll-warning-watch"
+            ]
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "bundle exec jekyll build",
+            "problemMatcher": [
+                "$jekyll-error",
+                "$jekyll-warning"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
             }
         }
     ]
