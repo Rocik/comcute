@@ -55,15 +55,15 @@ Obecnie stosowane metody łamania RSA wykorzystują metody tzw. sit liczbowych i
 
 Łamanie szyfrów symetrycznych w środowisku rozproszonym o stosunkowo niewielkiej długości kluczy, np. DES polega na tym, że usiłujemy znaleźć klucz szyfrujący, by odszyfrować szyfrogram, albo bezpośrednio odtworzyć tekst jawny z szyfrogramu. Operację można scharakteryzować następująco:
 
-#### Parametry algorytmu
+## Parametry algorytmu
 
 Długość bloku – 64 bitów, efektywna długość klucza – 56 bitów (w 64-bitowej sekwencji występuje 8 bitów parzystości).
 
-#### Założenia
+## Założenia
 
 Dysponujemy szyfrogramem i odpowiadającym mu fragmentem tekstu jawnego. Ta metoda łamania to wg podanej poprzednio klasyfikacji łamanie brutalne ze znanym tekstem jawnym.
 
-#### Zrównoleglenie obliczeń poprzez podział danych
+## Zrównoleglenie obliczeń poprzez podział danych
 
 Polegać to może na tym, że aplikacja internauty otrzymuje blok tekstu jawnego i blok szyfrogramu oraz początkowe bity klucza (np. o liczbie bitów 16-24). Każdy użytkownik otrzymuje inną kombinację początkowych bitów hipotetycznego klucza.
 
@@ -91,19 +91,19 @@ Ułatwieniem w łamaniu haseł mogą być słabości stosowanych funkcji skrótu
 
 W dalszej części punktu przedstawiono charakterystykę obliczeń dla rozproszonego łamania brutalnego haseł, wykorzystujących zgłoszone do współpracy komputery (część ich zdolności obliczeniowych):
 
-#### Rozproszony system obliczeń
+## Rozproszony system obliczeń
 
 System obliczeń składa się z grupy węzłów wewnętrznych (przyjmujących zlecenia wykonania obliczeń, dzielących dane zadania na paczki, organizujące obliczenia we współpracy z zewnętrznymi węzłami), węzłów zewnętrznych (przekazujących na żądanie kody aplikacji i kolejne paczki danych do współpracujących komputerów internautów) i komputerów wykonujących obliczenia (zgłoszonych dobrowolnie użytkowników biorących udział w całym przedsięwzięciu);
 
-#### Parametry obliczeń
+## Parametry obliczeń
 
 Długość wartości skrótu – 128b (MD5), 160b (SHA-1, RIPEMD), 256b (SHA-256), długość ciągu znaków hasła – od 1 do pewnej górnej granicy.
 
-#### Założenia
+## Założenia
 
 Dysponujemy wartością skrótu hasła i typem stosowanej funkcji skrótu, pomocna może być informacja o użytkowniku (rozbudowa o elementy tzw. łamania słownikowego). Ten sposób znajdowania haseł jest podobny do podanej poprzednio klasyfikacji metody łamania z szyfrogramem.
 
-#### Zrównoleglenie obliczeń poprzez podział danych
+## Zrównoleglenie obliczeń poprzez podział danych
 
 Aplikacja uruchomiona na komputerze użytkownika (współpracującego z rozproszonym systemem obliczeń) otrzymuje wartość skrótu, kod funkcji do obliczeń skrótu i początkowy ciąg znaków hasła. Każdy komputer użytkownika otrzymuje inną kombinację początkowych znaków hipotetycznego hasła (patrz rys. 19.1).
 
@@ -111,7 +111,7 @@ Aplikacja uruchomiona na komputerze użytkownika (współpracującego z rozprosz
 
 Zadaniem aplikacji na komputerze użytkownika jest zbadanie pozostałych hipotetycznych ciągów znaków hasła (uzupełnienie zadanego ciągu początkowego) o długości od 1 znaku do 3 znaków większej od zadanej w celu ustalenia, czy są one łącznie tą właściwą kombinacją pozwalającą wyliczyć zadaną wartość funkcji skrótu.
 
-#### Zalety
+## Zalety
 
 Minimalna komunikacja, a obliczenia niemalże w czasie rzeczywistym (niekiedy kilka sekund); czas obliczeń można regulować, ustając długość badanej sekwencji znaków.
 
@@ -120,17 +120,18 @@ Minimalna komunikacja, a obliczenia niemalże w czasie rzeczywistym (niekiedy ki
 W dalszej części tego podpunktu przedstawiono przykład aplikacji rozproszonego łamania haseł zrealizowanej poza środowiskiem Comcute, ale przygotowanej z myślą o przyszłej implementacji w systemie laboratoryjnym Comcute Politechniki Gdańskiej. Przewidziano, że będą łamane hasła przechowywane w postaci skrótów utworzonych z wykorzystaniem jednokierunkowych funkcji MD5 oraz SHA-1. Aplikacja została stworzona z wykorzystaniem języków Python, C++ i JavaScript.
 
 Architektura aplikacji obejmuje następujące elementy:
+
 * Serwer sterujący – główny element, zwany również kontrolerem. Jest to wielowątkowy serwer TCP/IP, który zajmuje się dzieleniem przestrzeni problemu na mniejsze zakresy, przydziałem zadań oraz przyjmowaniem rozwiązań, a także ich weryfikacją. Ta część de facto symuluje zachowanie warstw W i Z środowiska COMCUTE.
 * Baza danych MySQL, w której przechowywane są informacje o użytkownikach systemu, wygenerowanych zadaniach, a także problemach, które należy jeszcze zaadresować. Jest to symulacja warstwy danych serwerów W środowiska Comcute.
 * Moduł serwera WWW. Jest to symulacja serwerów S środowiska Comcute.
 * Klienci:
-   * pierwszego typu – łączą się poprzez aplikację desktopową bezpośrednio z kontrolerem, będąc świadomymi uczestnikami obliczeń (voluntary computing);
-   * drugiego rodzaju, nie są świadom faktu brania udziału w projekcie, stąd nie mogą oni w sposób bezpośredni komunikować się z kontrolerem.
+  * pierwszego typu – łączą się poprzez aplikację desktopową bezpośrednio z kontrolerem, będąc świadomymi uczestnikami obliczeń (voluntary computing);
+  * drugiego rodzaju, nie są świadom faktu brania udziału w projekcie, stąd nie mogą oni w sposób bezpośredni komunikować się z kontrolerem.
 * Serwer sterujący – Jest to aplikacja napisana w języku Python, zadaniem której, jest podział przestrzeni problemu na zakresy obliczeń stanowiące części zadań serwowanych klientom. Oprócz tego odpowiedzialny jest on też za przyjmowanie i weryfikację wyników zgłoszonych przez klientów.
 
 Komunikacja z kontrolerem przebiega przy użyciu gniazd TCP/IP, z wykorzystaniem protokołu tekstowego przypominającego np. protokół FTP. W komunikacji udział biorą obiekty zadań, opakowane w formie dokumentów formatu XML. Przykładowe zadanie w formacie XML ma więc postać (dla klientów pierwszego typu):
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <task id="17">
       <problem>
@@ -147,7 +148,7 @@ Komunikacja z kontrolerem przebiega przy użyciu gniazd TCP/IP, z wykorzystaniem
 
 Odpowiedź zgłaszana jest natomiast w następujący sposób:
 
-```
+```xml
 <?xml version="1.0"?>
 <task id="17">
       <result found="T">CCCCC</result>
@@ -160,6 +161,7 @@ Co oznacza że zostało znalezione rozwiązane. W tym momencie można dokonać s
 Wprowadzony został moduł serwera WWW (WebServer), będącego swoistym rodzajem proxy, jako pośrednik pomiędzy kontrolerem a klientami (drugiego typu). W tym przypadku mamy do czynienia z wieloma użytkownikami, którzy nie są zbyt świadomi faktu użyczania swej mocy obliczeniowej. Z uwagi na pewną trudność związaną z obsługą protokołu zgłaszania odpowiedzi, zaproponowany został element pośredniczący pomiędzy klientem niejawnym, a kontrolerem.
 
 Kod aplikacji serwera został on napisany w języku Python i zapewnia podstawową oczekiwaną funkcjonalność, tj. jest w stanie udostępniać pewne zasoby internetowe (strony www, grafikę czy też aplety), jak również obsługiwać żądania rodziny GET/POST i inne, jak np. możliwość dynamicznego wypełniania szablonów dokumentów, informacjami charakterystycznymi dla zadań naszego systemu. Serwer jest pośrednikiem i z punktu widzenia kontrolera jest użytkownikiem reprezentującym wszystkich klientów drugiego typu. W momencie nawiązywania połączenia, przedstawia się więc on jako inna maszyna, następnie pobiera w jej imieniu zadanie. Zadanie to przesyła, używając jednego z dostępnych silników, dla klienta – zwykle przeglądarki internetowej – po czym odbiera od klienta wynik, który znowu raportuje do kontrolera, również w imieniu klienta. Uzupełnienie działania serwera stanowią proste moduły, zwane też silnikami, które realizują właściwą funkcjonalność obliczeniową. Przygotowane zostały 3 takie implementacje:
+
 * Silnik JavaScript pozwala wstawić skrypt na dowolną stronę, który raz uruchomiony, zajmuje się wykonaniem obliczeń, a następnie odesłaniem rezultatu do serwera, z którego został pobrany. Realizuje to przy wykorzystaniu technologii AJAX. Skrypt ma możliwość wprowadzenia opóźnień czasowych, dzięki którym pozostaje niezauważalny, gdyż zabiera relatywnie mało zasobów systemowych.
 * Silnik Flash został zrealizowany tylko w częściowej funkcjonalności. Nie występuje tu osadzenie obiektu (WDF) na stronie, są dostępne jedynie moduły w postaci plików typu .FLA i .AS, z którymi to współpracuje zmodyfikowana wersja WebServera.
 * Silnik apletów Java uruchamia aplety Javy poprzez mechanizm JNLP. Poprzez skrypt, który je ładuje, są wstawiane parametry do obliczeń. Aby można było odesłać wyniki obliczeń nie podpisując apletu, odsyła się je na WebServer za pomocą java.net.URLConnection.
@@ -176,17 +178,21 @@ Aktualne doniesienia [3,4] na temat łamania kluczy RSA wskazują, że dokonano 
 
 Charakterystykę rozproszonego łamania RSA opisano następująco:
 
-#### Parametry
+## Parametry
+
 Tekst jawny o długości bloku – np. 128 b, klucz publiczny – (n, e).
 
-#### Założenia
+## Założenia
+
 Dysponujemy szyfrogramem (np. podpisem) S i tekstem jawnym (skrót podpisywanej wiadomości) H oraz pewną początkową liczbą bitów klucza prywatnego albo zakresem badanych liczb pierwszych;
 
-#### Zrównoleglenie obliczeń poprzez podział danych
+## Zrównoleglenie obliczeń poprzez podział danych
+
 Aplikacja internauty otrzymuje aplikację do badania liczb pierwszych, tekst jawny, szyfrogram oraz klucz publiczny. Każdy użytkownik otrzymuje inną kombinację początkowych bitów hipotetycznego klucza prywatnego albo inny hipotetyczny przedział dla liczby poszukiwanej pierwszej, np. p. Zadaniem internauty jest znalezienie takiej pary liczb pierwszych p,q (problem faktoryzacji), że n=pq oraz liczby d będącej tożsamościową odwrotnością e, tzn. Sd mod n = H, Hed mod n ≡ H; Do badania, czy dana liczba x jest liczbą pierwszą, można użyć:
+
 * Testu Fermata – dla liczby x i znanej liczby pierwszej a obliczamy f ≡ a x‑1 (mod x); jeśli f ≠1(mod x), to x nie jest liczbą pierwszą, a w przeciwnym wypadku prawdopodobnie; test powtarzamy dla upewnienia się dla kilku liczb pierwszych a, np. 2, 5, 7, 11,13. Niestety, istnieją liczby złożone (liczby Carmichaela), dla których zachodzi a x-1 (mod x) ≡ 1(mod x), dla dowolnego a względnie pierwszego z x. Zaletą tego jest testu jest prostota obliczeń.
 * Testu Millera-Rabina – który jest bardziej skomplikowany. Wykonujemy go następująco:
-   * Dla danego nieparzystego n niech a<sup>n−1</sup> = t2<sup>s</sup>, gdzie t jest nieparzyste.
+  * Dla danego nieparzystego n niech a<sup>n−1</sup> = t2<sup>s</sup>, gdzie t jest nieparzyste.
       1. Jeśli liczba n jest liczbą pierwszą, to a<sup>n−1</sup> ≡1 (mod n) (zachodzi małe twierdzenie Fermata).
       2. Jeśli liczba n jest liczbą pierwszą i ![równanie]({{"/images/image0026.png" | relative_url}}) dla 0 &lt; r ≤ s, to
       3. ![równanie]({{"/images/image0036.png" | relative_url}}) albo ![równanie]({{"/images/image0045.png" | relative_url}})
@@ -212,9 +218,11 @@ Niezbędna jest jednak dodatkowa uwaga. Zanim przystąpimy do wyczerpującego at
 Zalety: czas obliczeń można regulować, ustając długość zadanej sekwencji bitów lub wielkość przedziału badanych liczb pierwszych.
 
 # 19.6. Podsumowanie
+
 W rozdziale przedstawiono metody rozproszonego łamania szyfrów symetrycznych, łamania haseł bądź testowania ich odporności na odgadnięcie oraz wybrane metody łamania schematów asymetrycznych na przykładzie algorytmu RSA. Zaprezentowano także przykład aplikacji służącej do rozproszonego łamania haseł z wykorzystaniem mocy obliczeniowej komputerów wolontariuszy uczestniczących w obliczeniach. Z przedstawionych rozważań wynika, że wybrane obliczenia kryptograficzne realizowane w środowisku rozproszonym mają duże znaczenie praktyczne i pozwalają znacznie przyśpieszyć różnego rodzaju działania mające znaczenie dla bezpieczeństwa różnych firm, organizacji i instytucji.
 
 # 19.7. Wykaz literatury
+
 1. A. J. Menezes, P. C. van Oorschot, S. A. Vanstone: Handbook of Applied Cryptography (Kryptografia stosowana), WNT 2005.
 2. B. Schneier: Kryptografia dla praktyków, wyd.2, WNT 2000.
 3. Kleinjung, K. Aoki, J. Franke, A. K. Lenstra, E. Thomé, J. W. Bos, P. Gaudry, A. Kruppa, P. L. Montgomery, D. A. Osvik, H. te Riele, A. Timofeev, P. Zimmermann: Factorization of a 768-bit RSA modulus, version 1.4, February 18, 2010, [http://eprint.iacr.org/2010/006.pdf](http://eprint.iacr.org/2010/006.pdf "Factorization of a 768-bit RSA modulus")

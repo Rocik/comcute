@@ -99,6 +99,7 @@ W realizowanych aplikacjach dotyczących monitoringu obsługiwane są najpopular
 Zasadniczym komponentem jest tutaj biblioteka procedur przekształcających określone wybrane standardy do formatu umożliwiającego zautomatyzowane przetwarzanie numeryczne, czyli w praktyce konwersja do postaci opisującej poszczególne klatki przekazu na poziomie pojedynczych pikseli.
 
 # 15.4.2. Przekształcenia kontekstowe
+
 Operacje polegają na modyfikacji poszczególnych elementów obrazu w zależności od ich stanu i stanu ich otoczenia. Ze względu na rozmiar kontekstu mogą wymagać wielu powtarzalnych operacji, ale algorytmy są regularne i ponadto mogą być wykonywane na wszystkich punktach obrazu jednocześnie.
 
 Filtry wykorzystywane do analizy obrazów zakładają, że wykonywane na obrazie operacje będą kontekstowe. Oznacza to, że dla wyznaczenia jednego punktu obrazu wynikowego trzeba dokonać określonych obliczeń na wielu punktach obrazu źródłowego. Algorytm polega na obliczeniu funkcji, której argumentami są wartości pikseli z otoczenia. Otoczenie najczęściej utożsamiane jest z kwadratowym obszarem otaczającym symetrycznie aktualnie przetwarzany piksel [5].

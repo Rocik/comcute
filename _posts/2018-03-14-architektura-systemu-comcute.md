@@ -33,8 +33,6 @@ Założenia projektowe:
 
 10. Mogą istnieć sytuacje, w których zadanie obliczeniowe uznaje się za  ukończone nawet wówczas, gdy wyniki nie zostaną policzone w 100%.
 
-
-
 # 7.2. Koncepcja architektury systemu
 
 System składa się z czterech warstw (rys. 7.1):
@@ -56,7 +54,6 @@ Oddzielenie warstwy dystrybucyjnej od warstwy wewnętrznej umożliwia:
 * ochronę węzłów W dysponujących informacją o całym zadaniu (wraz z wynikami obliczeń) przed zagrożeniem z zewnątrz.
 
 Założenia projektowe systemu zakładają, że istnieje pełna kontrola nad budową i sposobem funkcjonowania węzłów W i serwerów S. Serwery R nie są projektowane w ramach systemu, lecz muszą być z nim „zaprzyjaźnione”, tzn. muszą mieć informacje o położeniu serwerów S i sposobie komunikacji z nimi. Nie ma żadnej kontroli nad serwerami P i komputerami internautów I.
-
 
 # 7.3. Współdziałanie komponentów
 
@@ -108,8 +105,6 @@ Działanie systemu składa się z pięciu faz:
 
    2. Wyniki po skompletowaniu są odsyłane do zleceniodawcy z dowolnego węzła W, który uczestniczył w obliczeniach.
 
-
-
 # 7.4. Sposoby dystrybucji zadań obliczeniowych
 
 Ponieważ system nie może w żaden sposób zagwarantować, że internauta nie zamknie przeglądarki lub nie przełączy się na inną stronę przed zakończeniem wykonywania swojego fragmentu zadania obliczeniowego, potencjalnie te same fragmenty zadań będą realizowane wielokrotnie przez węzły W aż do uzyskania odpowiedzi (od własnych internautów lub od innych węzłów). Taki mechanizm jest potrzebny do zapewnienia niezawodności systemu. Dla zapewnienia wiarygodności (uodpornienia na ataki podstawieniowe) obliczenia muszą być powtarzane (potencjalnie przez różne węzły), zaś wyniki porównywane ze sobą i wybierane przez głosowanie (min. 3 odpowiedzi). Węzły dystrybuują zadania wg algorytmu pseudolosowego. Jeśli algorytm wskazuje na zadanie, które ma już wyniki, to węzeł W prześle zadanie do realizacji wówczas, gdy ilość odpowiedzi jest mniejsza od minimalnej. Wszystkie wyniki są rejestrowane wraz z ilością „oddanych głosów”. Po skompletowaniu wszystkich wyników i scalaniu rozwiązania problemu wybierane są wyniki z największą ilością głosów (rys. 7.3).
@@ -152,11 +147,11 @@ Nie znaczy to, że należy całkowicie pominąć pierwsze trzy kategorie treści
 
 Elastyczne dopasowywanie się systemu do zmiennychzadań obliczeniowych trzeba zapewnić przez dołączanie zmieniających się modułów obliczeniowych do użytecznej treści WWW. Ważne jest, aby treść WWW udostępniana przez serwery P odwoływała się do serwerów R, które będą wzbogacały ją o kod rozszerzający pełniący funkcję loadera, który będzie pobierał z serwera W poprzez serwer S moduł obliczeniowy zawierający kod i dane do obliczenia Możliwe jest też inne rozwiązanie. Można do internauty dostarczyć gotowy kod obliczeniowy, który będzie pobierał jedynie dane. To rozwiązanie jest mniej elastyczne, ale nie wymaga tworzenia specjalnego środowiska uruchomieniowego po stronie internauty.
 
-**Tryb pracy w sytuacji szczególnego zagrożenia**
+#### Tryb pracy w sytuacji szczególnego zagrożenia
 
 W sytuacji szczególnego zagrożenia założenie o dobrowolnym uczestnictwie w dystrybucji i przetwarzaniu zadań staje się nieaktualne. Internauci świadomi zagrożenia instytucji państwowych mogą zdecydować się na udział w obliczeniach z pobudek patriotycznych, ale również odpowiednie przepisy prawne mogą usankcjonować narzucenie wykorzystywania ich mocy obliczeniowej. Wówczas serwisy S mogą zaoferować specjalną aplikację, która będzie jawnie wykonywać zadania obliczeniowe po stronie klienta na komputerach internautów, co pozwoli na pominięcie mechanizmu doklejania dodatkowego kodu do treści oferowanych przez serwery P.
 
-**Komercyjny tryb pracy**
+#### Komercyjny tryb pracy
 
 W zastosowaniach komercyjnych można zastosować obliczenia jawne i zwiększyć obciążenie komputerów internautów. Można też zwiększyć zaufanie do aplikacji i w ten sposób częściowo zapewnić możliwość obliczeń peer-to-peer (do pewnego stopnia, bo ograniczenia są przez zapory sieciowe).
 

@@ -21,7 +21,7 @@ The layered architecture has been elaborated for the Comcute system \[3\]. Layer
 
 The conceptual scheme (Fig. 3.1) illustrates operational implementation of layer _S_ in cooperation with layers _W_ and _I_ in the process of execution of required computational sub-tasks. The sub-tasks are components of high-level applications delivered form layer _Z_. In practice, layer _S_ receives complete program modules with attached data packages. Next, both program modules and data packages are being sent down to layer _I_ \[4\].
 
-### 1.2.1.  Inter-layer cooperation
+## 1.2.1.  Inter-layer cooperation
 
 The conceptual scheme (Fig. 3.1) has been developed and elaborated with respect to realisation details. In Fig. 3.2, system architecture and complete operational flowchart are presented. Practical processing aspects have been deliberatively spotlighted. The architecture concentrates around four main conceptual components. They are: server _W_, servers _S_, Load Balancer and global user area (Internet), respectively.
 
@@ -31,16 +31,16 @@ Server _W_ monitors operational activities and controls task execution at the hi
 
 According to the chart presented in Fig. 3.2, one may enumerate consecutive operational steps:
 
-1.  servers _S_ are registered at server _W_
-2.  server _W_ distributes task modules and data packages
-3.  server _W_ determines task allocations according to Load Balancer data
-4.  Internet user opens a web page
-5.  Internet user selects the link of Load Balancer
-6.  Load Balancer attaches the Internet user to a selected server _S_
-7.  web browser of the Internet user gets its task
-8.  the task connects to the Load Balancer in order to get connection to server _S_
-9.  the task gets its data package for processing
-10.  results are sent back from the Internet user to server _S_ and to server _W_.
+1. servers _S_ are registered at server _W_
+2. server _W_ distributes task modules and data packages
+3. server _W_ determines task allocations according to Load Balancer data
+4. Internet user opens a web page
+5. Internet user selects the link of Load Balancer
+6. Load Balancer attaches the Internet user to a selected server _S_
+7. web browser of the Internet user gets its task
+8. the task connects to the Load Balancer in order to get connection to server _S_
+9. the task gets its data package for processing
+10. results are sent back from the Internet user to server _S_ and to server _W_.
 
 The proposed solution is sensible and clear, and has allowed achievement of specified operability and effectiveness. One may notice that the operational diagram incorporates key features of scalability and system transparency.
 
@@ -60,37 +60,37 @@ In the current version of the Comcute system, the two models of data distributio
 
 In the implementation of the Comcute system, several classes of functionalities have been realised. Among others, one may enumerate the operational functionalities and software components like: user interface, inter-node communicator, layer _S_ interface, workload monitor, task status monitor, task execution controller, repository for tasks, task distributor, results collector, repository of results, and many others. They are characterised below:
 
-**User interface**
+#### User interface
 
 * reception of high-level applications for execution,
 * controlling of tasks execution status,
 * sending results to a user.
 
-**Inter-node communicator**
+#### Inter-node communicator
 
 * general communication with servers of layer _W,_
 * communication with subsets of servers in layer _W,_
 * sending messages to selected server sub-groups,
 * reception of messages form selected servers of layer _W_.
 
-**Layer _S_ interface**
+#### Layer _S_ interface
 
 * reception of messages form selected servers of layer _S,_
 * data sending to selected servers _S_,
 * reception of results from servers of layer _S._
 
-**Workload monitor**
+#### Workload monitor
 
 * determination of inner workload of a computing nodes,
 * global determination of workload of servers in layers _W_ and _S_,
 * generation of ordered list of workloads of servers in a layer.
 
-**Task status monitor**
+#### Task status monitor
 
 * status control of tasks being in execution,
 * reporting of task execution statuses.
 
-**Task execution controller**
+#### Task execution controller
 
 * task partitioning into execution module,
 * distribution of modules with task codes,
@@ -99,24 +99,24 @@ In the implementation of the Comcute system, several classes of functionalities 
 * verification of task termination conditions,
 * consolidation of partial results into complete ones.
 
-**Repository for tasks**
+#### Repository for tasks
 
 * storing and delivering of execution codes for tasks,
 * delivering and storing of data packages for tasks,
 * collecting and storing partial results of tasks.
 
-**Task distributor**
+#### Task distributor
 
 * deploying of tasks on servers in layer _S_,
 * distribution of data packages for processing,
 * reception of results form execution servers in layer _S_.
 
-**Results collector**
+#### Results collector
 
 * starting of execution code for results consolidation,
 * storing of results in results repository.
 
-**Repository of results**
+#### Repository of results
 
 * storing of complete final results,
 * results presentation for Comcute users,
@@ -130,10 +130,10 @@ Architectural and conceptual foundations of the Comcute system have been elabora
 
 # References
 
-1.  Brudło P.: _Berkeley Open Infrastructure for Network Computing_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 39-45.
-2.  Balicki J., Brudło P., Czarnul P., Kuchta J., Matuszek M., Szpryngier P., Szymański J.: _Functional Design of the Comcute System_, R&D technical report 33/2011, Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdansk, Poland, 2011.
-3.  Brudło P.: _Implementation Issues in the Comcute System_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 127-136.
-4.  Brudło P., Kuchta J., Szpryngier P., Szymański J.: _Requirements for Implementation of Selected Computational Methods for the Comcute System_, R&D technical report 36/2011, Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdansk, Poland, 2011.
-5.  Brudło P., Czarnul P., Kuchta J., Szpryngier P., Szymański J.: _Characteristics of Distributed Computations for the Comcute System,_ R&D technical report 41/2011, Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdansk, Poland, 2011.
-6.  Balicki J., Bieliński T., Brudło P., Paluszak J., Szymański J: _Dissemination of Computations with Distribution Servers_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 113-126.
-7.  Brudło P.: _Security in Monitoring_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 175-184.
+1. Brudło P.: _Berkeley Open Infrastructure for Network Computing_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 39-45.
+2. Balicki J., Brudło P., Czarnul P., Kuchta J., Matuszek M., Szpryngier P., Szymański J.: _Functional Design of the Comcute System_, R&D technical report 33/2011, Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdansk, Poland, 2011.
+3. Brudło P.: _Implementation Issues in the Comcute System_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 127-136.
+4. Brudło P., Kuchta J., Szpryngier P., Szymański J.: _Requirements for Implementation of Selected Computational Methods for the Comcute System_, R&D technical report 36/2011, Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdansk, Poland, 2011.
+5. Brudło P., Czarnul P., Kuchta J., Szpryngier P., Szymański J.: _Characteristics of Distributed Computations for the Comcute System,_ R&D technical report 41/2011, Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdansk, Poland, 2011.
+6. Balicki J., Bieliński T., Brudło P., Paluszak J., Szymański J: _Dissemination of Computations with Distribution Servers_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 113-126.
+7. Brudło P.: _Security in Monitoring_, Chapter in monograph: „Distributed Calculations in Computer Systems of Grid Class Architecture”, Publisher: Gdansk University of Technology, Faculty of Electronics, Telecommunications and Informatics, Gdańsk, Poland, 2012, pp. 175-184.

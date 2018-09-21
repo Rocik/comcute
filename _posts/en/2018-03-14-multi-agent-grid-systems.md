@@ -17,7 +17,7 @@ An agent is a computer system that is situated in some environment, and is capab
 
 A Multi Agent System (MAS) is a system which consists of a number of agents. Agents are able to interact, mainly by exchanging messages possibly through some computer network infrastructure. In order to react successfully agents should be able to cooperate, coordinate and negotiate with each other \[20\].
 
-### 1.1.1. Agents as Service Providers
+## 1.1.1. Agents as Service Providers
 
 A Service Oriented Architecture (SOA) can be regarded as a paradigm for organizing and utilizing distributed capabilities that may be under the control of different ownership domains \[16\]. It needs to be pointed that SOA is not a concrete architecture or not even tool as well as framework. It is a set of guidelines that leads to a concrete architecture.
 
@@ -52,7 +52,7 @@ The most significant agent standard is the one stated by Foundation For Intellig
 * Agent Management System (AMS) — exerts supervisory control over the Agent Platform, it provides a white pages \[2\] service by maintaining agents’ AID (Agent Identify), each agent has to register with an AMS to get a valid AID,
 * Message Transport Service (MTS) — communication services between agents on different platforms;
 
-*  communication — in order to provide understandable communication between heterogeneous agents FIPA proposes a semantic language (SL) \[7\] for messages recording and ontologies for providing vocabulary for representing knowledge.
+* communication — in order to provide understandable communication between heterogeneous agents FIPA proposes a semantic language (SL) \[7\] for messages recording and ontologies for providing vocabulary for representing knowledge.
 
 For purposes of communication between agents FIPA defines Agent Communication Language (ACL) \[6\]. Each of messages exchanged between agents consists of fields defining sender, receiver and message type (performativity), where only that last one, defining communicative act, is mandatory. The communicative act \[5\] is an agent’s action detailed by the message content. Those actions describes making requests, querying about inner state and performing negotiations (contact net). For the purposes of ACL messages content expression an SL language was defined \[7\] which with specified ontology defines syntax and semantics for the message.
 
@@ -136,25 +136,25 @@ While implementing agents, an usage of standards should be considered. The most 
 
 # References
 
-1.  Alain Andrieux, Karl Czajkowski, Asit Dan, Kate Keahey, Heiko Ludwig, Toshiyuki Nakata, Jim Pruyne, John Rofrano, Steve Tuecke, and Ming Xu. _Web Services Agreement Specification (WS-Agreement)._ [https://forge.gridforum.org/projects/graap-wg/](https://forge.gridforum.org/projects/graap-wg/), 2012-04-02.
-2.  Jerzy Balicki and Jarosław Kuchta. _Obliczenia rozproszone w systemach komputerowych o architekturze klasy grid._ Wydawnictwo Politechniki Gdańskiej, Gdańsk, 2012.
-3.  _FIPA – Foundations for Intelligent Physical Agents. Standard Status Specifications._ [http://www.fipa.org/repository/standardspecs.html](http://www.fipa.org/repository/standardspecs.html).
-4.  _FIPA – Foundations for Intelligent Physical Agents. FIPA Abstract Architecture Specification_, December 2002.
-5.  _FIPA – Foundations for Intelligent Physical Agents. FIPA Communicative Act Library Specification_, December 2002.
-6.  _FIPA – Foundations for Intelligent Physical Agents. FIPA Message Structure Specification_, December 2002.
-7.  _FIPA – Foundations for Intelligent Physical Agents. FIPA SL Content Language Specification_, December 2002.
-8.  Ian Foster, Nicholas R. Jennings, and Carl Kesselman. _Brain meets brawn: Why grid and agents need each other._ In Proceedings of the 2005 conference on Towards the Learning Grid: Advances in Human Learning Services, pages 28–40, Amsterdam, The Netherlands, The Netherlands, 2005. IOS Press.
-9.  Ian Foster, Carl Kesselman, and Steven Tuecke. _The anatomy of the grid: Enabling scalable virtual organizations._ Int. J. High Perform. Comput. Appl., 15(3):200–222, August 2001.
-10.  Qiang He, Jun Yan, Ryszard Kowalczyk, Hai Jin, and Yun Yang. _Lifetime service level agreement management with autonomous agents for services provision._ Inf. Sci., 179(15):2591–2605, July 2009.
-11.  Bart Jacob, Luis Ferreira, Norbert Bieberstein, Candice Gilzean, Jean-Yves Girard, Roman Strachowski, and Seong (Steve) Yu. _Enabling applications for grid computing with globus._ IBM Corp., Riverton, NJ, USA, first edition, 2003.
-12.  Carl Kesselman and Ian Foster. _The Grid: Blueprint for a New Computing Infrastructure._ Morgan Kaufmann Publishers, November 1998.
-13.  Jiewen Luo and Zhongzhi Shi. _Distributed system integration in agent grid collaborative environment._ In Integration Technology, 2007. ICIT ’07. IEEE International Conference on, pages 373 –378, march 2007.
-14.  Frank Manola and Craig Thompson. _Characterizing the Agent Grid._ Technical Report 990623, Object Services and Consulting, Inc., June 1999.
-15.  Eric Newcomer and Greg Lomow. _Understanding SOA with Web Services (Independent Technology Guides)._ Addison-Wesley Professional, December 2004.
-16.  _OASIS. Reference Model for Service Oriented Architecture._ [http://www.oasis-open.org/committees/download.php/16587/wd-soa-rm-cd1ED.pdf](http://www.oasis-open.org/committees/download.php/16587/wd-soa-rm-cd1ED.pdf).
-17.  Luis F. G. Sarmenta. _Volunteer Computing._ PhD thesis, Massachusetts Institute of Technology, 2001.
-18.  Mehrdad Senobari, Michal Drozdowicz, Marcin Paprzycki, Wojciech Kuranowski, Maria Ganzha, Richard Olejnik, and Ivan Lirkov. _Combining a jade-agent-based grid infrastructure with the globus middleware initial solution._ In Proceedings of the 2008 International Conference on Computational Intelligence for Modelling Control & Automation, CIMCA ’08, pages 895–900, Washington, DC, USA, 2008. IEEE Computer Society.
-19.  Telecom Italia Lab. _Java Agent DEvelopment Framework Documentation._ [http://jade.tilab.com/doc/index.html](http://jade.tilab.com/doc/index.html).
-20.  Michael Wooldridge. _Introduction to MultiAgent Systems._ John Wiley & Sons, June 2002.
-21.  Michael J. Wooldridge and Nicholas R. Jennings. _Intelligent agents: Theory and practice._ The Knowledge Engineering Review, 10(2):115–152, 1995.
-22.  Zhikun Zhao, Feng Yang, and Yinglei Xu. _Building P2P Volunteer Computing System Using Agents._ In Computational Intelligence and Software Engineering, 2009. CiSE 2009. International Conference on, pages 1 –5, December 2009.
+1. Alain Andrieux, Karl Czajkowski, Asit Dan, Kate Keahey, Heiko Ludwig, Toshiyuki Nakata, Jim Pruyne, John Rofrano, Steve Tuecke, and Ming Xu. _Web Services Agreement Specification (WS-Agreement)._ [https://forge.gridforum.org/projects/graap-wg/](https://forge.gridforum.org/projects/graap-wg/), 2012-04-02.
+2. Jerzy Balicki and Jarosław Kuchta. _Obliczenia rozproszone w systemach komputerowych o architekturze klasy grid._ Wydawnictwo Politechniki Gdańskiej, Gdańsk, 2012.
+3. _FIPA – Foundations for Intelligent Physical Agents. Standard Status Specifications._ [http://www.fipa.org/repository/standardspecs.html](http://www.fipa.org/repository/standardspecs.html).
+4. _FIPA – Foundations for Intelligent Physical Agents. FIPA Abstract Architecture Specification_, December 2002.
+5. _FIPA – Foundations for Intelligent Physical Agents. FIPA Communicative Act Library Specification_, December 2002.
+6. _FIPA – Foundations for Intelligent Physical Agents. FIPA Message Structure Specification_, December 2002.
+7. _FIPA – Foundations for Intelligent Physical Agents. FIPA SL Content Language Specification_, December 2002.
+8. Ian Foster, Nicholas R. Jennings, and Carl Kesselman. _Brain meets brawn: Why grid and agents need each other._ In Proceedings of the 2005 conference on Towards the Learning Grid: Advances in Human Learning Services, pages 28–40, Amsterdam, The Netherlands, The Netherlands, 2005. IOS Press.
+9. Ian Foster, Carl Kesselman, and Steven Tuecke. _The anatomy of the grid: Enabling scalable virtual organizations._ Int. J. High Perform. Comput. Appl., 15(3):200–222, August 2001.
+10. Qiang He, Jun Yan, Ryszard Kowalczyk, Hai Jin, and Yun Yang. _Lifetime service level agreement management with autonomous agents for services provision._ Inf. Sci., 179(15):2591–2605, July 2009.
+11. Bart Jacob, Luis Ferreira, Norbert Bieberstein, Candice Gilzean, Jean-Yves Girard, Roman Strachowski, and Seong (Steve) Yu. _Enabling applications for grid computing with globus._ IBM Corp., Riverton, NJ, USA, first edition, 2003.
+12. Carl Kesselman and Ian Foster. _The Grid: Blueprint for a New Computing Infrastructure._ Morgan Kaufmann Publishers, November 1998.
+13. Jiewen Luo and Zhongzhi Shi. _Distributed system integration in agent grid collaborative environment._ In Integration Technology, 2007. ICIT ’07. IEEE International Conference on, pages 373 –378, march 2007.
+14. Frank Manola and Craig Thompson. _Characterizing the Agent Grid._ Technical Report 990623, Object Services and Consulting, Inc., June 1999.
+15. Eric Newcomer and Greg Lomow. _Understanding SOA with Web Services (Independent Technology Guides)._ Addison-Wesley Professional, December 2004.
+16. _OASIS. Reference Model for Service Oriented Architecture._ [http://www.oasis-open.org/committees/download.php/16587/wd-soa-rm-cd1ED.pdf](http://www.oasis-open.org/committees/download.php/16587/wd-soa-rm-cd1ED.pdf).
+17. Luis F. G. Sarmenta. _Volunteer Computing._ PhD thesis, Massachusetts Institute of Technology, 2001.
+18. Mehrdad Senobari, Michal Drozdowicz, Marcin Paprzycki, Wojciech Kuranowski, Maria Ganzha, Richard Olejnik, and Ivan Lirkov. _Combining a jade-agent-based grid infrastructure with the globus middleware initial solution._ In Proceedings of the 2008 International Conference on Computational Intelligence for Modelling Control & Automation, CIMCA ’08, pages 895–900, Washington, DC, USA, 2008. IEEE Computer Society.
+19. Telecom Italia Lab. _Java Agent DEvelopment Framework Documentation._ [http://jade.tilab.com/doc/index.html](http://jade.tilab.com/doc/index.html).
+20. Michael Wooldridge. _Introduction to MultiAgent Systems._ John Wiley & Sons, June 2002.
+21. Michael J. Wooldridge and Nicholas R. Jennings. _Intelligent agents: Theory and practice._ The Knowledge Engineering Review, 10(2):115–152, 1995.
+22. Zhikun Zhao, Feng Yang, and Yinglei Xu. _Building P2P Volunteer Computing System Using Agents._ In Computational Intelligence and Software Engineering, 2009. CiSE 2009. International Conference on, pages 1 –5, December 2009.

@@ -148,7 +148,6 @@ Aktualne mechanizmy (rys. 6.3) pozwalają na stworzenie dobrze zabezpieczonego �
 
 Standardy bezpieczeństwa wciąż się rozwijają, tworzone są nowe specyfikacje, modyfikowane lub rozszerzane stare. Wybór odpowiedniego standardu zabezpieczeń w strukturze grid musi być uzależniony od specyfiki, charakteru i przeznaczenia systemu.
 
-
 # 6.10. Wykaz literatury
 
 1. [http://www.ibm.com/developerworks/webservices/library/ws-add/](http://www.ibm.com/developerworks/webservices/library/ws-add/)
@@ -189,7 +188,7 @@ Standardy bezpieczeństwa wciąż się rozwijają, tworzone są nowe specyfikacj
 36. Rosenberg R.: Trust, Access Control, and Rights for Web Services Part 1, [http://www.devshed.com/c/a/Security/Trust-Access-Control-and-Rights-for-Web-Services-Part-1/](http://www.devshed.com/c/a/Security/Trust-Access-Control-and-Rights-for-Web-Services-Part-1/), 2004
 37. Security in a Web Services World: A Proposed Architecture and Roadmap, [ftp://www6.software.ibm.com/software/developer/library/ws-secmap.pdf](ftp://www6.software.ibm.com/software/developer/library/ws-secmap.pdf), 2002
 38. Anderson S., Bohren J. et al.: Web Services Secure Conversation Language (WSSecureConversation), [ftp://www6.software.ibm.com/software/developer/library/ws-secureconversation.pdf](ftp://www6.software.ibm.com/software/developer/library/ws-secureconversation.pdf), 2005.
-39. OASIS Web Services Secure Exchange (WS-SX) Technical Committee, [http://www.oasisopen. org/committees/tc_home.php?wg_abbrev=ws-sx](http://www.oasisopen. org/committees/tc_home.php?wg_abbrev=ws-sx)
+39. OASIS Web Services Secure Exchange (WS-SX) Technical Committee, [http://www.oasisopen.org/committees/tc_home.php?wg_abbrev=ws-sx](http://www.oasisopen.org/committees/tc_home.php?wg_abbrev=ws-sx)
 40. Siddiqui B.: Web Services Security, Part 1, [http://webservices.xml.com/pub/a/ws/2003/03/04/security.html](http://webservices.xml.com/pub/a/ws/2003/03/04/security.html), 2003
 41. Foster, C. Kesselman, (ed.): The Grid 2: Blueprint for a New Computing Infrastructure, Morgan Kaufmann Publishers, 2004
 42. Siddiqui B., Web Services Security, Part 2, [http://webservices.xml.com/%20pub/a/ws/2003/04/01/security.html](http://webservices.xml.com/%20pub/a/ws/2003/04/01/security.html), 2003

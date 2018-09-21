@@ -37,9 +37,7 @@ The amount of fire spread from neighbor fields is determined by coefficients of 
 <div class="flex-table">
     {% include figure.html file="/images/image_9_2_1.png" alt="coefficients for no wind conditions" caption="a) coefficients for no wind conditions" %}
     {% include figure.html file="/images/image_9_2_1.png" alt="coefficients for windy conditions (wx=0.05, wy=0.1)" caption="b) coefficients for windy conditions (wx=0.05, wy=0.1)" %}
-    <p class="caption">
-    Fig. 9.2. Example values of simulation coefficients
-    </p>
+    <p class="caption">Fig. 9.2. Example values of simulation coefficients</p>
 </div>
 
 Fig. 9.2a shows an example of coefficients in no wind conditions. Coefficients for fields adjacent by edge to the central one are bigger than those for fields adjacent by corner by a factor of π (approximately). The motivation for such distinction is that the Euclidean distances between centers of respective fields and the middle of central field also differ by a factor of π. Fig. 9.2b shows coefficients influenced by wind. It is defined as a pair (wx, wy) representing horizontal and vertical components of the wind. Parameters wx and wy are dimensionless and are added (or subtracted) to the original coefficients of the fields depending on the direction of spreading.
@@ -105,11 +103,11 @@ The one solutions that comes up almost instantly is the use of genetic algorithm
 
 Genetic algorithm typically consists of the following steps \[4\]:
 
-1.  Initial population generation.
-2.  Evaluation of individuals.
-3.  Selection
-4.  Crossover and mutation.
-5.  Succession.
+1. Initial population generation.
+2. Evaluation of individuals.
+3. Selection
+4. Crossover and mutation.
+5. Succession.
 
 Steps 2-5 are repeated in subsequent epoch.
 
@@ -134,17 +132,11 @@ Fig. 9.6 shows an example of crossover. Positions of fire stations are marked wi
 <div class="flex-table flex-center">
     {% include figure.html file="/images/image_9_6_1a-300x300.png" alt="parents chosen for crossovers" caption="Fig. 9.6. Example of crossover of two individuals - parents chosen for crossover" nodisp=true %}
     {% include figure.html file="/images/image_9_6_2a-300x300.png" alt="parents chosen for crossover" caption="Fig. 9.6. Example of crossover of two individuals - parents chosen for crossover" nodisp=true %}
-    <p>
-    (a) parents chosen for crossover
-    </p>
+    <p>(a) parents chosen for crossover</p>
     {% include figure.html file="/images/image_9_6_1b-300x300.png" alt="two offspring" caption="Fig. 9.6. Example of crossover of two individuals - two offspring" nodisp=true %}
     {% include figure.html file="/images/image_9_6_2b-300x300.png" alt="two offspring" caption="Fig. 9.6. Example of crossover of two individuals - two offspring" nodisp=true %}
-    <p>
-    (b) two offspring
-    </p>
-    <p class="caption">
-    Fig. 9.6. Example of crossover of two individuals
-    </p>
+    <p>(b) two offspring</p>
+    <p class="caption">Fig. 9.6. Example of crossover of two individuals</p>
 </div>
 
 Mutation of a chromosome is a random change of some of its genes \[3\]. As genes correspond to fire stations, mutation is as simple as a random displacement of one or more stations. Fig. 9.7 shows an example of such mutation. In Fig. 9.7a an individual before mutation is presented. The fire station (the gene) which is about to undergo mutation is marked by a ring. Fig. 9.7b shows the individual after the mutation. Empty ring represents the original position of the station (the original gene) and the arrow shows the displacement of the station during mutation.
@@ -152,9 +144,7 @@ Mutation of a chromosome is a random change of some of its genes \[3\]. As genes
 <div class="flex-table">
     {% include figure.html file="/images/image_9_7a-300x300.png" alt="individual before mutation" caption="a) individual before mutation" %}
     {% include figure.html file="/images/image_9_7b-300x300.png" alt="individual after mutation" caption="b) individual after mutation" %}
-    <p class="caption">
-    Fig. 9.7. Example of mutation of an individual
-    </p>
+    <p class="caption">Fig. 9.7. Example of mutation of an individual</p>
 </div>
 ## 1.4.3. Bringing the pieces together
 
@@ -183,9 +173,7 @@ Point A in the Fig. 9.11 represents the moment when user activated a link on the
     {% include figure.html file="/images/image_9_10_2-300x283.png" alt="Example of ongoing simulation" caption="Fig. 9.10. Example of ongoing simulation" nodisp=true %}
     {% include figure.html file="/images/image_9_10_3-300x283.png" alt="Example of ongoing simulation" caption="Fig. 9.10. Example of ongoing simulation" nodisp=true %}
     {% include figure.html file="/images/image_9_10_4-300x283.png" alt="tExample of ongoing simulation" caption="Fig. 9.10. Example of ongoing simulation" nodisp=true %}
-    <p class="caption">
-    Fig. 9.10. Example of ongoing simulation
-    </p>
+    <p class="caption">Fig. 9.10. Example of ongoing simulation</p>
 </div>
 
 Point B marks the beginning of computational module execution. When the simulation starts, all cores of the processor are utilized (the number of worker threads can be tuned, as stated before). Points C and D show how system load drops between execution of subsequent test cases. Each test case is run using multiple worker threads but the switch to another test case is a single-threaded operation. According to the chart, execution of a single test case takes approximately 15-20 seconds.
@@ -208,9 +196,9 @@ Performance of a single simulation performed on volunteer’s computer could be 
 
 # References
 
-1.  Almeida R. M., Macau E. E. N., _Percolation model for wildland fire spread dynamics_, Proceedings on International Conference on Chaos and Nonlinear Dynamics, São José dos Campos. South America, 2010.
-2.  Foster I., Kesselman C, Tuecke S., _The anatomy of the grid: Enabling scalable virtual organizations_, Int. J. High Perform. Comput. Appl., 15(3), August 2001, pp. 200-222.
-3.  Nedjah N., A. Abraham, Luiza de Macedo Mourelle, _Genetic Systems Programming: Theory and Experiences,_ Springer Verlag, New York 2009.
-4.  Pyne S. J., P. L. Andrews R. D. Laven: _Introduction to wildland fire,_ John Wiley and Sons, New York 1996.
-5.  Russell S. J., P. Norvig, _Artificial Intelligence a modern approach_, Prentice Hall, Upper Saddle River, 2nd edition, New York 2003.
-6.  JCUDA Project, [http://www.jcuda.de/](http://www.jcuda.de/), May 2012.
+1. Almeida R. M., Macau E. E. N., _Percolation model for wildland fire spread dynamics_, Proceedings on International Conference on Chaos and Nonlinear Dynamics, São José dos Campos. South America, 2010.
+2. Foster I., Kesselman C, Tuecke S., _The anatomy of the grid: Enabling scalable virtual organizations_, Int. J. High Perform. Comput. Appl., 15(3), August 2001, pp. 200-222.
+3. Nedjah N., A. Abraham, Luiza de Macedo Mourelle, _Genetic Systems Programming: Theory and Experiences,_ Springer Verlag, New York 2009.
+4. Pyne S. J., P. L. Andrews R. D. Laven: _Introduction to wildland fire,_ John Wiley and Sons, New York 1996.
+5. Russell S. J., P. Norvig, _Artificial Intelligence a modern approach_, Prentice Hall, Upper Saddle River, 2nd edition, New York 2003.
+6. JCUDA Project, [http://www.jcuda.de/](http://www.jcuda.de/), May 2012.

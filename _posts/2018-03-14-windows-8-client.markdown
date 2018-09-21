@@ -5,6 +5,7 @@ title: "Klient systemu Windows 8"
 date: 2018-03-14 23:00:00 +0100
 categories: comcute
 ---
+
 <p></p>
 W ramach jednej z prac magisterskich opracowanych na Katedrze Architektury Systemów Komputerowych stworzono klientów projektu COMCUTE dla systemu Windows 8 oraz jego starszych wersji.
 

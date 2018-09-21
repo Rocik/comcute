@@ -47,28 +47,23 @@ Ogólny model warstwowy zarządzania bezpieczeństwem można przedstawiono w tab
 **Tab. 12.1. Warstwy ogólnego systemu zarządzania bezpieczeństwem**
 {: style="text-align: center;"}
 
-Zarządzanie bezpieczeństwem
-<br />
+Zarządzanie bezpieczeństwem  
 (aplikacje, bazy danych, EDE, e-mail, itp.)
 {: style="text-align: center;"}
 ---
-Agenci bezpieczeństwa, Protokoły bezpieczeństwa
-<br />
+Agenci bezpieczeństwa, Protokoły bezpieczeństwa  
 (uwierzytelnianie, zarządzanie kluczami, itp)
 {: style="text-align: center;"}
 ---
-Usługi bezpieczeństwa
-<br />
+Usługi bezpieczeństwa  
 (poufność, integralność, niezaprzeczalność, itp.)
 {: style="text-align: center;"}
 ---
-Mechanizmy bezpieczeństwa
-<br />
+Mechanizmy bezpieczeństwa  
 (podpis cyfrowy, uwierzytelnianie)
 {: style="text-align: center;"}
 ---
-Moduły podstawowe
-<br />
+Moduły podstawowe  
 (algorytmy, tryby pracy)
 {: style="text-align: center;"}
 ---
@@ -95,9 +90,7 @@ Drugim podstawowym protokołem jest podpis elektroniczny, będący tzw. załącz
 
 Infrastruktura klucza publicznego PKI [4,11] to sieć serwerów wystawiających certyfikaty CA (Certification Authority), serwerów rejestrujących użytkowników RA (Registration Authority) wraz z polityką bezpieczeństwa określającą działania i procedury związane z zarządzaniem certyfikatami kluczy publicznych. Certyfikat klucza publicznego to struktura danych podpisana przez wystawcę certyfikatu. Te podpisane dane zawierają co najmniej dane ubiegającego się o certyfikat (a zatem posiadacza klucza prywatnego do pary z tym umieszczonym w certyfikacie), jego klucza publicznego, identyfikatora certyfikatu, danych i podpisu wystawcy. Certyfikat może ponadto zawierać wiele dodatkowych danych: datę wystawienia i okres ważności, przeznaczenie certyfikatu (kluczy), wersję standardu, ograniczenia stosowania, delegacje użycia, itp. Niezwykle istotne jest stwierdzenie, że certyfikat klucza publicznego de facto bezwzględnie łączy ze sobą użytkownika z jego kluczem prywatnym, którego oczywiście ujawnić nie można. Dzięki temu, wykorzystując klucz publiczny zawarty w certyfikacie, możemy zweryfikować autentyczność wszelkich czynności wykonanych przez użytkownika z użyciem jego klucza prywatnego (do pary z tym opublikowanym w certyfikacie) [11].
 
-
 # 12.3. Bezpieczeństwo interfejsu: klient zewnętrzny – system Comcute
-
 
 W tym punkcie będą opisane aspekty bezpieczeństwa interfejsu klienta – czyli warstwy komunikacji warstwy W ze światem zewnętrznym [2]. Zgodnie z dokumentem pt. „Architektura systemu – wymagania od strony klienta”, ten interfejs powinien pozwolić na realizację następujących czynności:
 
@@ -126,8 +119,7 @@ W zależności od sposobu komunikacji możemy wskazać tu następujące mechaniz
 
 3. Inny sposób komunikacji (np. osobiście) może zapewnić ochronę przed analizą ruchu. Dodatkowo usługę obliczeniową będzie konfigurował i wdrażał operator – pracownik właściciela systemu Comcute. Może on uruchamiać wiele obliczeń i dla każdego z nich dobierać różne opóźnienie czasowe chwili wystartowania, więc nie będzie dokładnie wiadomo, dla kogo te obliczenia są wykonywane. W tej sytuacji mamy także ochronę przed modyfikacją i podsłuchem za pomocą tych samych środków (SSL, uwierzytelnianie operatora).
 
-
-# 12.4.Bezpieczeństwo warstwy serwerów *W*
+# 12.4. Bezpieczeństwo warstwy serwerów *W*
 
 W tym punkcie opisano aspekty bezpieczeństwa warstwy serwerów W (węzłów wewnętrznych systemu) zajmującej się zarządzaniem zadaniami obliczeniowymi zleconymi przez klienta zewnętrznego bądź operatora. Zgodnie z dokumentem pt. „Architektura systemu – problemy i koncepcje” [2], w tej warstwie są realizowane następujące czynności:
 
@@ -154,7 +146,6 @@ Z powyższego zestawienia wynika, że warstwa serwerów W przechowuje kluczowe d
 * Dostęp do baz danych ograniczony tylko dla lokalnych aplikacji i użytkowników serwerów W i ewentualnie także serwerów S systemu laboratoryjnego.
 
 * Dostęp do serwerów W powinien być ograniczony jedynie dla uwierzytelnionych i autoryzowanych użytkowników.
-
 
 # 12.5.Bezpieczeństwo komunikacji pomiędzy warstwą serwerów *W* a serwerami *S*
 

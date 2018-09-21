@@ -18,12 +18,14 @@ W systemie Comcute JEE każdy węzeł obliczeniowy zawiera dwa procesory po 6 rd
 System operacyjny Linux CentOS w wersji 6.1 jest zainstalowany w domenie o 50 GB pamięci na lokalnym dysku twardym. Ponadto w każdym węźle systemu Comcute JEE zainstalowano serwer NFS v3 (ang. *Network File System*) z protokołem do zdalnego udostępniania systemu plików. Wówczas po wysłaniu żądania przez klienta, żądanie zostaje odebrane przez serwer, a operacja jest wykonywana na dysku. Następnie potwierdzenie jest wysłane przez serwer, a klient odbiera to potwierdzenie. W rezultacie użytkownik może uzyskać dostęp do plików znajdujących się na zdalnym komputerze, a także z nich korzystać tak, jakby były na lokalnym dysku twardym w jego komputerze. Odnosi się to także do macierzy dyskowej.
 
 Do węzła nr 1 przydzielono następujące zasoby dyskowe:
+
 * 50 GB – system operacyjny;
 * 3 TB – katalogi domowe udostępniane przez NFS pozostałym komputerom linuksowym;
 * 568 GB – katalog /opt na potrzeby serwera GlassFish i stron WWW;
 * 6,4 TB – katalog /macierz podpięty z macierzy dyskowej.
 
 Natomiast pozostałe węzły linuksowe od nr 2 do nr 7 mają przydzielone następujące zasoby dyskowe:
+
 * 50 GB – system operacyjny;
 * 3 TB – katalogi domowe pobrane z serwera DNS;
 * 3,6 GB – katalog /opt na potrzeby serwera GlassFish i stron WWW;
@@ -202,6 +204,7 @@ Dla danych ![wzór]({{"/images/image009.png" | relative_url}}), ![wzór]({{"/ima
 {% include figure.html file="/images/image011.png" alt="wzór" rcaption="(5)" %}
 
 gdzie:
+
 * ![wzór]({{"/images/image012.png" | relative_url}})
 * ![wzór]({{"/images/image013.png" | relative_url}})
 * ![wzór]({{"/images/image015.png" | relative_url}})

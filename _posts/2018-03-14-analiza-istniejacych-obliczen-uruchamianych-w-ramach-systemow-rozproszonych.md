@@ -69,49 +69,49 @@ Z kolei, przepustowości dla komunikacji klient-serwer w Internecie mają zwykle
 Stąd też, analiza możliwości przeniesienia tradycyjnych algorytmów z systemów klastrowych do systemu Comcute powinna uwzględniać:
 
 1. paradygmaty przetwarzania:
-   * *embarrassingly parallel* [11],
-   * *master-slave* [11],
-   * *single program multiple data* [5],
-   * *pipeline* [11],
-   * *divide-and-conquer* [3-4,6].
+* *embarrassingly parallel* [11],
+* *master-slave* [11],
+* *single program multiple data* [5],
+* *pipeline* [11],
+* *divide-and-conquer* [3-4,6].
 
    Ze względu na proponowaną architekturę systemu algorytmy, które będą wstępnie predysponowane do zrównoleglenia powinny działać w jednym w paradygmatów: embarrassingly parallel, master-slave lub divide-and-conquer.
 
-2. typowe rozmiary danych wejściowych,
+1. typowe rozmiary danych wejściowych,
 
-3. typowe rozmiary danych wyjściowych,
+1. typowe rozmiary danych wyjściowych,
 
-4. typowa liczba procesorów/rdzeni, na których uruchamia się algorytm
+1. typowa liczba procesorów/rdzeni, na których uruchamia się algorytm
 
-5. stosunek czasu obliczeń do czasu komunikacji w algorytmie – przy danym rozmiarze danych wejściowych jest to zwykle zależne od liczby procesorów, na których się uruchamia daną aplikację przy zadanym rozmiarze danych wejściowych. Dla dużej liczby procesorów coraz większe znaczenie odgrywa opóźnienie komunikacyjne, w szczególności dla paradygmatów takich jak SPMD. Tradycyjnie, zrównoleglając zadania, stosunek ten powinien być możliwie duży. W innym przypadku, zrównoleglanie może być nieopłacalne w porównaniu do uruchomienia na pojedynczej maszynie. W tym przypadku, rozpatrzmy możliwość zrównoleglania krótkotrwałych zadań pomiędzy użytkowników – zadań, dla których czas komunikacji będzie znaczący. Z jednej strony, przy bardzo dużej liczbie klientów daje to możliwość rozproszenia obliczeń i nawet długi czas komunikacji może być akceptowalny przy bardzo dużym rozmiarze danych oraz bardzo dużej liczbie klientów. Z drugiej, powodować może nadmierne obciążenie serwera/serwerów rozpraszających, które będą musiały obsługiwać bardzo dużą liczbę zgłoszeń po zadania oraz z wynikami od bardzo dużej liczby klientów w zadanym przedziale czasowym.
+1. stosunek czasu obliczeń do czasu komunikacji w algorytmie – przy danym rozmiarze danych wejściowych jest to zwykle zależne od liczby procesorów, na których się uruchamia daną aplikację przy zadanym rozmiarze danych wejściowych. Dla dużej liczby procesorów coraz większe znaczenie odgrywa opóźnienie komunikacyjne, w szczególności dla paradygmatów takich jak SPMD. Tradycyjnie, zrównoleglając zadania, stosunek ten powinien być możliwie duży. W innym przypadku, zrównoleglanie może być nieopłacalne w porównaniu do uruchomienia na pojedynczej maszynie. W tym przypadku, rozpatrzmy możliwość zrównoleglania krótkotrwałych zadań pomiędzy użytkowników – zadań, dla których czas komunikacji będzie znaczący. Z jednej strony, przy bardzo dużej liczbie klientów daje to możliwość rozproszenia obliczeń i nawet długi czas komunikacji może być akceptowalny przy bardzo dużym rozmiarze danych oraz bardzo dużej liczbie klientów. Z drugiej, powodować może nadmierne obciążenie serwera/serwerów rozpraszających, które będą musiały obsługiwać bardzo dużą liczbę zgłoszeń po zadania oraz z wynikami od bardzo dużej liczby klientów w zadanym przedziale czasowym.
 
-6. synchronizacja w algorytmie:
-   * globalna,
-   * lokalna (partycje synchronizujące się lokalnie),
-   * brak (podział danych wejściowych i zebranie wyników),
+1. synchronizacja w algorytmie:
+* globalna,
+* lokalna (partycje synchronizujące się lokalnie),
+* brak (podział danych wejściowych i zebranie wyników),
 
    Najprawdopodobniej ze względu na ograniczenia technologiczne (domyślne ograniczenia do komunikacji klienta z serwerem, z którego pobrany został kod klienta) synchronizacja musiałaby odbywać się poprzez scentralizowaną bądź hierarchicznie skonfigurowaną część serwerową systemu Comcute. W zależności od liczby klientów, liczby uruchomionych aplikacji mogłaby powodować zbyt duże obciążenie systemu i uniemożliwiać wykonanie.
 
-7. złożoność algorytmu (ew. NP-zupełny) algorytm:
-   * optymalny – w dużym systemie takim jak Comcute z tysiącem, dziesiątkami lub setkami tysięcy klientów rozwiązanie problemu nawet NP-zupełnego dla dużych zbiorów danych może być realne. Co więcej, dla paradygmatów przetwarzania embarrassingly parallel, master-slave lub divide-and-conquerbez interakcji pomiędzy problemami, może się dobrze skalować.
-   * heurystyczny – rozwiązanie przybliżone stosowane jest zwykle ze względu na to, żeby skrócić czas wykonania algorytmu. Ze względu na potencjalnie dużą liczbę klientów, można rozważyć zastosowanie prostego, dobrze skalującego się rozwiązania optymalnego. Zależne od algorytmu.
-   * losowe rozwiązania – w tak dużym systemie możliwe jest szukanie rozwiązań np. problemów kombinatorycznych poprzez losowe generowanie rozwiązań przez potencjalnie bardzo dużą liczbę klientów i porównywanie wyników. Bardziej dokładną alternatywą może być podział przestrzeni danych wejściowych na fragmenty i przydzielenie do poszczególnych klientów.
+1. złożoność algorytmu (ew. NP-zupełny) algorytm:
+* optymalny – w dużym systemie takim jak Comcute z tysiącem, dziesiątkami lub setkami tysięcy klientów rozwiązanie problemu nawet NP-zupełnego dla dużych zbiorów danych może być realne. Co więcej, dla paradygmatów przetwarzania embarrassingly parallel, master-slave lub divide-and-conquerbez interakcji pomiędzy problemami, może się dobrze skalować.
+* heurystyczny – rozwiązanie przybliżone stosowane jest zwykle ze względu na to, żeby skrócić czas wykonania algorytmu. Ze względu na potencjalnie dużą liczbę klientów, można rozważyć zastosowanie prostego, dobrze skalującego się rozwiązania optymalnego. Zależne od algorytmu.
+* losowe rozwiązania – w tak dużym systemie możliwe jest szukanie rozwiązań np. problemów kombinatorycznych poprzez losowe generowanie rozwiązań przez potencjalnie bardzo dużą liczbę klientów i porównywanie wyników. Bardziej dokładną alternatywą może być podział przestrzeni danych wejściowych na fragmenty i przydzielenie do poszczególnych klientów.
 
-8. typowe rozmiary danych przesyłanych pomiędzy węzłami (klastra) i częstotliwość synchronizacji – istotne w kontekście pytania ilu klientów może się synchronizować w tym momencie przez system Comcute i czy z powodu rozmiaru danych i ew. dużej częstotliwości nie stanie się to wąskim gardłem systemu.
+1. typowe rozmiary danych przesyłanych pomiędzy węzłami (klastra) i częstotliwość synchronizacji – istotne w kontekście pytania ilu klientów może się synchronizować w tym momencie przez system Comcute i czy z powodu rozmiaru danych i ew. dużej częstotliwości nie stanie się to wąskim gardłem systemu.
 
-9. typowy czas działania algorytmu – zwykle algorytmy działające dłużej (ze względu na swoją złożoność bądź zwykle stosowane rozmiary danych wejściowych) będą prezentowały większy potencjał zrównoleglania w środowisku Comcute niż algorytmy działające krócej. Wynika to z potencjalnie dużych czasów komunikacji w rozproszonym środowisku Comcute.
+1. typowy czas działania algorytmu – zwykle algorytmy działające dłużej (ze względu na swoją złożoność bądź zwykle stosowane rozmiary danych wejściowych) będą prezentowały większy potencjał zrównoleglania w środowisku Comcute niż algorytmy działające krócej. Wynika to z potencjalnie dużych czasów komunikacji w rozproszonym środowisku Comcute.
 
 # 4.4. Charakterystyki istniejących systemów i standardów obliczeniowych – w kontekście migracji algorytmów do systemu Comcute
 
 Potencjalne przeniesienie algorytmów z tradycyjnych systemów klastrowych na rozproszony system Comcute wiąże się bezpośrednio z technologią kodowania, kompilacji i uruchomienia tego typu aplikacji. Tradycyjnie wykorzystuje się niskopoziomowe programowanie równoległe na klastrach – m.in. następujące modele i interfejsy programistyczne oraz środowiska:
 
 1. programowanie w modelu z pamięcią współdzieloną – poszczególne procesy aplikacji bądź wątki działające w obrębie procesu mają dostęp do wspólnej przestrzeni w pamięci. Synchronizacja może następować przez zapis i odczyt w komórkach pamięci współdzielonej z dodatkowymi mechanizmami synchronizacji takimi jak monitory, blokady, zmienne warunkowe, zasypianie i budzenie wątków etc. Przykładami technologii implementującymi ten model są np.:
-   * Pthreads – API wspierające wielowątkowość w języku C.
-   * Java Threads – API wspierające wielowątkowość w języku Java.
-   * OpenMP – możliwość rozszerzania programów o sekcje wykonywane równolegle poprzez ich specyfikację za pomocą specjalnych dyrektyw i deklaracji.
-2. programowanie w modelu z pamięcią rozproszoną. Najczęściej stosowany jest model z przekazywaniem wiadomości (message passing).
-   *  MPI [2] – popularna specyfikacja z przekazywaniem wiadomości, również wsparciem dla wielowątkowości, API dla języków C/C++ i Fortran.
-   * PVM [1] – środowisko przetwarzania równoległego i rozproszonego dla języka C/C++ i Fortran.
+* Pthreads – API wspierające wielowątkowość w języku C.
+* Java Threads – API wspierające wielowątkowość w języku Java.
+* OpenMP – możliwość rozszerzania programów o sekcje wykonywane równolegle poprzez ich specyfikację za pomocą specjalnych dyrektyw i deklaracji.
+1. programowanie w modelu z pamięcią rozproszoną. Najczęściej stosowany jest model z przekazywaniem wiadomości (message passing).
+* MPI [2] – popularna specyfikacja z przekazywaniem wiadomości, również wsparciem dla wielowątkowości, API dla języków C/C++ i Fortran.
+* PVM [1] – środowisko przetwarzania równoległego i rozproszonego dla języka C/C++ i Fortran.
 
 Zwykle kompilacja tego typu zadań wykonywana jest przez programistę-użytkownika, który następnie uruchamia aplikację równoległą na dedykowanej maszynie wirtualnej lub wykorzystuje do uruchomienia systemy kolejkowe takie jak PBS, LSF itp.
 
@@ -132,7 +132,7 @@ Z kolei przetwarzanie typu volunteer computing wykorzystuje komputery internaut�
 
 2. tylko pewna klasa algorytmów (możliwa do uruchomienia w paradygmacie master-slave) może być efektywnie zrównoleglona,
 
-3.  ograniczeń po stronie klienta – użytkownik musi jawnie zainstalować kod zarządzający i aplikacji na swoim komputerze, wyrazić zgodę na uruchomienie i określić warunki wykorzystania,
+3. ograniczeń po stronie klienta – użytkownik musi jawnie zainstalować kod zarządzający i aplikacji na swoim komputerze, wyrazić zgodę na uruchomienie i określić warunki wykorzystania,
 
 4. użytkownicy zwykle nie są wynagradzani finansowo za uczestnictwo w projekcie, mają natomiast świadomość współuczestnictwa w ważnych projektach.
 
@@ -149,11 +149,9 @@ Problemy w Comcute:
 
 Na ile łatwo zmigrować już istniejący kod do tego typu środowiska? Implementacje aplikacji z systemów typu BOINC [16] do konkretnej technologii przez przeglądarkę będą możliwe do przeniesienia z uzyskaniem istotnego przyspieszenia obliczeń. Będzie to możliwe dla aplikacji w paradygmatach embarrassingly parallel oraz master-slave z dużym stosunkiem czasu obliczeń do komunikacji i synchronizacji, w mniejszym stopniu dla aplikacji dziel-i-rządź. Aplikacje SPMD oraz potokowe nie będą pracowały wydajnie w środowisku Comcute chyba, że system zostanie wykorzystany do uruchamiania całych instancji z różnymi danymi wejściowymi u różnych internautów. W takim przypadku Comcute pozwoli na równoległe obliczenie wielu scenariuszy z różnymi danymi wejściowymi.
 
-
 # 4.5. Charakterystyka wybranych algorytmów
 
 W rozdziale przedstawiono charakterystykę wybranych i często używanych algorytmów równoległych (uruchamianych do tej pory na klastrach, sieciach LAN), pod kątem możliwości uruchomienia w środowisku rozproszonym (tj. takim gdzie koszty komunikacji są relatywnie większe niż na klastrach), a więc możliwości uruchomienia w środowisku Comcute.
-
 
 # 4.5.1. Równoległe symulacje SPMD
 
