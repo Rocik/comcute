@@ -10,6 +10,7 @@ var Loader = function() {
         Flash: 0,
         Silverlight: 0
     };
+    let registered;
     let errorCallback;
     let taskId;
     let moduleLocation;
@@ -33,6 +34,8 @@ var Loader = function() {
 
 
     this.registerAndGetModule = function() {
+        registered = true;
+
         const browserInfo = [
             navigator.userAgent,
             // trzeba ładować wynik do tablicy bo inaczej plugin js do ws'ów
@@ -62,6 +65,7 @@ var Loader = function() {
 
     this.unregister = function () {
         runner.stop();
+        registered = false;
     };
 
     /**
@@ -70,6 +74,10 @@ var Loader = function() {
      * @param textStatus statuc usługi sieciowej
      */
     function installModule(soapData, textStatus) {
+        if (!registered) {
+            return;
+        }
+
         if (textStatus === null || textStatus !== "success") {
             return errorCallback("Server failed to get task");
         }
@@ -128,8 +136,10 @@ var Loader = function() {
 
 
     function runComcute() {
-        runner.errorCallback = errorCallback;
-        runner.startComputing(taskId, computeModule);
+        if (registered) {
+            runner.errorCallback = errorCallback;
+            runner.startComputing(taskId, computeModule);
+        }
     }
 
 
