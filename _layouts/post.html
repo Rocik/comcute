@@ -16,7 +16,7 @@ layout: default
             {% assign authorData = site.data.authors[author] %}
             <span itemprop="author" itemscope itemtype="http://schema.org/Person">
                 {% if authorData.homepage %}
-                <a href="{{ authorData.homepage }}" title="{{ authorData.name }}">
+                    <a href="{{ authorData.homepage }}" title="{{ authorData.name }}">
                 {% endif %}
                 <span class="p-author h-card" itemprop="name">
                     {{ authorData.name }}</span>{% if authorData.homepage %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
