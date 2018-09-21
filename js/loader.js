@@ -51,11 +51,10 @@ var Loader = function() {
                 return;
 
         // Pobranie kodu obliczeniowego od serwera S
-        $.webservice({
+        webservice({
             url: LOADER_SERVICE_URL,
             nameSpace: LOADER_SERVICE_NAMESPACE,
             methodName: "GetTask",
-            dataType: "text",
             data: browserInfo,
             success: installModule,
             error: errorCallback
@@ -120,18 +119,24 @@ var Loader = function() {
 
 
     function fetchComcuteModule(newLocation, newTaskId) {
-        $.ajax({
-            url: newLocation,
-            dataType: 'script',
-            success: function(data) {
+        const request = new XMLHttpRequest();
+        request.open('GET', newLocation, true);
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 400) {
+                //var response = this.response;
+                // eval( ~script~ )
+
                 taskId = newTaskId;
                 moduleLocation = newLocation;
                 computeModule = comcuteModule;
 
                 runComcute();
-            },
-            error: errorCallback
-        });
+            } else {
+                errorCallback(this.statusText);
+            }
+        };
+        request.onerror = errorCallback;
+        request.send();
     }
 
 

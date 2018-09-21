@@ -22,21 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-(function($) {
-jQuery.webservice = function (options) {
+(function() {
+
+window.webservice = function (settings) {
     try {
-        var settings = { requestType: "soap1.1",
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                throw XMLHttpRequest.responseText;
-            }
+        settings.requestType ="soap1.1";
+        settings.error = function(XMLHttpRequest, textStatus, errorThrown) {
+            throw XMLHttpRequest.responseText;
         };
-        $.extend(settings, options);
 
-        var oBuffer = new Array();
+        const oBuffer = new Array();
 
-        if (settings.requestType == "soap1.1" || settings.requestType == "soap1.2")
+        if (settings.requestType == "soap1.1" || settings.requestType == "soap1.2") {
             settings.nameSpace += (settings.nameSpace.length - 1 == settings.nameSpace.lastIndexOf("/")) ? "" : "/";
-
+        }
+        
         switch (settings.requestType) {
             case "soap1.2":
                 settings.methodType = "POST";
@@ -107,26 +107,28 @@ jQuery.webservice = function (options) {
                 break;
         }
 
-        if (navigator.userAgent.toUpperCase().indexOf('MSIE') == -1) {
-            $.ajax({ type: settings.methodType,
-                cache: false,
-                url: settings.url,
-                data: settings.requestData,
-                contentType: settings.contentType,
-                dataType: settings.dataType,
-                success: settings.success,
-                error: settings.error,
-                beforeSend: function (XMLHttpRequest) {
-                    if (settings.requestType === "soap1.1" || settings.requestType === "soap1.2") {
-                        //tak na wszelki wypadek, chyba .NET go wymaga
-                        XMLHttpRequest.setRequestHeader("SOAPAction", settings.nameSpace + settings.methodName);
-                    }
-                }
-            });
+        // Disables cache
+        const timestamp = "?t=" + new Date().getTime();
+
+        const request = new XMLHttpRequest();
+        request.open(settings.methodType, settings.url + timestamp, true);
+        request.onload = function () {
+            if (this.status >= 200 && this.status < 400) {
+                settings.success(this.response, this.statusText);
+            } else {
+                settings.error(/*should something be added here?*/);
+            }
+        };
+        request.onerror = settings.error;
+        request.setRequestHeader('Content-Type', 'settings.requestData');
+        if (settings.requestType === "soap1.1" || settings.requestType === "soap1.2") {
+            //tak na wszelki wypadek, chyba .NET go wymaga
+            request.setRequestHeader("SOAPAction", settings.nameSpace + settings.methodName);
         }
-    }
-    catch (err) {
-        alert("Error occurred in jquery.webservice.js.");
+        request.send(settings.requestData);
+    } catch (err) {
+        alert("Error occurred in webservice.");
     }
 };
-}(jQuery));
+
+}());

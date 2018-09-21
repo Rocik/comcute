@@ -64,11 +64,10 @@ var jsRunner = function() {
 
 
     function fetchInputData() {
-        $.webservice({
+        webservice({
             url: self.sServiceUrl,
             nameSpace: self.sServiceNamespace,
             methodName: "GetData",
-            dataType: "text",
             data: [taskId],
             success: runJob,
             error: self.errorCallback
@@ -84,8 +83,7 @@ var jsRunner = function() {
         }
 
         // kontener na dane wejściowe do obliczeń
-        let responseText = $(soapData).find("return");
-        responseText = responseText[0].innerHTML;
+        const responseText = extractSoap(soapData);
 
         if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
             if (responseText === "NO_DATA_AVAILABLE")
@@ -148,11 +146,10 @@ var jsRunner = function() {
                 ];
 
                 // wysyłanie wyników
-                /*$.webservice({
+                /*webservice({
                     url: self.sServiceUrl,
                     nameSpace: self.sServiceNamespace,
                     methodName: "SaveResult",
-                    dataType: "text",
                     data: resultArguments,
                     error: self.errorCallback
                 });
@@ -324,5 +321,14 @@ var jsRunner = function() {
             newCanvas.classList.remove("thumbnail");
             current.onclick = selectCanvas;
         }
+    }
+
+
+    function extractSoap(soapData) {
+        const div = document.createElement('div');
+        div.innerHTML = soapData.trim();
+
+        const returns = div.getElementsByTagName("return"); 
+        return returns[0].innerHTML;
     }
 };
