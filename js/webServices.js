@@ -22,9 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-(function() {
-
-window.webservice = function (settings) {
+window.webservice = function(settings) {
     try {
         settings.requestType ="soap1.1";
         settings.error = function(XMLHttpRequest, textStatus, errorThrown) {
@@ -130,5 +128,3 @@ window.webservice = function (settings) {
         alert("Error occurred in webservice.");
     }
 };
-
-}());

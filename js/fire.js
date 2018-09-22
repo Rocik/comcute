@@ -1,5 +1,5 @@
 /**
- * var in some functions and some strange structures gave significant performance boost
+ * NOTE: var in some functions and some strange structures gave significant performance boost
  */
 "use strict";
 
@@ -10,15 +10,16 @@
 
 window.comcuteModule = {
 
-    getStatus: function(input, lang) {
-         if (lang === "pl")
+    getStatus: function(_, lang) {
+        if (lang === "pl") {
             return {
                 description: "Symulacja rozprzestrzeniania sie pożaru na obszarze trójmiasta."
             };
-         else
+        } else {
             return {
                 description: "Fire spreading simulation over Tricity, Poland."
             };
+        }
     },
 
     getInputTasksAmount: function(input) {
@@ -39,7 +40,7 @@ window.comcuteModule = {
         ctx.putImageData(img, 0, 0);
     },
 
-    prepare: function(dataObject, resolve) {
+    prepare: function(_, resolve) {
         const img = new Image();
         img.onload = function() {
             const canvas = document.createElement('canvas');

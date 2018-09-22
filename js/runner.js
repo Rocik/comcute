@@ -1,13 +1,13 @@
 /**
  *  Pobiera dane do zadania, uruchamia obliczenia
  */
-var jsRunner = function() {
+var Runner = function() {
     'use strict';
     const self = this;
 
-    this.sServiceUrl = ""; // adres URL usługi sieciowej znajdującej się na serwerze S, z którym się komunikujemy
-    this.sServiceNamespace = ""; // przestrzeń nazw powyższej usługi
-    let taskId = ""; // id rozwiązywanego zadania, zserializowane UUID
+    this.sServiceUrl = "";
+    this.sServiceNamespace = "";
+    let taskUUID = "";
 
     let running = true;
     let computeModule;
@@ -21,6 +21,9 @@ var jsRunner = function() {
     const canvasDelayTimeouts = [];
     const canvasDelayMs = 500;
 
+    const textStatus = document.getElementById('text-status');
+    const computingStatus = document.getElementById('computing-status');
+
     let inputTaskIndex;
     let inputTaskGoal;
     let results;
@@ -31,10 +34,11 @@ var jsRunner = function() {
 
     this.startComputing = function(newTaskId, comcuteModule) {
         computeModule = comcuteModule;
-        if (ww === undefined)
+        if (ww === undefined) {
             createWW();
+        }
 
-        taskId = newTaskId;
+        taskUUID = newTaskId;
         running = true;
         statusTexts = {};
 
@@ -68,7 +72,7 @@ var jsRunner = function() {
             url: self.sServiceUrl,
             nameSpace: self.sServiceNamespace,
             methodName: "GetData",
-            data: [taskId],
+            data: [taskUUID],
             success: runJob,
             error: self.errorCallback
         });
@@ -93,30 +97,31 @@ var jsRunner = function() {
             return;
         }
 
-        if (!running)
-            return;
+        if (!running) return;
 
         // Konwersja odpowiedzi serwera S na zmienne
         const responseJSON = JSON.parse(responseText);
-        const dataTaskID = responseJSON[0]; // id zadania, zserializowane UUID
-        const dataID     = responseJSON[1]; // id danych, zserializowane UUID
-        const dataObject = responseJSON[2];
+        const dataTaskUUID = responseJSON[0];
+        const dataUUID     = responseJSON[1];
+        const dataObject   = responseJSON[2];
 
         if (dataObject !== null) {
-            console.info("Testowanie (" + dataID + "): " + dataObject);
+            console.info("Testowanie (" + dataUUID + "): " + dataObject);
 
-            updateStatusbar(dataObject, dataID);
+            updateStatusbar(dataObject, dataUUID);
 
             const threadsAmount = ww.getFreeWorkers();
-            for (let i = 0; i < threadsAmount; ++i)
+            for (let i = 0; i < threadsAmount; ++i) {
                 canvasDelayTimeouts[i] = false;
+            }
 
             inputTaskIndex = 0;
             if (typeof computeModule.getInputTasksAmount === 'function') {
                 inputTaskGoal = computeModule.getInputTasksAmount(dataObject);
                 results = [];
-            } else
+            } else {
                 inputTaskGoal = 0;
+            }
 
             const onRunFinished = function(result) {
                 if (inputTaskGoal > 0) {
@@ -135,11 +140,11 @@ var jsRunner = function() {
                     }
                 }
 
-                console.log("Wynik obliczeń (" + dataID + "): " + result);
+                console.log("Wynik obliczeń (" + dataUUID + "): " + result);
 
                 const resultArguments = [
-                    dataTaskID,
-                    dataID,
+                    dataTaskUUID,
+                    dataUUID,
                     result,
                     navigator.userAgent,
                     "JavaScript" // Informacje o technologii, w której wykonano obliczenia
@@ -157,14 +162,16 @@ var jsRunner = function() {
                 if (inputTaskGoal > 0)
                     fetchInputData();*/
 
-                delete statusTexts[dataID];
+                delete statusTexts[dataUUID];
             }
 
             if (inputTaskGoal > 0) {
-                for (let i = 0; i < threadsAmount; ++i)
+                for (let i = 0; i < threadsAmount; ++i) {
                     startTask(dataObject, onRunFinished);
-            } else
+                }
+            } else {
                 startTask(dataObject, onRunFinished);
+            }
         }
     };
 
@@ -213,20 +220,16 @@ var jsRunner = function() {
         ww.onProgressChanged = handleProgressChanged;
         previousProgress = 0;
 
-        let newCanvas = document.createElement("canvas");
-        newCanvas.setAttribute("id", "canvas" + 0);
+        let newCanvas = makeWorkerCanvas(0);
         newCanvas.setAttribute("class", "canvas");
-        newCanvas.onclick = selectCanvas;
         selectedCanvas.appendChild(newCanvas);
 
         const threadsAmount = ww.getFreeWorkers();
         const canvasList = canvases.getElementsByClassName("all")[0];
 
         for (let i = 1; i < threadsAmount; ++i) {
-            newCanvas = document.createElement("canvas");
-            newCanvas.setAttribute("id", "canvas" + i);
+            newCanvas = makeWorkerCanvas(i);
             newCanvas.setAttribute("class", "thumbnail");
-            newCanvas.onclick = selectCanvas;
             canvasList.appendChild(newCanvas);
         }
 
@@ -236,10 +239,18 @@ var jsRunner = function() {
     }
 
 
+    function makeWorkerCanvas(id) {
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "canvas" + id);
+        canvas.onclick = selectCanvas;
+        return canvas;
+    }
+
+
     function handleProgressChanged(p, workerIndex, extraData) {
         updateProgress(p);
         if (computeModule.getStatus === undefined) {
-            document.getElementById('text-status').style.display = "none";
+            textStatus.style.display = "none";
         }
         updateCanvas(workerIndex, extraData);
     }
@@ -275,8 +286,8 @@ var jsRunner = function() {
 
 
     function updateStatusbar(dataObject, dataID) {
-        document.getElementById('computing-status').classList.replace('hidden', 'visible');
-        document.getElementById('text-status').removeAttribute("style");
+        computingStatus.classList.replace('hidden', 'visible');
+        textStatus.removeAttribute("style");
 
         if (computeModule.getStatus !== undefined) {
             const moduleStatus = computeModule.getStatus(dataObject, Comcute.currentLanguage);
@@ -295,11 +306,11 @@ var jsRunner = function() {
             }
 
             const moduleDescription = moduleStatus.description || "";
-            document.getElementById('text-status').innerHTML = moduleDescription + statusText;
+            textStatus.innerHTML = moduleDescription + statusText;
         } else if (willDrawCanvas()) {
-            document.getElementById('text-status').innerHTML = Comcute.messages.awaitingData;
+            textStatus.innerHTML = Comcute.messages.awaitingData;
         } else {
-            document.getElementById('text-status').innerHTML = Comcute.messages.computingStart;
+            textStatus.innerHTML = Comcute.messages.computingStart;
         }
     }
 

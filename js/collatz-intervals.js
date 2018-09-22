@@ -9,20 +9,21 @@ const comcuteModule = {
     parallelTaskJobs: true,
 
     getStatus: function(input, lang) {
-         var dataRange = input.split(" ");
-         var start = new BigInteger(dataRange[0]);
-         var size = new BigInteger(dataRange[1]);
+        var dataRange = input.split(" ");
+        var start = new BigInteger(dataRange[0]);
+        var size = new BigInteger(dataRange[1]);
 
-         if (lang === "pl")
+        if (lang === "pl") {
             return {
                 description: "Hipoteza Collatza. Testowanie: ",
                 taskStatus: start.toString() + " ~ " + start.add(size).toString()
             };
-         else
+        } else {
             return {
                 description: "Collatz hypothesis. Testing: ",
                 taskStatus: start.toString() + " ~ " + start.add(size).toString()
             };
+        }
     },
 
     task: function(dataObject) {

@@ -1,6 +1,6 @@
 window.onload = function() {
     'use strict';
-
+    
     const loader = new Loader();
 
     const comcuteStart = document.getElementById('comcute-start');
