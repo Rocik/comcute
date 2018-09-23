@@ -14,15 +14,15 @@ Zaproponowano szereg algorytmów realizujących aspekty bezpieczeństwa zoriento
 
 W systemowych rozwiązaniach informatycznych w zakresie aktywnego monitoringu podstawowym problemem realizacyjnym jest analiza obrazów wideo w celu wykrycia sytuacji potencjalnie niebezpiecznych lub nietypowych. W automatycznych systemach nadzoru należy sklasyfikować sytuacje, efekty, obiekty, zdarzenia, etc. będące przedmiotem potencjalnego zainteresowania, a następnie zastosować odpowiednie algorytmy poszukujące ich w strumieniach (online) lub zapisach (offline) video.
 
-# 15.1.1. Wykrywanie niebezpiecznych przedmiotów lub obiektów w obrazie
+## 15.1.1. Wykrywanie niebezpiecznych przedmiotów lub obiektów w obrazie
 
 W przypadku obserwacji lub też rejestracji transmisji monitoringu z kamer to człowiek podejmuje decyzje dotyczące ewentualnej zakwalifikowania obserwowanego obrazu do sytuacji interesujących. Stąd też w tego typu zastosowaniach konieczna jest aktywna obserwacja obrazów z kamer przez służby nadzoru. W wypadku zastosowania systemu Comcute istnieje możliwość automatycznego wykrywania potencjalnie niebezpiecznych (niepożądanych) przedmiotów bądź obiektów pojawiających się w obserwowanym obszarze. Rejestracja wideo może być podzielona na klatki, każda klatka może zostać wysłana do przetwarzania u określonego internauty. Proponuje się opracowanie bazy wzorców niepożądanych obiektów lub przedmiotów oraz ich wykrywanie. Dla przykładu przedmiotami potencjalnie niebezpiecznymi mogą być: duże torby lub walizki (z potencjalnie niebezpieczną zawartością), noże, czy broń palna. Szersze zastosowania mogą dotyczyć np. wykrywania ciężarówek (tirów) na drogach lub miejscach, gdzie nie powinny się one poruszać lub pojawiać, albo też samochodów na drogach z zakazem ruchu. Zadaniem aplikacji jest wykrycie na obrazie interesującego obiektu z bazy wzorców oraz wysłanie odpowiedniego sygnału dla służb, aby zdecydowały o ostatecznej klasyfikacji danego analizowanego przypadku.
 
-# 15.1.2. Wykrywanie anomalii natury ogólnej w obrazie z kamer
+## 15.1.2. Wykrywanie anomalii natury ogólnej w obrazie z kamer
 
 W praktyce monitorowania zwykle poszczególne klatki z zapisu monitoringu statystycznie niewiele się od siebie różnią. Większość planu obrazu zajmuje tło, natomiast obiekty, które pojawiają się w zakresie wizyjnym, zajmują stosunkowo niewielki procent powierzchni. Celem aplikacji jest wykrywanie sytuacji, gdy zmiany obserwowanego tła są ponadprzeciętne. Dla statycznego obrazu można po wstępnym odfiltrowaniu wyznaczyć określony wzorzec tła (policzyć np. sygnaturę lub model widmowy). Wzorzec ten po korelacji z obrazem aktualnym (przetworzonym) pokazuje skalę potencjalnych zmian. Jeżeli zmiany te są zbyt duże, to zgłaszany jest sygnał do obsługi. Jako przykład zastosowania można podać wykrycie sytuacji zasnucia obrazu parkingu, lotniska czy drogi np.: gęstą mgłą, ale również pojawienie się np. dymu zasłaniającego znaczną część widoku kamery, czy zasłonięcie obiektywu kamery np. ręką lub innym przedmiotem. W przypadku trywialnym będzie to szybkie wykrycie odłączenia kamery (transmisja czarnego tła). W przypadku monitorowania przestrzeni, gdzie praktycznie nic nie powinno się pojawiać (ochrona obiektów), na podstawie różnic w obrazach można otrzymać sygnał o pojawieniu się nietypowych zmian (bez klasyfikacji co to jest).
 
-# 15.1.3. Wykrywanie dynamicznych zmian w obrazach monitorujących
+## 15.1.3. Wykrywanie dynamicznych zmian w obrazach monitorujących
 
 W przypadku dużych i dynamicznych zmian pomiędzy klatkami, zmiany te świadczyć mogą o potencjalnie interesujących sytuacjach. Przy wykorzystaniu operacji korelacji (porównania ze sobą) sekwencji kolejnych klatek i zaobserwowaniu różnic można wykryć potencjalnie interesujące sytuacje, takie jak: szybkie rozprzestrzenianie się dymu we fragmencie obrazu, wybuch obiektu w tle, rozszerzający się pożar, zbyt szybko poruszający się obiekt (np. samochód czy motocykl). W aplikacji wymagane jest wykonanie szeregu testów i prób, aby dla określonej kamery (tło, środowisko, dynamizm zmian) określić wartości progowe dla zgłaszania sygnału o wykryciu potencjalnych odstępstw od normy. Aplikacja może działać zarówno online (sygnały pojawiają się w czasie rzeczywistym zaistnienia zdarzeń), jak i offline (czyli sprawdzania archiwalnych zapisów w celu dotarcia do interesujących fragmentów zapisu z monitoringu).
 
@@ -32,7 +32,7 @@ Poniżej przedstawiono ogólną koncepcję realizacyjną dla algorytmów przetwa
 
 Nowoczesne algorytmy i techniki przetwarzania obrazów pozwalają na wszechstronną analizę oraz obróbkę obrazów nie tylko w zakresie typowych operacji, takich jak: skalowanie, zmiana kontrastu, filtracja w zakresie nasycenia, poprawa jakości i kolorystyki, etc., ale także w zakresie analizy i rozpoznawania obiektów oraz cech obiektów prezentowanych na obrazach. Wśród zastosowań można tutaj wymienić: lokalizację oraz śledzenie trajektorii obiektów ruchomych, nawigację dla ruchomych obiektów naziemnych i latających, robotykę przemysłową czy techniki radarowe oraz sonarowe. Istnieją generalnie dwa podejścia realizacyjne: w pierwszym projektuje się wyspecjalizowane układy scalone przeznaczone dla określonych algorytmów, w drugim stosuje się systemy oparte o zrównoleglanie obliczeń, a następnie scalanie ich wyników. Podejście drugie zapewnia większą elastyczność oraz znacznie większą przydatność dla prac naukowo-badawczych w zakresie testowania i weryfikacji nowych technik i algorytmów, a w szczególności pozwala na rozpraszanie obliczeń w sieciach rozległych. Pożądanym aplikacyjnie jest przetwarzanie w czasie rzeczywistym, gdzie przetwarzanie sekwencji obrazów wymaga, aby odpowiedź systemu komputerowego pojawiała się nie później niż nadejście kolejnej klatki z urządzenia rejestrującego [2].
 
-# 15.2.1. Techniki przetwarzania obrazów – konwolucja
+## 15.2.1. Techniki przetwarzania obrazów – konwolucja
 
 Pojedynczy obraz cyfrowy reprezentowany jest zazwyczaj w postaci matrycy punktów w zadanej rozdzielczości. Każdy z punktów opisany jest poprzez informację o kolorze – w przypadku obrazów barwnych, lub stopniu szarości – w przypadku obrazów monochromatycznych. Dla reprezentacji obrazów barwnych stosuję się często reprezentację typu RGB, która wymaga przechowywania informacji oddzielnie o trzech barwach składowych. Inną reprezentacją jest tzw. pseudo-kolor, wówczas odpowiednie barwy są ponumerowane i identyfikacja z fizycznym kolorem odbywa się poprzez odwołania do tablicy wzorcowej (palety). Dla celów przetwarzania obrazów często stosuje się obrazy reprezentowane w skali szarości ze względu zarówno na jednowartościowy opis punktu na obrazie, jak i bezpośrednie powiązanie tej wartości z graficzną reprezentacją wyrażoną odcieniem szarości. W zakresie formatów dla zapisu ciągłego (np. fragment filmu) stosuje się (odpowiednio spakowaną) sekwencję klatek składowych.
 
@@ -68,7 +68,7 @@ Na rys. 15.3 pokazano przykład wykorzystania praktycznego w przetwarzaniu sekwe
 
 {% include figure.html file="/images/image0071.png" alt="Śledzenie obiektu obserwowanego nieruchomą kamerą" caption="Rys. 15.3. Śledzenie obiektu obserwowanego nieruchomą kamerą" %}
 
-# 15.3.1. Wnioski
+## 15.3.1. Wnioski
 
 Powyżej przedstawiono konwolucję dwu- i trójwymiarową jako podstawową technikę przetwarzania obrazów. Pokazano wykorzystanie systemu przy śledzeniu obiektów ruchomych na obrazach rejestrowanych przez nieruchomą kamerę. Zasygnalizowano również rozmiar problematyki przetwarzania i analizy obrazów w przypadkach ogólnych. Pokazano szerokie możliwości zrównoleglenia przetwarzania oraz wykonywania rozproszonych obliczeń na niezależnych jednostkach, potencjalnie w sieci rozległej.
 
@@ -76,7 +76,7 @@ Powyżej przedstawiono konwolucję dwu- i trójwymiarową jako podstawową techn
 
 W praktycznych implementacjach systemów aktywnego monitoringu występuje wiele problemów. Poniżej opisano zagadnienia związane z różnorodnością formatów plików zawierających cyfrowe zapisy wideo oraz z algorytmami stosowanymi do ich przekształcania.
 
-# 15.4.1. Formaty plików wideo
+## 15.4.1. Formaty plików wideo
 
 W praktycznych zastosowaniach wykorzystuje się szereg formatów dla plików zawierających cyfrowe zapisy multimedialne (wizyjne). Aktualnie stosowanych jest bardzo wiele formatów. Wynika to przede wszystkim z wprowadzania własnych standardów przez szeroką gamę producentów sprzętu video, jak również ze zorientowania tych standardów na określone zastosowania aplikacyjne.
 
@@ -99,7 +99,7 @@ W realizowanych aplikacjach dotyczących monitoringu obsługiwane są najpopular
 
 Zasadniczym komponentem jest tutaj biblioteka procedur przekształcających określone wybrane standardy do formatu umożliwiającego zautomatyzowane przetwarzanie numeryczne, czyli w praktyce konwersja do postaci opisującej poszczególne klatki przekazu na poziomie pojedynczych pikseli.
 
-# 15.4.2. Przekształcenia kontekstowe
+## 15.4.2. Przekształcenia kontekstowe
 
 Operacje polegają na modyfikacji poszczególnych elementów obrazu w zależności od ich stanu i stanu ich otoczenia. Ze względu na rozmiar kontekstu mogą wymagać wielu powtarzalnych operacji, ale algorytmy są regularne i ponadto mogą być wykonywane na wszystkich punktach obrazu jednocześnie.
 
@@ -121,7 +121,7 @@ Filtry wykorzystywane do analizy obrazów zakładają, że wykonywane na obrazie
 **Nazwy instancji algorytmu**
 : filtry liniowe, konwolucja (splot funkcji), filtry dolnoprzepustowe, filtry górnoprzepustowe (gradient Robertsa, maska Prewitta, maska Sobela), filtry górnoprzepustowe wykrywające narożniki, filtry górnoprzepustowe wykrywające krawędzie, etc.
 
-# 15.4.3. Przekształcenia kontekstowe w dziedzinie czasu
+## 15.4.3. Przekształcenia kontekstowe w dziedzinie czasu
 
 Algorytmy operujące na trójwymiarowej reprezentacji obrazów, gdzie trzecim wymiarem jest czas, a w praktyce określona liczba występujących po sobie klatek w sekwencji. Algorytmy te dają możliwość przekształcania kontekstowego w dziedzinie czasu, gdzie klatka wynikowa jest rezultatem przetwarzania kilku (kilkunastu) sąsiadujących ze sobą klatek. Algorytmy te również nadają się do zrównoleglenia, przy czym ich złożoność jest tutaj trójwymiarowa.
 
@@ -149,8 +149,8 @@ W dziedzinie przewarzania obrazów danymi jest zazwyczaj sekwencja video składa
 
 # 15.6. Wykaz literatury
 
-1. Brudło P., Kuchciński K.: Parallel Spatio-Temporal Convolution Scheme Oriented for Hardware Real-Time Implementation, Proceedings: 23rd EUROMICRO Conference, Budapeszt, Węgry, wrzesień 1997, pp. 190-195
-2. Brudło P.: Wykorzystanie procesorów sygnałowych w przetwarzaniu obrazów, Materiały konferencyjne: Przetwarzanie Sieciowe i Rozproszone, Jastrzębia Góra, listopad 1999, Praca zbiorowa Katedry Architektury Systemów Komputerowych KASKBOOK, pp. 155-161
-3. Brudło P.: System przetwarzania i analizy sekwencji obrazów video w oparciu o sieć procesorów sygnałowych serii ADSP-21060, Materiały konferencyjne: Systemy Czasu Rzeczywistego ‚2000, Kraków, wrzesień 2000, pp. 485-494
-4. Granlund G., Knutsson H.: Signal Processing for Computer Vision, Dordrecht, Holland, Kluwer Academic Publishers
-5. Woźnicki J.: Podstawowe techniki przetwarzania obrazu, Wydawnictwa Komunikacji i Łączności, Warszawa
+1. Brudło P., Kuchciński K.: _Parallel Spatio-Temporal Convolution Scheme Oriented for Hardware Real-Time Implementation_, Proceedings: 23rd EUROMICRO Conference, Budapeszt, Węgry, wrzesień 1997, pp. 190-195
+2. Brudło P.: _Wykorzystanie procesorów sygnałowych w przetwarzaniu obrazów_, Materiały konferencyjne: Przetwarzanie Sieciowe i Rozproszone, Jastrzębia Góra, listopad 1999, Praca zbiorowa Katedry Architektury Systemów Komputerowych KASKBOOK, pp. 155-161
+3. Brudło P.: _System przetwarzania i analizy sekwencji obrazów video w oparciu o sieć procesorów sygnałowych serii ADSP-21060_, Materiały konferencyjne: Systemy Czasu Rzeczywistego ‚2000, Kraków, wrzesień 2000, pp. 485-494
+4. Granlund G., Knutsson H.: _Signal Processing for Computer Vision_, Dordrecht, Holland, Kluwer Academic Publishers
+5. Woźnicki J.: _Podstawowe techniki przetwarzania obrazu_, Wydawnictwa Komunikacji i Łączności, Warszawa
