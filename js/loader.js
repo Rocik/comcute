@@ -1,5 +1,5 @@
 var Loader = function() {
-    //"use strict"; // TODO: enable
+    "use strict";
 
     const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";
     const LOADER_SERVICE_NAMESPACE = "http://si.webservice/";
@@ -9,6 +9,7 @@ var Loader = function() {
         Flash: 0,
         Silverlight: 0
     };
+    const HeadNode = document.getElementsByTagName("head")[0];
     const runner = new Runner();
     let registered;
     let errorCallback;
@@ -40,7 +41,7 @@ var Loader = function() {
         const browserInfo = [
             navigator.userAgent,
             // trzeba ładować wynik do tablicy bo inaczej plugin js do ws'ów
-            // rozwali go na pojedyncze elementy i wysle literka po literce do ws'a
+            // rozwali go na pojedyncze elementy i wyśle literka po literce do ws'a
             JSON.stringify(SupportedTech)
         ];
 
@@ -51,7 +52,6 @@ var Loader = function() {
                 }, 1000);
                 return;
 
-        // Pobranie kodu obliczeniowego od serwera S
         webservice({
             url: LOADER_SERVICE_URL,
             nameSpace: LOADER_SERVICE_NAMESPACE,
@@ -68,23 +68,17 @@ var Loader = function() {
         registered = false;
     };
 
-    /**
-     * Instaluje otrzymany od węzła S moduł obliczeniowy.
-     * @param soapData odpowiedź usługi sieciowej
-     * @param textStatus statuc usługi sieciowej
-     */
+
     function installModule(soapData, textStatus) {
         if (!registered) {
             return;
         }
 
-        if (textStatus === null || textStatus !== "success") {
+        if (textStatus === null || textStatus !== "OK") {
             return errorCallback("Server failed to get task");
         }
 
-        // wyciągnięcie odpowiedzi
-        const rawResponseText = $(soapData).find("return");
-        const responseText = rawResponseText[0].innerHTML;
+        const responseText = extractSoap(soapData);
 
         if (responseText === null || responseText === "ERROR") {
             return errorCallback("Error while getting task");
@@ -94,28 +88,22 @@ var Loader = function() {
             return errorCallback("NO_DATA_AVAILABLE");
         }
 
-        // zdekodowanie ze stringa do htmla i utworzenie tablicy obiektów html ze stringa tagów
-        const embedHtml = $(htmlDecode(responseText));
-        if (embedHtml.length === 0) {
+        const embedHtml = htmlDecode(responseText);
+        if (embedHtml == null) {
             return;
         }
 
-        // dodanie skryptu osadzającego do seksji head
-        const head = document.getElementsByTagName("head")[0];
-        head.appendChild(embedHtml[0]);
-        const sResponse = embedHtml[0].childNodes[0].textContent;
+        HeadNode.appendChild(embedHtml);
+        const sResponse = embedHtml.childNodes[0].textContent;
         eval(sResponse);
 
-        // utworzenie i załadowanie skryptu obliczeniowego
-        //if (MODULE_TYPE === "JavaScript") {
-            if (taskId === TASK_ID && moduleLocation === MODULE_LOCATION) {
-                runComcute();
-            } else {
-                runner.sServiceUrl = S_SERVICE_URL;
-                runner.sServiceNamespace = S_SERVICE_NAMESPACE;
-                fetchComcuteModule(MODULE_LOCATION, TASK_ID);
-            }
-        //}
+        if (taskId === TASK_ID && moduleLocation === MODULE_LOCATION) {
+            runComcute();
+        } else {
+            runner.sServiceUrl = S_SERVICE_URL;
+            runner.sServiceNamespace = S_SERVICE_NAMESPACE;
+            fetchComcuteModule(MODULE_LOCATION, TASK_ID);
+        }
     }
 
 
@@ -148,11 +136,14 @@ var Loader = function() {
         }
     }
 
-
-    // Dekoduje string do tagów html
+    
     function htmlDecode(value) {
-        const p = document.createElement(p);
-        p.innerHTML = value;
-        return p.innerText || p.textContent;
+        const div = document.createElement("div");
+        div.innerHTML = value;
+        const htmlTags = div.innerText || div.textContent;
+
+        const innerDiv = document.createElement("div");
+        innerDiv.innerHTML = htmlTags;
+        return innerDiv.firstChild;
     }
 };

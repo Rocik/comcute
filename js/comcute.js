@@ -67,4 +67,13 @@ window.onload = function() {
             element.removeChild(element.firstChild);
         }
     }
+
+
+    window.extractSoap = function(soapData) {
+        const div = document.createElement('div');
+        div.innerHTML = soapData.trim();
+
+        const returns = div.getElementsByTagName("return"); 
+        return returns[0].innerHTML;
+    }
 };

@@ -46,7 +46,7 @@ window.webservice = function(settings) {
                 oBuffer.push("xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">");
                 oBuffer.push("<soap12:Body>");
                 oBuffer.push("<" + settings.methodName + " xmlns=\"" + settings.nameSpace + "\">");
-                for (key in settings.data) {
+                for (var key in settings.data) {
                     if (key != "length" && typeof (settings.data[key].prototype) == "undefined")
                         oBuffer.push("<" + key + ">" + settings.data[key] + "</" + key + ">");
                 }
@@ -60,7 +60,7 @@ window.webservice = function(settings) {
                 settings.methodType = "GET";
                 settings.contentType = "text/xml";
 
-                for (key in settings.data) {
+                for (var key in settings.data) {
                     if (key != "length" && typeof (settings.data[key].prototype) == "undefined")
                         oBuffer.push(key + "=" + settings.data[key]);
                 }
@@ -72,7 +72,7 @@ window.webservice = function(settings) {
                 settings.methodType = "POST";
                 settings.contentType = "application/x-www-form-urlencoded";
 
-                for (key in settings.data) {
+                for (var key in settings.data) {
                     if (key != "length" && typeof (settings.data[key].prototype) == "undefined")
                         oBuffer.push(key + "=" + settings.data[key]);
                 }
@@ -92,7 +92,7 @@ window.webservice = function(settings) {
                 oBuffer.push("xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
                 oBuffer.push("<soap:Body>");
                 oBuffer.push("<ns2:" + settings.methodName + " xmlns:ns2=\"" + settings.nameSpace + "\">");
-                for (key in settings.data) {
+                for (var key in settings.data) {
                     if (key != "length" && typeof (settings.data[key].prototype) == "undefined")
                         oBuffer.push("<arg" + key + ">" + settings.data[key] + "</arg" + key + ">");
                 }
@@ -110,7 +110,7 @@ window.webservice = function(settings) {
 
         const request = new XMLHttpRequest();
         request.open(settings.methodType, settings.url + timestamp, true);
-        request.onload = function () {
+        request.onload = function() {
             if (this.status >= 200 && this.status < 400) {
                 settings.success(this.response, this.statusText);
             } else {
@@ -118,7 +118,7 @@ window.webservice = function(settings) {
             }
         };
         request.onerror = settings.error;
-        request.setRequestHeader('Content-Type', 'settings.requestData');
+        request.setRequestHeader('Content-Type', settings.contentType);
         if (settings.requestType === "soap1.1" || settings.requestType === "soap1.2") {
             //tak na wszelki wypadek, chyba .NET go wymaga
             request.setRequestHeader("SOAPAction", settings.nameSpace + settings.methodName);

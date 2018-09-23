@@ -63,7 +63,7 @@ var Runner = function() {
                 fetchInputData();
         } else
             // fetchInputData();
-            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"c97bb22f-fcb5-4ee0-be6c-b2bde5951e4c\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf709\",\"http://comcute.eti.pg.gda.pl/maps/map_small.png 3 494 11 667 743 958 942 12 2 580 667 602 615 2 151 984 587 94 2 24 662 504 825 3 451 931 351 879 150 913 2 237 819 34 530 4 375 744 712 812 1004 884 125 400 3 874 827 10 423 465 689 3 191 496 531 980 208 978 4 111 532 954 759 474 709 477 780 4 327 786 192 769 693 848 22 576 4 78 268 579 685 409 789 262 763 2 463 869 400 758\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "success");
+            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"c97bb22f-fcb5-4ee0-be6c-b2bde5951e4c\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf709\",\"http://comcute.eti.pg.gda.pl/maps/map_small.png 3 494 11 667 743 958 942 12 2 580 667 602 615 2 151 984 587 94 2 24 662 504 825 3 451 931 351 879 150 913 2 237 819 34 530 4 375 744 712 812 1004 884 125 400 3 874 827 10 423 465 689 3 191 496 531 980 208 978 4 111 532 954 759 474 709 477 780 4 327 786 192 769 693 848 22 576 4 78 268 579 685 409 789 262 763 2 463 869 400 758\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "OK");
     }
 
 
@@ -81,7 +81,7 @@ var Runner = function() {
 
     function runJob(soapData, serverTextStatus) {
         // sprawdzenie, czy pobranie danych przebiegło poprawnie
-        if (serverTextStatus === null || serverTextStatus !== 'success') {
+        if (serverTextStatus === null || serverTextStatus !== 'OK') {
             self.errorCallback("Getting job's data failed");
             return;
         }
@@ -332,14 +332,5 @@ var Runner = function() {
             newCanvas.classList.remove("thumbnail");
             current.onclick = selectCanvas;
         }
-    }
-
-
-    function extractSoap(soapData) {
-        const div = document.createElement('div');
-        div.innerHTML = soapData.trim();
-
-        const returns = div.getElementsByTagName("return"); 
-        return returns[0].innerHTML;
     }
 };
