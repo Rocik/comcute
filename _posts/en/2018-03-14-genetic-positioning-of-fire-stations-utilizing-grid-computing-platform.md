@@ -2,9 +2,10 @@
 layout: post
 lang: en
 title: "Genetic Positioning of Fire Stations Utilizing Grid-computing Platform "
-date: 2018-03-14 21:00:00 +0100
+date: 2018-03-14 15:00:00 +0100
 categories: comcute
 authors: [ JerzyBalicki, WaldemarKorlub, HenrykKrawczyk ]
+pdfFile: "genetic_positioning_of_fire_stations_utilizing_grid_computing_platform"
 ---
 
 A chapter presents a model for determining near-optimal locations of fire stations based on topography of a given area and location of forests, rivers, lakes and other elements of the site. The model is based on principals of genetic algorithms and utilizes the power of the grid to distribute and execute in parallel most performance-demanding computations involved in the algorithm.

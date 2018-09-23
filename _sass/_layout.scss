@@ -442,10 +442,31 @@ $side-pane-margins: 21px !default;
     }
 }
 
-.post-meta {
+#post-meta {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
     font-size: $small-font-size;
     color: $grey-color;
 }
+
+#post-pdf {
+    display: flex;
+    align-items: center;
+
+    img {
+        width: 16px;
+        height: 16px;
+    }
+
+    a {
+        font-family: Arial;
+        padding-left: 6px;
+    }
+}
+
 
 $post-link-color: #384369 !default;
 

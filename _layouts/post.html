@@ -7,21 +7,31 @@ layout: default
         <h1 class="post-title p-name" itemprop="name headline">
             {{ page.title | escape }}
         </h1>
-        <p class="post-meta">
-        {% assign authorCount = page.authors | size %}
-        {% if authorCount == 1 %} Autor:
-        {% elsif authorCount > 1 %} Autorzy:
-        {% endif %}
-        {% for author in page.authors %}
-            {% assign authorData = site.data.authors[author] %}
-            <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                {% if authorData.homepage %}
-                    <a href="{{ authorData.homepage }}" title="{{ authorData.name }}">
+        <div id="post-meta">
+            <div id="post-authors">
+                {% assign authorCount = page.authors | size %}
+                {% if authorCount == 1 %} Autor:
+                {% elsif authorCount > 1 %} Autorzy:
                 {% endif %}
-                <span class="p-author h-card" itemprop="name">
-                    {{ authorData.name }}</span>{% if authorData.homepage %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
-        {% endfor %}
-        </p>
+                {% for author in page.authors %}
+                    {% assign authorData = site.data.authors[author] %}
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                        {% if authorData.homepage %}
+                            <a href="{{ authorData.homepage }}" title="{{ authorData.name }}">
+                        {% endif %}
+                        <span class="p-author h-card" itemprop="name">
+                            {{ authorData.name }}</span>{% if authorData.homepage %}</a>{% endif %}</span>{% if forloop.rindex0 > 0 %},{% endif %}
+                {% endfor %}
+            </div>
+            {% if page.pdfFile %}
+                <div id="post-pdf">
+                    <img src="{{ "/images/pdf.png" | relative_url }}">
+                    <a href="{{ page.pdfFile | prepend: "/static/" | relative_url }}.pdf" title="{% tl pdf_file_title %}">
+                        {% tl pdf_file_label %}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     </header>
 
     <div class="post-content e-content" itemprop="articleBody">

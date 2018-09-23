@@ -5,6 +5,7 @@ title: "Mechanizmy bezpieczeństwa w systemie Comcute"
 date: 2018-03-14 19:00:00 +0100
 categories: comcute
 authors: [ PiotrSzpryngier ]
+pdfFile: "Mechanizmy-bezpieczeństwa-w-systemie-Comcute"
 ---
 
 Celem niniejszego dokumentu jest wyróżnienie podstawowych problemów związanych z bezpieczeństwem przetwarzania w systemie utrzymania wielkiej mocy obliczeniowej w sytuacjach kryzysowych Comcute. Ponadto na przykładzie architektury systemu modelowego będą przedstawione mechanizmy bezpieczeństwa przydatne do zastosowania w projekcie.

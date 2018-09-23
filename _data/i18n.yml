@@ -60,10 +60,14 @@ side_pane_2_elements:
     en:
         - title: Windows 8 client
           link: /comcute/2018/03/14/windows-8-client.html
+        - title: On Configurability of Distributed Volunteer-Based Computing
+          link: /comcute/2018/03/14/on-configurability-of-distributed-volunteer-based-computing-in-the-comcute-system.html
         - title: Foundations of Grid Processing Architecture for the Comcute System
           link: /comcute/2018/03/14/foundations-of-grid-processing-architecture-for-the-comcute-system.html
         - title: Security Mechanisms in the Comcute System
           link: /comcute/2018/03/14/security-mechanisms.html
+        - title: Genetic Programming for Workload Balancing
+          link: /comcute/2018/03/14/genetic-programming-for-workload-balancing-in-the-comcute-grid-system.html
 side_pane_3_elements:
     pl:
         - title: Bezpieczeństwo w monitoringu
@@ -75,6 +79,20 @@ side_pane_3_elements:
     en:
         - title: Genetic Positioning of Fire Stations Utilizing Grid-computing Platform
           link: /comcute/2018/03/14/genetic-positioning-of-fire-stations-utilizing-grid-computing-platform.html
+        - title: Image Processing Techniques
+          link: /comcute/2018/03/14/image-processing-techniques-for-distributed-grid-applications.html
+        - title: Mersenne Number Finding
+          link: /comcute/2018/03/14/mersenne-number-finding-and-collatz-hypothesis-verification-in-the-comcute-grid-system.html
+        - title: Distributed Detection of Selected Features in Data Streams
+          link: /comcute/2018/03/14/distributed-detection-of-selected-features-in-data-streams-using-grid-class-systems.html
+
+pdf_file_title:
+    pl: Pobierz jako plik PDF
+    en: Download article as PDF
+
+pdf_file_label:
+    pl: Pobierz artykuł
+    en: Download article
 
 footer_kask:
     pl: Katedra Architektury Systemów Komputerowych

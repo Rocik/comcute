@@ -5,6 +5,7 @@ title: "Rozproszone łamanie szyfrów"
 date: 2018-03-14 21:00:00 +0100
 categories: comcute
 authors: [ PiotrSzpryngier ]
+pdfFile: "Rozproszone-łamanie-szyfrów"
 ---
 
 W rozdziale zaprezentowano podstawowe techniki łamania szyfrów symetrycznych i asymetrycznych o stosunkowo niewielkiej długości kluczy. Przedstawiono ogólną charakterystykę metod łamania szyfrów. Ilustracją tych metod jest zaprezentowana aplikacja służąca do łamania haseł lub badania odporności haseł na odgadnięcie.

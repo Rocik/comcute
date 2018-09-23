@@ -5,6 +5,7 @@ title: "Analiza istniejących obliczeń uruchamianych w ramach systemów rozpros
 date: 2018-03-14 15:00:00 +0100
 categories: comcute
 authors: [ PawelCzarnul ]
+pdfFile: "Analiza-algorytmów"
 ---
 
 W rozdziale zaprezentowano analizę algorytmów równoległych tradycyjnie uruchamianych w systemach klastrowych wysokiej wydajności, a następnie pokazano charakterystykę algorytmów ze względu na parametry istotne przy implementacji ich rozwiązań w rozproszonym środowisku Comcute. Następnie przedstawiono ocenę możliwości ich przeniesienia do tego środowiska.

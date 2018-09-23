@@ -5,6 +5,7 @@ title: "Bezpieczeństwo w monitoringu"
 date: 2018-03-14 21:00:00 +0100
 categories: comcute
 authors: [ PiotrBrudlo ]
+pdfFile: "Bezpieczeństwo-w-monitoringu"
 ---
 
 Zaproponowano szereg algorytmów realizujących aspekty bezpieczeństwa zorientowane na aplikacje monitorujące. W znaczącej części pozwolą one na zastąpienie pracy czynnika ludzkiego przy przeglądaniu lub analizie zapisów video z monitorowanych miejsc lub obszarów. Ze względu na szeroki potencjalny obszar, zakres zastosowań praktycznych oraz potencjalne efekty natury ekonomicznej u potencjalnych klientów spodziewane jest szerokie wykorzystanie tego typu rozwiązań w automatycznym monitoringu zarówno typu offline jak i online.

@@ -5,6 +5,7 @@ title: "Rozpraszanie obliczeń za pomocą serwerów dystrybucyjnych"
 date: 2018-03-14 18:00:00 +0100
 categories: comcute
 authors: [ JerzyBalicki, PiotrBrudlo ]
+pdfFile: "Rozpraszanie-obliczeń-za-pomoca-serwerów-dystrybucyjnych"
 ---
 
 W rozdziale omówiono zasady funkcjonowania serwerów dystrybucyjnych w systemie obliczeniowym klasy grid pracującym w trybie volunteer computing. Omówiono sposoby zwiększania wydajności tej warstwy systemu za pomocą zarządzania strumieniem paczek danych. Odniesiono się także do koncepcji *map-reduce* w implementacji przetwarzania równoległego.

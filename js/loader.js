@@ -1,28 +1,20 @@
 var Loader = function() {
     //"use strict"; // TODO: enable
 
-    // Adres usługi systemu comcute do komunikacji z internautą.
     const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";
-    // Namespace usługi systemu comcute do komunikacji z internautą.
     const LOADER_SERVICE_NAMESPACE = "http://si.webservice/";
-    const runner = new Runner();
-    const supportedTech = {
+    const SupportedTech = {
         JavaScript: 0,
         JavaApplet: 1,
         Flash: 0,
         Silverlight: 0
     };
+    const runner = new Runner();
     let registered;
     let errorCallback;
     let taskId;
     let moduleLocation;
     let computeModule;
-
-
-    // Constructor
-    {
-        this.setFailureEvent();
-    }
 
 
     this.setFailureEvent = function(callback) {
@@ -38,6 +30,8 @@ var Loader = function() {
                 callback();
         };
     };
+    // Set default
+    this.setFailureEvent();
 
 
     this.registerAndGetModule = function() {
@@ -47,7 +41,7 @@ var Loader = function() {
             navigator.userAgent,
             // trzeba ładować wynik do tablicy bo inaczej plugin js do ws'ów
             // rozwali go na pojedyncze elementy i wysle literka po literce do ws'a
-            JSON.stringify(supportedTech)
+            JSON.stringify(SupportedTech)
         ];
 
         // TODO: REMOVE! JUST FOR TESTING WITHOUT SERVER
