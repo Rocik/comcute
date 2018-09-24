@@ -11,12 +11,15 @@ layout: default
 
     {%- if site.posts.size > 0 -%}
     <ul class="post-list">
+        {% assign notFirst = false %}
         {%- for post in site.posts -%}
             {% if post.lang != lang %}
                 {% continue %}
             {% endif %}
-            {% if forloop.index0 > 0 %}
+            {% if notFirst %}
                 <hr>
+            {% else %}
+                {% assign notFirst = true %}
             {% endif %}
             <li>
                 <h3>
@@ -24,7 +27,7 @@ layout: default
                         {{ post.title | escape }}
                     </a>
                 </h3>
-            {{ post.excerpt }}
+                {{ post.excerpt }}
             </li>
         {%- endfor -%}
     </ul>

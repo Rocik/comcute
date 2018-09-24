@@ -27,15 +27,15 @@
         {%- endif -%}
         <span id="languages" class="trigger">
             {% for tongue in site.languages %}
-            <span>
-                {% if tongue == site.default_lang %}
-                    <a hreflang="{{ tongue }}" href='{{ site.baseurl | append: page.url }}'>
-                {% else %}
-                    <a hreflang="{{ tongue }}" href="{{ site.baseurl | append: '/' | append: tongue | append: page.url }}">
-                {% endif %}
-                    <img src="{{ "/images/" | append: tongue | append: ".png" | relative_url }}" alt="{{ tongue }}"/>
-                </a>
-            </span>
+                <span>
+                    {% if tongue == site.default_lang %}
+                        <a hreflang="{{ tongue }}" href='{{ site.baseurl | append: page.url }}'>
+                    {% else %}
+                        <a hreflang="{{ tongue }}" href="{{ site.baseurl | append: '/' | append: tongue | append: page.url }}">
+                    {% endif %}
+                        <img src="{{ "/images/" | append: tongue | append: ".png" | relative_url }}" alt="{{ tongue }}"/>
+                    </a>
+                </span>
             {% endfor %}
         </span>
     </div>
