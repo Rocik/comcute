@@ -1,10 +1,59 @@
 /**
  * Web Workers wrapper.
- * @param  {string|Function} javaScriptFunction Script to run in the workers.
+ * @param  {!string|Function} javaScriptFunction Script to run in the workers.
  * @constructor
  */
 function WW(javaScriptFunction) {
     'use strict';
+
+    class StatefulWorker extends Worker {
+        /**
+         * @param {string} stringUrl
+         * @constructor
+         */
+        constructor(stringUrl) {
+            super(stringUrl);
+            this._isBusy = false;
+            this._callback = null;
+        }
+
+
+        /**
+         * @param {number} workerIndex
+         * @param {Object} input
+         * @param {Function} [callback]
+         */
+        start(workerIndex, input, callback) {
+            super.postMessage({
+                type: 'start',
+                data: input,
+                index: workerIndex
+            });
+            this._isBusy = true;
+            this._callback = callback;
+        }
+
+
+        /**
+         * @param {*} result - Task results from Worker.
+         */
+        finish(result) {
+            this._isBusy = false;
+            if (typeof this._callback === 'function') {
+                this._callback(result);
+            }
+        }
+
+
+        /**
+         * @returns {Boolean} True when worker is not working.
+         */
+        get isIdle() {
+            return !this._isBusy;
+        }
+    }
+    
+
 
     /**
      * Event handler executed when any worker changes their progress.
@@ -17,8 +66,8 @@ function WW(javaScriptFunction) {
     /**
      * Pool of all Web Workers extended with:
      * isBusy - task is running
-     * callback - function execetured on finish
-     * @type {Array.<Worker>}
+     * callback - function executed on finish
+     * @type {Array.<StatefulWorker>}
      */
     const workers = [];
     /**
@@ -51,17 +100,20 @@ function WW(javaScriptFunction) {
      * @constructor
      */
     function constructor() {
-        if (typeof javaScriptFunction === 'function')
+        if (typeof javaScriptFunction === 'function') {
             workerFunction = javaScriptFunction.toString();
-        else
+        } else {
             workerFunction = javaScriptFunction;
+        }
 
         let logicalProcessors = window.navigator.hardwareConcurrency;
-        if (logicalProcessors > 1)
+        if (logicalProcessors > 1) {
             logicalProcessors--;
+        }
 
-        for (let i = 0; i < logicalProcessors; ++i)
+        for (let i = 0; i < logicalProcessors; ++i) {
             spawnWorker();
+        }
     }
 
 
@@ -72,16 +124,18 @@ function WW(javaScriptFunction) {
      * @param  {number} amount - desired workers count.
      */
     this.setWorkersAmount = function(amount) {
-        if (usedWorkers > 0)
+        if (usedWorkers > 0) {
             throw new Error("Changing workers amount while some of them are running is not allowed.");
+        }
 
         usedWorkers = 0;
         progressGoal = amount;
 
         if (workers.length < amount) {
             const workersToAdd = amount - workers.length;
-            for (let i = 0; i < workersToAdd; ++i)
+            for (let i = 0; i < workersToAdd; ++i) {
                 spawnWorker();
+            }
         } else if (workers.length > amount) {
             const workersToRemove = workers.length - amount;
             removeWorkers(workersToRemove);
@@ -102,13 +156,14 @@ function WW(javaScriptFunction) {
             includes.push(fullPath);
 
             if (Array.isArray(workers) && workers.length) {
-                for (const worker of workers)
+                for (const worker of workers) {
                     worker.postMessage({
                         type: 'import',
                         includes: fullPath,
                         // self.location inside Worker does not include subdirectory
                         location: getStringifiedLocation()
                     });
+                }
             }
         }
     };
@@ -132,7 +187,7 @@ function WW(javaScriptFunction) {
 
     /**
      * Start task on first first unoccupied worker.
-     * @param  {*} input - Any data direcly sent to the worker.
+     * @param  {*} input - Any data directly sent to the worker.
      * @param  {Function} [callback] - Executed after the task is done.
      * @return {Promise} When callback is null Promise is returned.
      */
@@ -143,8 +198,9 @@ function WW(javaScriptFunction) {
             });
         }
 
-        if (!runOnUnoccupiedWorker(input, callback))
+        if (!runOnUnoccupiedWorker(input, callback)) {
             jobQueue.push({ input, callback });
+        }
     };
 
 
@@ -152,15 +208,16 @@ function WW(javaScriptFunction) {
      * Terminate all workers.
      */
     this.dispose = function() {
-        for (let worker of workers)
+        for (let worker of workers) {
             worker.terminate();
+        }
     };
 
 
     /**
      * Create blob "file" with merged controller and user's function that runs at the start.
      * @param  {string} javaScriptText - The user's script to attach.
-     * @return {URL} Blob location.
+     * @return {string} Blob location.
      */
     function createBlob(javaScriptText) {
         const blobParts = [
@@ -170,34 +227,32 @@ function WW(javaScriptFunction) {
             '};'
         ];
         const workerBlob = new Blob(blobParts, { type:'text/javascript' });
-        return URL.createObjectURL(workerBlob);
+        return URL.createObjectURL(workerBlob).toString();
     }
 
 
     /**
-     * Creates initalized Worker object.
+     * Creates initialized Worker object.
      */
     function spawnWorker() {
         const workerUrl = createBlob(workerFunction);
-        const worker = new Worker(workerUrl);
+        const worker = new StatefulWorker(workerUrl);
         worker.addEventListener('message', handleMessageFromWorker);
         worker.postMessage({type: 'import', data: includes});
-        worker.isBusy = false;
         workers.push(worker);
     }
 
 
     /**
      * Start a task on the first unoccupied Worker.
-     * @param  {*} input - Any data direcly sent to the worker.
+     * @param  {*} input - Any data directly sent to the worker.
      * @param  {Function} [callback] - Executed after the task is done.
      * @return {boolean}  True if found free worker.
      */
     function runOnUnoccupiedWorker(input, callback) {
         for (let i = 0; i < workers.length; ++i) {
-            if (workers[i].isBusy === false) {
-                workers[i].callback = callback;
-                startWorker(i, input);
+            if (workers[i].isIdle) {
+                startWorker(i, input, callback);
                 return true;
             }
         }
@@ -209,15 +264,11 @@ function WW(javaScriptFunction) {
     /**
      * Command Worker to start processing data.
      * @param  {number} workerIndex
-     * @param  {*} input - Any data direcly sent to the worker.
+     * @param  {*} input - Any data directly sent to the worker.
+     * @param  {Function} [callback] - Executed after the task is done.
      */
-    function startWorker(workerIndex, input) {
-        workers[workerIndex].postMessage({
-            type: 'start',
-            data: input,
-            index: workerIndex
-        });
-        workers[workerIndex].isBusy = true;
+    function startWorker(workerIndex, input, callback) {
+        workers[workerIndex].start(workerIndex, input, callback);
         usedWorkers++;
     }
 
@@ -232,7 +283,7 @@ function WW(javaScriptFunction) {
             let removed = false;
 
             for (let j = 0; j < workers.length; ++j) {
-                if (workers[j].isBusy === false) {
+                if (workers[j].isIdle) {
                     workers[j].terminate();
                     workers.splice(j, 1);
                     removed = true;
@@ -253,22 +304,27 @@ function WW(javaScriptFunction) {
      */
     function getBaseDomainUrl() {
         const url = window.location.origin;
-        if (url.slice(-1) === '/')
+        if (url.slice(-1) === '/') {
             return url;
+        }
+
         return url + '/';
     }
 
 
     const getStringifiedLocation = () => {
-        if (this.testLocation !== undefined)
+        if (this.testLocation !== undefined) {
             return this.testLocation;
+        }
+        
         return window.location.toString();
     };
 
 
     /**
      * Parses all messages from Workers.
-     * @param  {Object.data.{type: string, ...*}} msg - Worker message.
+     * @param  {MessageEvent} msg - Worker message.
+     * @param  {{type: string}} msg.data - Worker message.
      */
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
@@ -279,10 +335,10 @@ function WW(javaScriptFunction) {
                 break;
             }
             case 'progress': {
-                const valueChanged = msg.data.difference;
+                const valueChange = msg.data.difference;
                 const wid = msg.data.index;
                 const extraData = msg.data.extra;
-                parseProgressUpdate(valueChanged, wid, extraData);
+                parseProgressUpdate(valueChange, wid, extraData);
                 break;
             }
             case 'finished': {
@@ -299,15 +355,17 @@ function WW(javaScriptFunction) {
 
 
     /**
-     * @param  {[type]} valueChanged - How much progress has changed.
-     * @param  {[type]} workerId
-     * @param  {[type]} [extraData]
+     * @param  {number} valueChange - How much progress has changed.
+     * @param  {number} workerId
+     * @param  {*} [extraData]
      */
-    const parseProgressUpdate = (valueChanged, workerId, extraData) => {
+    const parseProgressUpdate = (valueChange, workerId, extraData) => {
         if (typeof this.onProgressChanged === 'function') {
-            totalProgress += valueChanged;
+            totalProgress += valueChange;
             if (totalProgress > 100 * progressGoal) {
-                totalProgress -= 100 * progressGoal;
+                if (progressGoal == usedWorkers) {
+                    totalProgress -= 100 * progressGoal;
+                }
                 progressGoal = usedWorkers;
             }
             this.onProgressChanged(totalProgress / progressGoal, workerId, extraData);
@@ -321,22 +379,21 @@ function WW(javaScriptFunction) {
      */
     const parseFinishedWorker = (wid, result) => {
         const worker = workers[wid];
-        worker.isBusy = false;
-        if (typeof worker.callback === 'function')
-            worker.callback(result);
+        worker.finish(result);        
 
-        if (worker.isBusy === false) {
+        // callback could start a new task
+        if (worker.isIdle) {
             if (jobQueue.length > 0) {
                 const job = jobQueue.shift();
-                worker.callback = job.callback;
-                startWorker(wid, job.input);
+                startWorker(wid, job.input, job.callback);
             }
         }
     };
 
 
+
     /**
-     * !!!  This function CANNOT direcly access anything outside it  !!!
+     * !!!  This function CANNOT access any memory outside it !!!
      *
      * Insides of this function are script which controls data flow within Worker.
      */
@@ -362,7 +419,7 @@ function WW(javaScriptFunction) {
 
         /**
          * @param  {number} value - Current progress value.
-         * @param  {*} extraData
+         * @param  {*} [extraData]
          */
         self.updateProgress = function(value, extraData) {
             const percent = (progressGoal > 0) ?
@@ -382,7 +439,8 @@ function WW(javaScriptFunction) {
 
         /**
          * Parses message from main thread.
-         * @param  {Object.data.{type: string, ...*}} msg - Main thread message.
+         * @param  {MessageEvent} msg - Main thread message.
+         * @param  {{type: string}} msg.data - Data from the main thread.
          */
         self.onmessage = function(msg) {
             switch (msg.data.type) {
@@ -409,19 +467,19 @@ function WW(javaScriptFunction) {
         /**
          * Loads additional script files.
          * With relative paths tries finding them on subdirectories.
-         * @param  {string[]} data List of script filenames.
+         * @param  {{includes: string[], location: string}} data List of script filenames.
          */
         function importScripts(data) {
             const includes = data.includes;
-            if (Array.isArray(includes) && includes.length)
+            if (Array.isArray(includes) && includes.length) {
                 self.importScripts(includes);
-            else if (typeof includes === 'string') {
+            } else if (typeof includes === 'string') {
                 try {
                     self.importScripts(includes);
                 } catch (e) {
                     const url = new URL(includes);
                     const selfUrl = new URL(data.location);
-                    if (!loadScriptOnSubdomainFolder(url, selfUrl))
+                    if (!loadScriptOnSubDomainFolder(url, selfUrl))
                         throw e;
                 }
             }
@@ -433,12 +491,12 @@ function WW(javaScriptFunction) {
          * @param  {URL} selfUrl - Worker blob location.
          * @return {boolean}     - True if loaded something.
          */
-        function loadScriptOnSubdomainFolder(url, selfUrl) {
+        function loadScriptOnSubDomainFolder(url, selfUrl) {
             if (url.origin == selfUrl.origin) {
-                const subdir = selfUrl.pathname.split('/', 2)[1];
+                const subDirectory = selfUrl.pathname.split('/', 2)[1];
 
-                if (subdir != url.pathname.split('/', 2)[1]) {
-                    const rootDir = url.origin + '/' + subdir;
+                if (subDirectory != url.pathname.split('/', 2)[1]) {
+                    const rootDir = url.origin + '/' + subDirectory;
                     const newPath = rootDir + url.pathname;
 
                     try {
