@@ -170,7 +170,7 @@ function WW(javaScriptFunction) {
 
 
     /**
-     * @return {number}
+     * @return {number} - Number of currently idle workers.
      */
     this.getFreeWorkers = function() {
         return workers.length - usedWorkers;
@@ -178,7 +178,7 @@ function WW(javaScriptFunction) {
 
 
     /**
-     * @return {number}
+     * @return {number} - Number of currently occupied workers.
      */
     this.getUsedWorkers = function() {
         return usedWorkers;
@@ -330,22 +330,23 @@ function WW(javaScriptFunction) {
         switch (msg.data.type) {
             case 'import': {
                 var index = includes.indexOf(msg.data.oldFilename);
-                if (index !== -1)
+                if (index !== -1) {
                     includes[index] = msg.data.newFilename;
+                }
                 break;
             }
             case 'progress': {
-                const valueChange = msg.data.difference;
-                const wid = msg.data.index;
+                const progressChange = msg.data.difference;
+                const workerId = msg.data.index;
                 const extraData = msg.data.extra;
-                parseProgressUpdate(valueChange, wid, extraData);
+                parseProgressUpdate(progressChange, workerId, extraData);
                 break;
             }
             case 'finished': {
                 usedWorkers--;
 
-                const wid = msg.data.index;
-                parseFinishedWorker(wid, msg.data.result);
+                const workerId = msg.data.index;
+                parseFinishedWorker(workerId, msg.data.result);
                 break;
             }
             default:
@@ -360,16 +361,23 @@ function WW(javaScriptFunction) {
      * @param  {*} [extraData]
      */
     const parseProgressUpdate = (valueChange, workerId, extraData) => {
-        if (typeof this.onProgressChanged === 'function') {
-            totalProgress += valueChange;
-            if (totalProgress > 100 * progressGoal) {
-                if (progressGoal == usedWorkers) {
-                    totalProgress -= 100 * progressGoal;
-                }
+        if (typeof this.onProgressChanged !== 'function') {
+            return;
+        }
+        
+        totalProgress += valueChange;
+
+        if (totalProgress > 100 * progressGoal) {
+            if (progressGoal >= usedWorkers) {
+                totalProgress -= 100 * progressGoal;
+            }
+            progressGoal = usedWorkers;
+        } else {
+            if (progressGoal < usedWorkers) {
                 progressGoal = usedWorkers;
             }
-            this.onProgressChanged(totalProgress / progressGoal, workerId, extraData);
         }
+        this.onProgressChanged(totalProgress / progressGoal, workerId, extraData);
     };
 
 

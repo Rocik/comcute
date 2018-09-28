@@ -4,7 +4,7 @@
  * @author Waldemar Korłub, na bazie implementacji PrimeCode.js Adama Polaka
  */
 
-const comcuteModule = {
+window.comcuteModule = {
 
     parallelTaskJobs: true,
 
@@ -27,7 +27,7 @@ const comcuteModule = {
     },
 
     task: function(dataObject) {
-        var progress = 0;
+        let progress = 0;
 
         function compute(input) {
             var dataRange = input.split(" ");
@@ -36,17 +36,16 @@ const comcuteModule = {
             var size = new BigInteger(dataRange[1]);
 
             progress = 0;
-            step = 1 / dataRange[1] * 100;
+            const step = 1 / dataRange[1] * 100;
 
             return testRange(start, start.add(size), step);
         }
 
-        function testRange(start, end, step){
-            one = new BigInteger("1");
-            potentiallyNonconforming = "";
+        function testRange(start, end, step) {
+            const one = new BigInteger("1");
+            let potentiallyNonconforming = "";
 
-            n = start;
-            startTime = new Date().getTime();
+            let n = start;
 
             while (n.compareTo(end) <= 0) {
 
@@ -59,22 +58,18 @@ const comcuteModule = {
                 updateProgress(progress);
             }
 
-            if (n.compareTo(end) > 0) {
-                packageProcessed = true;
-            }
-
             return potentiallyNonconforming;
         }
 
 
         function conformsCollatzConjecture(n) {
-            zero = new BigInteger("0");
-            one = new BigInteger("1");
-            two = new BigInteger("2");
-            three = new BigInteger("3");
-            three_thousand = new BigInteger("3000");
+            const zero = new BigInteger("0");
+            const one = new BigInteger("1");
+            const two = new BigInteger("2");
+            const three = new BigInteger("3");
+            const three_thousand = new BigInteger("3000");
 
-            loopCnt = new BigInteger("0");
+            let loopCnt = new BigInteger("0");
 
             while (!n.equals(one)) {
                 loopCnt = loopCnt.add(one);

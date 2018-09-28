@@ -1,4 +1,4 @@
-var Loader = function() {
+const Loader = function() {
     "use strict";
 
     const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";

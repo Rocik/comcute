@@ -125,6 +125,6 @@ window.webservice = function(settings) {
         }
         request.send(settings.requestData);
     } catch (err) {
-        alert("Error occurred in webservice.");
+        alert("Error occurred in webservice. " + err);
     }
 };

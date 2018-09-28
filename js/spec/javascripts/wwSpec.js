@@ -56,9 +56,9 @@ describe("Web Workers library", function() {
 
         it("function which reports progress using x outOf y", function(done) {
             const ww = new WW(function() {
-                setProgressGoal(100);
-                for (i = 1; i <= 100; ++i)
-                    updateProgress(i);
+                setProgressGoal(200);
+                for (let i = 1; i <= 100; ++i)
+                    updateProgress(i * 2);
             });
 
             let progress = 0;
@@ -67,7 +67,7 @@ describe("Web Workers library", function() {
                 expect(p).toBeCloseTo(progress);
             };
 
-            ww.run(1, function(result) {
+            ww.run(1, function() {
                 done();
             });
         });
@@ -75,26 +75,27 @@ describe("Web Workers library", function() {
         it("function which reports progress using x outOf y and sends extra data", function(done) {
             const ww = new WW(function() {
                 setProgressGoal(100);
-                for (i = 1; i <= 100; ++i)
+                for (let i = 1; i <= 100; ++i)
                     updateProgress(i, "extraData");
             });
 
             let progress = 0;
             ww.onProgressChanged = (p, id, d) => {
                 progress++;
+                console.log(p + " = " + progress);
                 expect(p).toBeCloseTo(progress);
                 expect(id).toBe(0);
                 expect(d).toBe("extraData");
             };
 
-            ww.run(1, function(result) {
+            ww.run(1, function() {
                 done();
             });
         });
 
         it("function which reports progress", function(done) {
             const ww = new WW(function() {
-                for (i = 1; i <= 100; ++i)
+                for (let i = 1; i <= 100; ++i)
                     updateProgress(i);
             });
 
@@ -299,10 +300,26 @@ describe("Web Workers library", function() {
 
         it("progress is aggregated", function(done) {
             const ww = new WW(function() {
-                for (i = 1; i <= 100; ++i)
+                for (let i = 1; i <= 100; ++i)
                     updateProgress(i);
             });
             ww.setWorkersAmount(2);
+
+            var progress = 0;
+            ww.onProgressChanged = (p) => {
+                progress++;
+                expect(p).toBeCloseTo(progress / 2);
+            };
+
+            ww.run(1, function() { done(); });
+            ww.run(2, function() { done(); });
+        });
+
+        it("progress is aggregated without setting explicit workers amount", function(done) {
+            const ww = new WW(function() {
+                for (let i = 1; i <= 100; ++i)
+                    updateProgress(i);
+            });
 
             var progress = 0;
             ww.onProgressChanged = (p) => {
