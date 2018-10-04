@@ -288,6 +288,7 @@ $side-pane-margins: 21px !default;
             color: $text-color;
             text-decoration: none;
         }
+  
     }
 
 
@@ -351,12 +352,15 @@ $side-pane-margins: 21px !default;
 
         .page-link {
             display: block;
-            padding: 8px 10px;
+            float: right;
+            clear: right;
 
             &:not(:last-child) {
-                margin-right: 0;
+                margin-right: 10px;
             }
-            margin-left: 10px;
+            margin-right: 10px;
+            margin-left: 14px;
+            margin-bottom: 10px;
         }
 
         #page-current {
@@ -381,7 +385,26 @@ $side-pane-margins: 21px !default;
     vertical-align: middle;
 
     #page-current {
-        border-bottom: 2px solid $brand-color;
+        display: inline-block;
+        padding-bottom: 2px;
+    }
+
+    #page-current::after {
+        display: block;
+        content: '';
+        width: 0%;
+        height: 2px;
+        margin: auto;
+
+        background: $brand-color;
+
+        animation: expand .5s ease .3s forwards;
+    }
+
+    @keyframes expand {
+        100% {
+            width: 100%;
+        }
     }
 }
 
