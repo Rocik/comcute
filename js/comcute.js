@@ -1,7 +1,8 @@
 window.onload = function() {
     'use strict';
     
-    const loader = new Loader();
+    const userSettings = new UserSettings();
+    const loader = new Loader(userSettings);
 
     const comcuteStart = document.getElementById('comcute-start');
     const comcuteStop = document.getElementById('comcute-stop');
@@ -16,14 +17,18 @@ window.onload = function() {
     const firstPageContent = document.getElementsByClassName('page-content')[0];
     const panel = document.getElementById('panel');
 
-    if (typeof(Worker) === "undefined" && sessionStorage.getItem('oldBrowserAlert') == null) {
-        sessionStorage.setItem('oldBrowserAlert', 'true');
-        if (document.documentElement.lang != "pl-PL" && document.documentElement.lang != "pl") {
-            alert("Your browser does not support Web Workers! You will not be able to start tasks.")
-        } else {
-            alert("Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.")
+
+    function setup() {
+        if (typeof(Worker) === "undefined" && sessionStorage.getItem('oldBrowserAlert') == null) {
+            sessionStorage.setItem('oldBrowserAlert', 'true');
+            if (document.documentElement.lang != "pl-PL" && document.documentElement.lang != "pl") {
+                alert("Your browser does not support Web Workers! You will not be able to start tasks.")
+            } else {
+                alert("Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.")
+            }
         }
     }
+
 
     comcuteStart.onclick = function() {
         loader.setFailureEvent(resetUI);
@@ -84,4 +89,46 @@ window.onload = function() {
         const returns = div.getElementsByTagName("return"); 
         return returns[0].innerHTML;
     }
+
+
+    setup();
 };
+
+
+class UserSettings {
+    constructor() {
+        const cpuThreads = window.navigator.hardwareConcurrency - 1;
+        this.workersCount = this.loadWorkersAmount(cpuThreads);
+
+        this.setupSlider(cpuThreads);
+    }
+
+    loadWorkersAmount(maxWorkers) {
+        const defaultAmount = this.isOnMobile() ? 1 : maxWorkers;
+
+        const workersCount = localStorage.getItem("workersCount");
+        if (workersCount == null) {
+            return defaultAmount;
+        }
+
+        return parseInt(workersCount) || defaultAmount;
+    }
+
+    isOnMobile() {
+        return (typeof window.orientation !== "undefined")
+            || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    }
+
+    setupSlider(threadsLimit) {
+        const workersCountRange = document.getElementById('workers-count');
+        if (workersCountRange == null) {
+            return;
+        }
+        workersCountRange.setAttribute("max", threadsLimit);
+        workersCountRange.setAttribute("value", this.workersCount);
+        workersCountRange.oninput = function() {
+            this.workersCount = this.value;
+            localStorage.setItem("workersCount", this.value);
+        }
+    }
+}

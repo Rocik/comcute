@@ -28,11 +28,13 @@ sass:
 
 header_pages:
  - comcute.pl.md
- - video.pl.md
- - authors.pl.md
  - comcute.en.md
+ - video.pl.md
  - video.en.md
+ - authors.pl.md
  - authors.en.md
+ - settings.pl.md
+ - settings.en.md
 
 languages: ["pl", "en"]
 default_lang: "pl"

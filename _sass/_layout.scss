@@ -587,6 +587,29 @@ figcaption {
 }
 
 
+.slide-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: $spacing-unit * 0.5;
+    margin-bottom: $spacing-unit;
+}
+
+.slider {
+    flex-grow: 1;
+    padding-top: 4px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.slider-label {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
 /**
  * Side panel
  */

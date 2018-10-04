@@ -1,7 +1,7 @@
 /**
- *  Pobiera dane do zadania, uruchamia obliczenia
+ *  Controls data flow: fetching data, running tasks, sending results
  */
-var Runner = function() {
+var Runner = function(userSettings) {
     'use strict';
     const self = this;
 
@@ -222,6 +222,7 @@ var Runner = function() {
 
     function createWW() {
         ww = new WW(computeModule.task);
+        ww.setWorkersAmount(userSettings.workersCount);
         ww.import('/js/jsbn.js', 'js/jsbn2.js');
         ww.onProgressChanged = handleProgressChanged;
         previousProgress = 0;

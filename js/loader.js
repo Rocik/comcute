@@ -1,4 +1,4 @@
-const Loader = function() {
+const Loader = function(userSettings) {
     "use strict";
 
     const LOADER_SERVICE_URL = "https://s-server.comcute.eti.pg.gda.pl/S-war/SIService";
@@ -10,7 +10,7 @@ const Loader = function() {
         Silverlight: 0
     };
     const HeadNode = document.getElementsByTagName("head")[0];
-    const runner = new Runner();
+    const runner = new Runner(userSettings);
     let registered;
     let errorCallback;
     let taskId;
