@@ -27,6 +27,8 @@ sass:
   style: compressed
 
 header_pages:
+ - index.md
+ - index-en.md
  - comcute.pl.md
  - comcute.en.md
  - video.pl.md

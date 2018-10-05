@@ -440,6 +440,43 @@ $side-pane-margins: 21px !default;
             width: auto;
         }
     }
+
+    h1:first-child, h2:first-child, h3:first-child
+    h4:first-child, h5:first-child, h6:first-child {
+        padding-top: 0;
+    }
+
+    h1 {
+        @include relative-font-size(1.9);
+
+        @include media-query($on-laptop) {
+            @include relative-font-size(1.65);
+        }
+    }
+
+    h2 {
+        @include relative-font-size(1.6);
+
+        @include media-query($on-laptop) {
+            @include relative-font-size(1.3);
+        }
+    }
+
+    h3 {
+        @include relative-font-size(1.22);
+
+        @include media-query($on-laptop) {
+            @include relative-font-size(1.12);
+        }
+    }
+
+    h4 {
+        @include relative-font-size(1.08);
+
+        @include media-query($on-laptop) {
+            @include relative-font-size(1);
+        }
+    }
 }
 
 .page-heading {
@@ -462,7 +499,7 @@ $side-pane-margins: 21px !default;
     hr {
         border: 0;
         border-top: 1px solid rgba(0, 0, 0, 0.2);
-        margin-top: $spacing-unit;
+        margin-top: $spacing-unit * 0.75;
     }
 }
 
@@ -539,38 +576,6 @@ $post-link-color: #384369 !default;
         margin-bottom: $spacing-unit / 2;
     }
 
-    h1 {
-        @include relative-font-size(1.9);
-
-        @include media-query($on-laptop) {
-            @include relative-font-size(1.65);
-        }
-    }
-
-    h2 {
-        @include relative-font-size(1.6);
-
-        @include media-query($on-laptop) {
-            @include relative-font-size(1.3);
-        }
-    }
-
-    h3 {
-        @include relative-font-size(1.22);
-
-        @include media-query($on-laptop) {
-            @include relative-font-size(1.12);
-        }
-    }
-
-    h4 {
-        @include relative-font-size(1.08);
-
-        @include media-query($on-laptop) {
-            @include relative-font-size(1);
-        }
-    }
-
     hr {
         border: 0;
         height: 1px;
@@ -620,7 +625,6 @@ figcaption {
 
 .slider {
     flex-grow: 1;
-    padding-top: 4px;
     margin-left: 15px;
     margin-right: 15px;
     margin-top: auto;

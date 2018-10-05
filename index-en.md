@@ -1,10 +1,13 @@
 ---
-layout: post
+layout: default
 lang: en
-title: System for providing big computing power in a crisis situation
+title: Home
 categories: home
 permalink: /
 ---
+
+# System for providing big computing power in a crisis situation
+
 Comcute is a project developed by researchers from Gdansk University of Technology, that is designed to be a real polish alternative for _BOINC_ – a platform for volunteer computing. The purpose of such systems is to solve complex scientific problems and to provide computing power with low cost. Comcute fulfills those guidelines. However, its main goal in taking advantage of the potential of grid computing is to provide continuous activity of processors in case of crisis like the explosion in Fukushima Nuclear Power Plant.
 
 # How do grid systems work
