@@ -29,8 +29,8 @@ sass:
 header_pages:
  - index.md
  - index-en.md
- - comcute.pl.md
- - comcute.en.md
+ - articles.pl.md
+ - articles.en.md
  - video.pl.md
  - video.en.md
  - authors.pl.md
