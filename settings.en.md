@@ -6,6 +6,7 @@ permalink: /settings/
 ---
 
 ## How much computing power do you want to share
+
 _Amount of simultaneously processed tasks._
 
 <div class="slide-container">

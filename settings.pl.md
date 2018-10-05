@@ -6,7 +6,8 @@ permalink: /settings/
 ---
 
 ## Jak dużą częścią mocy obliczeniowej chcesz się podzielić
-_Liczba jednoczesnych przetwarzań zadań._
+
+_Liczba jednocześnie przetwarzanych zadań._
 
 <div class="slide-container">
 	<span class="slider-label">Minimalna</span>
