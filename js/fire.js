@@ -57,8 +57,7 @@ window.comcuteModule = {
                 h: imgHeight
             });
         }
-        img.src = "/images/map_small.png";
-        //img.src = dataObject.substr(0, dataObject.indexOf(" ")); // TODO: switch on deployment
+        img.src = dataObject.substr(0, dataObject.indexOf(" ")); 
     },
 
     setResponse: function(results) {
