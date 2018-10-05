@@ -126,8 +126,10 @@ class UserSettings {
         }
         workersCountRange.setAttribute("max", threadsLimit);
         workersCountRange.setAttribute("value", this.workersCount);
+
+        const self = this;
         workersCountRange.oninput = function() {
-            this.workersCount = this.value;
+            self.workersCount = this.value;
             localStorage.setItem("workersCount", this.value);
         }
     }
