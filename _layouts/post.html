@@ -10,8 +10,8 @@ layout: default
         <div id="post-meta">
             <div id="post-authors">
                 {% assign authorCount = page.authors | size %}
-                {% if authorCount == 1 %} Autor:
-                {% elsif authorCount > 1 %} Autorzy:
+                {% if authorCount == 1 %} {% tl author_label %}:
+                {% elsif authorCount > 1 %} {% tl authors_label %}:
                 {% endif %}
                 {% for author in page.authors %}
                     {% assign authorData = site.data.authors[author] %}

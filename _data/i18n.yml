@@ -86,6 +86,14 @@ side_pane_3_elements:
         - title: Distributed Detection of Selected Features in Data Streams
           link: /comcute/2018/03/14/distributed-detection-of-selected-features-in-data-streams-using-grid-class-systems.html
 
+author_label:
+    pl: Autor
+    en: Author
+
+authors_label:
+    pl: Autorzy
+    en: Authors
+
 pdf_file_title:
     pl: Pobierz jako plik PDF
     en: Download article as PDF
