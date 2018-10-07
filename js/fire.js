@@ -40,7 +40,7 @@ window.comcuteModule = {
         ctx.putImageData(img, 0, 0);
     },
 
-    prepare: function(_, resolve) {
+    prepare: function(dataObject, resolve) {
         const img = new Image();
         img.onload = function() {
             const canvas = document.createElement('canvas');

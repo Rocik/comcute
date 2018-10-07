@@ -150,7 +150,7 @@ function WW(javaScriptFunction) {
     this.import = function() {
         const baseUrl = getBaseDomainUrl();
 
-        for (var argument of arguments) {
+        for (let argument of arguments) {
             let argUrl = new URL(argument, baseUrl);
             let fullPath = argUrl.href;
             includes.push(fullPath);
@@ -329,7 +329,7 @@ function WW(javaScriptFunction) {
     const handleMessageFromWorker = (msg) => {
         switch (msg.data.type) {
             case 'import': {
-                var index = includes.indexOf(msg.data.oldFilename);
+                const index = includes.indexOf(msg.data.oldFilename);
                 if (index !== -1) {
                     includes[index] = msg.data.newFilename;
                 }
