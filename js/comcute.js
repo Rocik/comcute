@@ -21,16 +21,20 @@ window.onload = function() {
     function setup() {
         if (typeof(Worker) === "undefined" && sessionStorage.getItem('oldBrowserAlert') == null) {
             sessionStorage.setItem('oldBrowserAlert', 'true');
-            if (document.documentElement.lang != "pl-PL" && document.documentElement.lang != "pl") {
-                alert("Your browser does not support Web Workers! You will not be able to start tasks.")
-            } else {
+            if (Comcute.currentLanguage == "pl") {
                 alert("Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.")
+            } else {
+                alert("Your browser does not support Web Workers! You will not be able to start tasks.")
             }
         }
     }
 
 
     comcuteStart.onclick = function() {
+        if (sessionStorage.getItem('oldBrowserAlert') == 'true') {
+            return;
+        }
+
         loader.setFailureEvent(resetUI);
         loader.registerAndGetModule();
 
