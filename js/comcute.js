@@ -17,21 +17,30 @@ window.onload = function() {
     const firstPageContent = document.getElementsByClassName('page-content')[0];
     const panel = document.getElementById('panel');
 
+    const OldBrowserStorageKey = 'isOldBrowser';
+
 
     function setup() {
-        if (typeof(Worker) === "undefined" && sessionStorage.getItem('oldBrowserAlert') == null) {
-            sessionStorage.setItem('oldBrowserAlert', 'true');
-            if (Comcute.currentLanguage == "pl") {
-                alert("Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.")
-            } else {
-                alert("Your browser does not support Web Workers! You will not be able to start tasks.")
+        if (sessionStorage.getItem(OldBrowserStorageKey) == null) {
+            const isOldBrowser = typeof(Worker) === "undefined";
+            sessionStorage.setItem(OldBrowserStorageKey, isOldBrowser.toString());
+            if (isOldBrowser) {
+                if (Comcute.currentLanguage == "pl") {
+                    alert("Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.")
+                } else {
+                    alert("Your browser does not support Web Workers! You will not be able to start tasks.")
+                }
             }
+        }
+
+        if (sessionStorage.getItem(OldBrowserStorageKey) == 'false') {
+            comcuteStart.removeAttribute("style");
         }
     }
 
 
     comcuteStart.onclick = function() {
-        if (sessionStorage.getItem('oldBrowserAlert') == 'true') {
+        if (sessionStorage.getItem(OldBrowserStorageKey) == 'true') {
             return;
         }
 
