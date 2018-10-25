@@ -36,6 +36,12 @@ $on-laptop:        800px !default;
   }
 }
 
+@mixin media-query-above($device) {
+  @media screen and (min-width: $device) {
+    @content;
+  }
+}
+
 @mixin media-query-between($max, $min) {
   @media screen and (max-width: $max) and (min-width: $min + 1) {
     @content;

@@ -386,19 +386,22 @@ $side-pane-margins: 21px !default;
 
     #page-current {
         display: inline-block;
+        padding-top: 5px;
         padding-bottom: 2px;
     }
 
-    #page-current::after {
-        display: block;
-        content: '';
-        width: 0%;
-        height: 2px;
-        margin: auto;
+    @include media-query-above($on-palm) {
+        #page-current::after {
+            display: block;
+            content: '';
+            height: 2px;
+            margin: auto;
 
-        background: $brand-color;
+            background: $brand-color;
 
-        animation: expand .5s ease .3s forwards;
+            width: 0%;
+            animation: expand .5s ease .3s forwards;
+        }
     }
 
     @keyframes expand {
@@ -439,6 +442,10 @@ $side-pane-margins: 21px !default;
         @include media-query($on-palm) {
             width: auto;
         }
+    }
+
+    p:last-child {
+        margin-bottom: $spacing-unit;
     }
 
     h1:first-child, h2:first-child, h3:first-child
