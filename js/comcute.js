@@ -25,11 +25,7 @@ window.onload = function() {
             const isOldBrowser = typeof(Worker) === "undefined";
             sessionStorage.setItem(OldBrowserStorageKey, isOldBrowser.toString());
             if (isOldBrowser) {
-                if (Comcute.currentLanguage == "pl") {
-                    alert("Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.")
-                } else {
-                    alert("Your browser does not support Web Workers! You will not be able to start tasks.")
-                }
+                alert(Comcute.messages.oldBrowser)
             }
         }
 
