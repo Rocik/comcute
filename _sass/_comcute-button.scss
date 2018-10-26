@@ -1,5 +1,6 @@
 $comcute-button-width: 300px;
 $comcute-button-height: 55px;
+$comcute-button-height-mobile: 50px;
 
 .comcute-button {
     display: flex;
@@ -26,7 +27,7 @@ $comcute-button-height: 55px;
 
     @include media-query($max-inline-header-width) {
         float: none;
-        line-height: 50px;
+        line-height: $comcute-button-height-mobile;
         min-width: 100%;
 
         @include relative-font-size(1.15);
@@ -57,7 +58,8 @@ $comcute-button-height: 55px;
 }
 
 .comcute-more {
-	&:hover + .comcute-more-container {
+    &:hover + .comcute-more-container,
+    &:focus + .comcute-more-container {
         display: block;
     }
 }
@@ -73,6 +75,15 @@ $comcute-button-height: 55px;
     
     background-color: #f1f1f1;
     box-shadow: 0px 4px 16px 0px rgba(black, 0.4);
+
+    @include media-query($max-inline-header-width) {
+        float: none;
+        margin-top: $comcute-button-height-mobile;
+        line-height: $comcute-button-height-mobile;
+        min-width: 100%;
+
+        @include relative-font-size(1.15);
+    }
 
     a {
 		display: block;
@@ -103,6 +114,7 @@ $comcute-button-height: 55px;
 
 .comcute-more {
     min-width: $comcute-button-height;
+    width: $comcute-button-height;
     max-width: $comcute-button-height;
 }
 
