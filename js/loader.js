@@ -35,7 +35,7 @@ const Loader = function(userSettings) {
     this.setFailureEvent();
 
 
-    this.registerAndGetModule = function() {
+    this.register = function(module) {
         registered = true;
 
         const browserInfo = [
@@ -47,7 +47,7 @@ const Loader = function(userSettings) {
 
         // TODO: REMOVE! JUST FOR TESTING WITHOUT SERVER
                 setTimeout(() => {
-                    computeModule = comcuteModule;
+                    computeModule = module;
                     runComcute();
                 }, 1000);
                 return;

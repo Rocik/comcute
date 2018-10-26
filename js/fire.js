@@ -8,7 +8,7 @@
     let imgWidth = 1024;
     let imgHeight = 1024;
 
-window.comcuteModule = {
+window.comcuteFireModule = {
 
     getStatus: function(_, lang) {
         if (lang === "pl") {

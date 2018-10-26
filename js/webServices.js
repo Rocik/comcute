@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
+// TODO: should be ported to Fetch API
 window.webservice = function(settings) {
     try {
         settings.requestType ="soap1.1";
@@ -114,7 +115,7 @@ window.webservice = function(settings) {
             if (this.status >= 200 && this.status < 400) {
                 settings.success(this.response, this.statusText);
             } else {
-                settings.error(/*should something be added here?*/);
+                settings.error(/*TODO: should something be added here?*/);
             }
         };
         request.onerror = settings.error;

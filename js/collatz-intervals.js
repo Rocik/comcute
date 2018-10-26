@@ -4,7 +4,7 @@
  * @author Waldemar Korłub, na bazie implementacji PrimeCode.js Adama Polaka
  */
 
-window.comcuteModule = {
+window.comcuteCollatzModule = {
 
     parallelTaskJobs: true,
 

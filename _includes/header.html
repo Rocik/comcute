@@ -14,10 +14,16 @@
             </a>
         </div>
 
-        <a id="comcute-start" role="button" class="comcute-button noselect" style="display: none;">
-            <span>{% tl comcute_button_start %}</span>
-        </a>
-
+        <div class="comcute-button" style="display: none;">
+            <a id="comcute-start" role="button" class="comcute-start comcute-sub-button noselect">
+                <span>{% tl comcute_button_start %}</span>
+            </a>
+            <button role="button" class="comcute-start comcute-sub-button comcute-more noselect" >
+                <span>&#x25BC;</span>
+            </button>
+            <div id="comcute-tasks" class="comcute-more-container"></div>
+        </div>
+        
         <a id="comcute-stop" role="button" class="comcute-button noselect" style="display: none;">
             <span>{% tl comcute_button_stop %}</span>
         </a>

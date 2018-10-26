@@ -1,6 +1,12 @@
 window.onload = function() {
     'use strict';
     
+    const enabledTasks = [
+        { title: "Fire",               js: window.comcuteFireModule },
+        { title: "Collatz Intervals",  js: window.comcuteCollatzModule },
+        { title: "Mersene",            js: window.comcuteMersenneModule },
+    ]
+
     const userSettings = new UserSettings();
     const loader = new Loader(userSettings);
 
@@ -17,40 +23,37 @@ window.onload = function() {
     const firstPageContent = document.getElementsByClassName('page-content')[0];
     const panel = document.getElementById('panel');
 
-    const OldBrowserStorageKey = 'isOldBrowser';
+    const oldBrowserStorageKey = 'isOldBrowser';
 
 
     function setup() {
-        if (sessionStorage.getItem(OldBrowserStorageKey) == null) {
+        if (sessionStorage.getItem(oldBrowserStorageKey) == null) {
             const isOldBrowser = typeof(Worker) === "undefined";
-            sessionStorage.setItem(OldBrowserStorageKey, isOldBrowser.toString());
+            sessionStorage.setItem(oldBrowserStorageKey, isOldBrowser.toString());
             if (isOldBrowser) {
                 alert(Comcute.messages.oldBrowser)
             }
         }
 
-        if (sessionStorage.getItem(OldBrowserStorageKey) == 'false') {
-            comcuteStart.removeAttribute("style");
+        if (sessionStorage.getItem(oldBrowserStorageKey) == 'false') {
+            comcuteStart.parentElement.removeAttribute("style");
+        }
+
+        const comcuteTasks = document.getElementById('comcute-tasks');
+        for (let task of enabledTasks) {
+            const a = document.createElement("a");
+            a.classList.add("comcute-start");
+            a.innerText = task.title;
+            a.onclick = () => {
+                startComcute(task.js);
+            }
+            comcuteTasks.appendChild(a);
         }
     }
 
 
     comcuteStart.onclick = function() {
-        if (sessionStorage.getItem(OldBrowserStorageKey) == 'true') {
-            return;
-        }
-
-        loader.setFailureEvent(resetUI);
-        loader.registerAndGetModule();
-
-        comcuteStart.style.display = "none";
-        comcuteStop.removeAttribute("style");
-        progressBar.classList.replace('collapsed', 'expanded')
-        simCanvas.style.display = "none";
-        empty(simCanvas.getElementsByClassName('all')[0]);
-        empty(simCanvas.getElementsByClassName('selected')[0]);
-        computingStatus.classList.replace('hidden', 'visible')
-        textStatus.innerHTML = Comcute.messages.awaitingData;
+        startComcute(enabledTasks[0].js);
     };
 
 
@@ -75,8 +78,27 @@ window.onload = function() {
     };
 
 
+    function startComcute(comcuteModule) {
+        if (sessionStorage.getItem(oldBrowserStorageKey) == 'true') {
+            return;
+        }
+
+        loader.setFailureEvent(resetUI);
+        loader.register(comcuteModule);
+
+        comcuteStart.parentElement.style.display = "none";
+        comcuteStop.removeAttribute("style");
+        progressBar.classList.replace('collapsed', 'expanded')
+        simCanvas.style.display = "none";
+        empty(simCanvas.getElementsByClassName('all')[0]);
+        empty(simCanvas.getElementsByClassName('selected')[0]);
+        computingStatus.classList.replace('hidden', 'visible')
+        textStatus.innerHTML = Comcute.messages.awaitingData;
+    }
+
+
     function resetUI() {
-        comcuteStart.removeAttribute("style");
+        comcuteStart.parentElement.removeAttribute("style");
         comcuteStop.style.display = "none";
         progressBar.classList.replace('expanded', 'collapsed')
         progress.style.width = "0%";

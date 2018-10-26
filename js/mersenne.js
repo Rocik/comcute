@@ -4,7 +4,7 @@
  * @author Waldemar Korłub
  */
 
-window.comcuteModule = {
+window.comcuteMersenneModule = {
 
     parallelTaskJobs: true,
 
