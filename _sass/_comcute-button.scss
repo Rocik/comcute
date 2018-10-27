@@ -19,10 +19,6 @@ $comcute-button-height-mobile: 50px;
         letter-spacing: 2px;        
     }
 
-    button {
-        border: none;
-    }
-
     cursor: pointer;
 
     @include media-query($max-inline-header-width) {
@@ -50,17 +46,16 @@ $comcute-button-height-mobile: 50px;
     display: inline-block;
     flex-grow: 1;
 
+    z-index: 10;
+
     @include transition(box-shadow 0.4s linear);
     box-shadow: none;
     &:hover {
-        box-shadow: 0 1px 10px rgba(black, 0.2);
-    }
-}
+        box-shadow: 0 1px 8px rgba(black, 0.2);
 
-.comcute-more {
-    &:hover + .comcute-more-container,
-    &:focus + .comcute-more-container {
-        display: block;
+        & + .comcute-sub-button {
+            border: none;
+        }
     }
 }
 
@@ -71,9 +66,8 @@ $comcute-button-height-mobile: 50px;
     margin-top: $comcute-button-height;
 
     overflow: auto;
-    z-index: 10;
+    z-index: 5;
     
-    background-color: #f1f1f1;
     box-shadow: 0px 4px 16px 0px rgba(black, 0.4);
 
     @include media-query($max-inline-header-width) {
@@ -89,7 +83,11 @@ $comcute-button-height-mobile: 50px;
 		display: block;
 		
 		line-height: $comcute-button-height - 10px;
-		font-size: 15px;
+        font-size: 15px;
+        
+        &:first-child {
+            box-shadow: inset 0px 7px 10px -7px rgba(black, 0.3);
+        }
     }
 
     &:hover {
@@ -113,9 +111,26 @@ $comcute-button-height-mobile: 50px;
 
 
 .comcute-more {
-    min-width: $comcute-button-height;
     width: $comcute-button-height;
     max-width: $comcute-button-height;
+    padding: 0 0 0 1px;
+
+    z-index: 8;
+
+    border-left: 1px solid #eb5957;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+
+    &:hover, &:focus {
+        border-left: none;
+        z-index: 10;
+    }
+
+    &:hover + .comcute-more-container,
+    &:focus + .comcute-more-container {
+        display: block;
+    }
 }
 
 
