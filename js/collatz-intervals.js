@@ -6,6 +6,8 @@
 
 window.comcuteCollatzModule = {
 
+    identifier: "collatz",
+
     parallelTaskJobs: true,
 
     getStatus: function(input, lang) {

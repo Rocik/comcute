@@ -5,9 +5,7 @@ var Runner = function(userSettings) {
     'use strict';
     const self = this;
 
-    this.sServiceUrl = "";
-    this.sServiceNamespace = "";
-    let taskUUID = "";
+    let server;
 
     let running = true;
     let computeModule;
@@ -32,13 +30,12 @@ var Runner = function(userSettings) {
     this.errorCallback = () => {};
 
 
-    this.startComputing = function(newTaskId, comcuteModule) {
+    this.startComputing = function(server, comcuteModule) {
+        self.server = server;
         computeModule = comcuteModule;
-        if (ww === undefined) {
-            createWW();
-        }
 
-        taskUUID = newTaskId;
+        createWW();
+        
         running = true;
         statusTexts = {};
 
@@ -62,122 +59,102 @@ var Runner = function(userSettings) {
             for (let i = 0; i < totalThreads; ++i) {
                 fetchInputData();
             }
-            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"f4k3id\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf709\",\"89\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "OK");
-            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"f4k3id\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf708\",\"1151\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "OK");
-            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"f4k3id\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf707\",\"10000\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "OK");
         } else {
+            totalThreads = 0;
             fetchInputData();
-            runJob("<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><ns2:GetDataResponse xmlns:ns2=\"http://si.webservice/\"><return>[\"c97bb22f-fcb5-4ee0-be6c-b2bde5951e4c\",\"e74c99c1-7f83-4aee-af5c-c4a753ebf709\",\"/images/map_small.png 3 494 11 667 743 958 942 12 2 580 667 602 615 2 151 984 587 94 2 24 662 504 825 3 451 931 351 879 150 913 2 237 819 34 530 4 375 744 712 812 1004 884 125 400 3 874 827 10 423 465 689 3 191 496 531 980 208 978 4 111 532 954 759 474 709 477 780 4 327 786 192 769 693 848 22 576 4 78 268 579 685 409 789 262 763 2 463 869 400 758\"]</return></ns2:GetDataResponse></S:Body></S:Envelope>", "OK");
         }
     }
 
 
     function fetchInputData() {
-        return; // TODO: remove
-        webservice({
-            url: self.sServiceUrl,
-            nameSpace: self.sServiceNamespace,
-            methodName: "GetData",
-            data: [taskUUID],
-            success: runJob,
-            error: self.errorCallback
+        self.server.getDataPackage()
+        .then(runJob)
+        .catch(function(err) {
+            console.log(err);
+            if (err === 404) {
+                if (ww.getUsedWorkers() === 0) {
+                    self.errorCallback("ENDED");
+                    return;
+                }
+                
+                while(textStatus.lastChild.classList.contains("awaiting")) {
+                    textStatus.removeChild(textStatus.lastChild);
+                }             
+            } else {
+                self.errorCallback(err);
+            }
         });
     };
 
 
-    function runJob(soapData, serverTextStatus) {
-        // sprawdzenie, czy pobranie danych przebiegło poprawnie
-        if (serverTextStatus === null || serverTextStatus !== 'OK') {
-            self.errorCallback("Getting job's data failed");
+    function runJob(data) {
+        if (!running) {
             return;
         }
 
-        // kontener na dane wejściowe do obliczeń
-        const responseText = extractSoap(soapData);
-
-        if (responseText === null || responseText === "NO_DATA_AVAILABLE") {
-            if (responseText === "NO_DATA_AVAILABLE")
-                self.errorCallback(responseText);
-            else
-                self.errorCallback("Got empty job");
+        if (data.input === null) {
             return;
         }
 
-        if (!running) return;
+        console.info("Testing (" + data.UUID + "): " + data.input);
 
-        // Konwersja odpowiedzi serwera S na zmienne
-        const responseJSON = JSON.parse(responseText);
-        const dataTaskUUID = responseJSON[0];
-        const dataUUID     = responseJSON[1];
-        const dataObject   = responseJSON[2];
+        updateStatusbar(data.input, data.UUID);
 
-        if (dataObject !== null) {
-            console.info("Testowanie (" + dataUUID + "): " + dataObject);
+        const threadsAmount = ww.getFreeWorkers();
+        for (let i = 0; i < threadsAmount; ++i) {
+            canvasDelayTimeouts[i] = false;
+        }
 
-            updateStatusbar(dataObject, dataUUID);
+        inputTaskIndex = 0;
+        if (typeof computeModule.getInputTasksAmount === 'function') {
+            inputTaskGoal = computeModule.getInputTasksAmount(data.input);
+            results = [];
+        } else {
+            inputTaskGoal = 0;
+        }
 
-            const threadsAmount = ww.getFreeWorkers();
-            for (let i = 0; i < threadsAmount; ++i) {
-                canvasDelayTimeouts[i] = false;
-            }
-
-            inputTaskIndex = 0;
-            if (typeof computeModule.getInputTasksAmount === 'function') {
-                inputTaskGoal = computeModule.getInputTasksAmount(dataObject);
-                results = [];
-            } else {
-                inputTaskGoal = 0;
-            }
-
-            const onRunFinished = function(result) {
-                if (inputTaskGoal > 0) {
-                    results.push(result);
-                    if (inputTaskIndex == inputTaskGoal) {
-                        if (ww.getUsedWorkers() > 0) {
-                            return;
-                        }
-                        if (typeof computeModule.getInputTasksAmount === 'function')
-                            result = computeModule.setResponse(results);
-                        else
-                            result = results;
-                    } else {
-                        startTask(dataObject, onRunFinished);
+        const onRunFinished = function(result) {
+            if (inputTaskGoal > 0) {
+                results.push(result);
+                if (inputTaskIndex == inputTaskGoal) {
+                    if (ww.getUsedWorkers() > 0) {
                         return;
                     }
+
+                    if (typeof computeModule.getInputTasksAmount === 'function') {
+                        result = computeModule.setResponse(results);
+                    } else {
+                        result = results;
+                    }
+                } else {
+                    startTask(data.input, onRunFinished);
+                    return;
                 }
-
-                console.log("Wynik obliczeń (" + dataUUID + "): " + result);
-
-                const resultArguments = [
-                    dataTaskUUID,
-                    dataUUID,
-                    result,
-                    navigator.userAgent,
-                    "JavaScript" // Informacje o technologii, w której wykonano obliczenia
-                ];
-
-                // wysyłanie wyników
-                /*webservice({
-                    url: self.sServiceUrl,
-                    nameSpace: self.sServiceNamespace,
-                    methodName: "SaveResult",
-                    data: resultArguments,
-                    error: self.errorCallback
-                });
-
-                if (inputTaskGoal > 0)
-                    fetchInputData();*/
-
-                delete statusTexts[dataUUID];
             }
 
-            if (inputTaskGoal > 0) {
-                for (let i = 0; i < threadsAmount; ++i) {
-                    startTask(dataObject, onRunFinished);
-                }
-            } else {
-                startTask(dataObject, onRunFinished);
+            console.log("Results (" + data.UUID + "): " + result);
+
+            self.server.setResults(data.UUID, [
+                result,
+                navigator.userAgent
+            ])
+            .catch(function(err) {
+                self.errorCallback(err);
+            });
+            
+            if (inputTaskGoal === 0) {
+                fetchInputData();
             }
+
+            delete statusTexts[data.UUID];
+        }
+
+        if (inputTaskGoal > 0) {
+            for (let i = 0; i < threadsAmount; ++i) {
+                startTask(data.input, onRunFinished);
+            }
+        } else {
+            startTask(data.input, onRunFinished);
         }
     };
 
@@ -303,15 +280,16 @@ var Runner = function(userSettings) {
             statusTexts[dataID] = moduleStatus.taskStatus;
             let statusText = "";
             let paragraphs = totalThreads;
+            
             for (const id in statusTexts) {
                 if (typeof statusTexts[id] === 'string') {
                     statusText += "<p>" + statusTexts[id] + "</p>";
                     paragraphs--;
                 }
             }
-
+            
             for (let i = 0; i < paragraphs; ++i) {
-                statusText += "<p>" + Comcute.messages.awaitingData + "</p>";
+                statusText += "<p class='awaiting'>" + Comcute.messages.awaitingData + "</p>";
             }
 
             const moduleDescription = moduleStatus.description || "";

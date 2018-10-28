@@ -10,6 +10,8 @@
 
 window.comcuteFireModule = {
 
+    identifier: "fire",
+
     getStatus: function(_, lang) {
         if (lang === "pl") {
             return {

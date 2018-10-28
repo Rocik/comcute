@@ -6,6 +6,8 @@
 
 window.comcuteMersenneModule = {
 
+	identifier: "mersenne",
+
     parallelTaskJobs: true,
 
     getStatus: function(dataObject, lang) {
