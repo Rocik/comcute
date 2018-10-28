@@ -24,11 +24,17 @@ function WW(javaScriptFunction) {
          * @param {Function} [callback]
          */
         start(workerIndex, input, callback) {
+            let transfer = undefined;
+            if (input instanceof ArrayBuffer || input instanceof MessagePort || input instanceof ImageBitmap) {
+                transfer = [input];
+            }
             super.postMessage({
                 type: 'start',
                 data: input,
                 index: workerIndex
-            });
+            },
+                transfer
+            );
             this._isBusy = true;
             this._callback = callback;
         }
