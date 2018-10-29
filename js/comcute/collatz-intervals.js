@@ -92,4 +92,4 @@ window.comcuteCollatzModule = {
 
         return compute(dataObject);
     }
-}
+};

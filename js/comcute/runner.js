@@ -2,7 +2,6 @@
  *  Controls data flow: fetching data, running tasks, sending results
  */
 var Runner = function(userSettings) {
-    'use strict';
     const self = this;
 
     let server;

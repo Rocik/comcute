@@ -1,8 +1,6 @@
 /**
  * NOTE: var in some functions and some strange structures gave significant performance boost
  */
-"use strict";
-
 (function() {
 
     let imgWidth = 1024;

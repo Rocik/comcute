@@ -1,4 +1,3 @@
-"use strict";
 const Loader = function(userSettings) {
 
     const runner = new Runner(userSettings);
