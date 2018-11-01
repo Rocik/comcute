@@ -2,9 +2,9 @@
 ---
 'use strict';
 
+{% include_relative ww.js %}
 {% include_relative comcute/fake-server.js %}
 {% include_relative comcute/server.js %}
-{% include_relative comcute/ww.js %}
 {% include_relative comcute/runner.js %}
 {% include_relative comcute/loader.js %}
 {% include_relative comcute/user-settings.js %}
