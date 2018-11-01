@@ -3,6 +3,7 @@ layout: default
 lang: pl
 title: Strona główna
 categories: home
+permalink: /
 ---
 
 # System utrzymania wielkiej mocy obliczeniowej w sytuacjach kryzysowych
