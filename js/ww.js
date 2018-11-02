@@ -442,12 +442,14 @@ function WW(javaScriptFunction) {
             const difference = percent - previousProgress;
             previousProgress = percent;
 
-            self.postMessage({
+            postMessageTransferable({
                 type: 'progress',
                 difference: difference,
                 index: workerIndex,
                 extra: extraData
-            });
+            },
+                extraData
+            );
         };
 
 
@@ -466,16 +468,32 @@ function WW(javaScriptFunction) {
                     previousProgress = 0;
                     progressGoal = -1;
                     const result = doWork(msg.data.data);
-                    self.postMessage({
+                    postMessageTransferable({
                         type: 'finished',
                         result: result,
                         index: workerIndex
-                    });
+                    },
+                        result
+                    );
                     break;
                 default:
                     throw 'Unknown main thread message type';
             }
         };
+
+
+        /**
+         * Post message using transferable interface.
+         * @param {*} msg		- Message to send.
+         * @param {*} objectToTransfer	- If object implements transferable interface it will be send that way.
+         */
+        function postMessageTransferable(msg, objectToTransfer) {
+            let transfer = undefined;
+            if (objectToTransfer instanceof ArrayBuffer || objectToTransfer instanceof MessagePort || objectToTransfer instanceof ImageBitmap) {
+                transfer = [objectToTransfer];
+            }
+            self.postMessage(msg, transfer);
+        }
 
 
         /**
