@@ -24,17 +24,19 @@ function WW(javaScriptFunction) {
          * @param {Function} [callback]
          */
         start(workerIndex, input, callback) {
-            let transfer = undefined;
-            if (input instanceof ArrayBuffer || input instanceof MessagePort || input instanceof ImageBitmap) {
+            let transfer = [];
+            if (input instanceof ArrayBuffer
+             || input instanceof MessagePort
+             || input instanceof ImageBitmap) {
                 transfer = [input];
             }
+
             super.postMessage({
                 type: 'start',
                 data: input,
                 index: workerIndex
-            },
-                transfer
-            );
+            }, transfer);
+            
             this._isBusy = true;
             this._callback = callback;
         }
@@ -447,9 +449,7 @@ function WW(javaScriptFunction) {
                 difference: difference,
                 index: workerIndex,
                 extra: extraData
-            },
-                extraData
-            );
+            }, extraData);
         };
 
 
@@ -472,9 +472,7 @@ function WW(javaScriptFunction) {
                         type: 'finished',
                         result: result,
                         index: workerIndex
-                    },
-                        result
-                    );
+                    }, result);
                     break;
                 default:
                     throw 'Unknown main thread message type';
@@ -483,16 +481,28 @@ function WW(javaScriptFunction) {
 
 
         /**
-         * Post message using transferable interface.
-         * @param {*} msg		- Message to send.
-         * @param {*} objectToTransfer	- If object implements transferable interface it will be send that way.
+         * Post message using transferable interface when possible.
+         * @param {{objectToTransfer: Object}} message - Message to send.
+         * @param {Object} objectToTransfer - Transferable candidate property of message argument.
          */
-        function postMessageTransferable(msg, objectToTransfer) {
-            let transfer = undefined;
-            if (objectToTransfer instanceof ArrayBuffer || objectToTransfer instanceof MessagePort || objectToTransfer instanceof ImageBitmap) {
+        function postMessageTransferable(message, objectToTransfer) {
+            let transfer = [];
+            if (canBeTransferred(objectToTransfer)) {
                 transfer = [objectToTransfer];
             }
-            self.postMessage(msg, transfer);
+
+            self.postMessage(message, transfer);
+        }
+
+
+        /**
+         * @param   {Object} object - Transferable candidate.
+         * @returns {Boolean} True when object type is allowed to be transferred.
+         */
+        function canBeTransferred(object) {
+            return object instanceof ArrayBuffer
+                || object instanceof MessagePort
+                || object instanceof ImageBitmap;
         }
 
 
@@ -511,8 +521,9 @@ function WW(javaScriptFunction) {
                 } catch (e) {
                     const url = new URL(includes);
                     const selfUrl = new URL(data.location);
-                    if (!loadScriptOnSubDomainFolder(url, selfUrl))
+                    if (!loadScriptOnSubDomainFolder(url, selfUrl)) {
                         throw e;
+                    }
                 }
             }
         }
