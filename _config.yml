@@ -17,7 +17,7 @@ title: Comcute
 description:
     pl: System utrzymania wielkiej mocy obliczeniowej w sytuacjach kryzysowych
     en: System for providing big computing power in a crisis situation
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /comcute
 url: "http://comcute.eti.pg.gda.pl"
 
 # Build settings
