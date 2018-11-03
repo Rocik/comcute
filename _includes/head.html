@@ -16,15 +16,4 @@
     {%- if jekyll.environment == 'production' and site.google_analytics -%}
         {%- include google-analytics.html -%}
     {%- endif -%}
-
-    {%- if jekyll.environment != 'production' -%}
-        <script>
-            document.write(
-            '<script src="http://' +
-            (location.host || 'localhost').split(':')[0] +
-            ':35729/livereload.js?snipver=1&amp;port=35729"' +
-            '></' +
-            'script>');
-        </script>
-    {%- endif -%}
 </head>
