@@ -13,9 +13,11 @@
     {% I18n_Headers %}
     <link rel="icon" href="{{ "/images/favicon.png" | relative_url }}"/>
     <link rel="stylesheet" href="{{ "/css/main.css" | relative_url  }}">
-
-    {%- if page.url == '/' and site.active_lang == 'pl' -%}
-        {%- include language-redirect.html -%}
+    
+    {%- if site.active_lang == 'pl' -%}
+        {%- if page.url == site.baseurl or page.url == '/' -%}
+            {%- include language-redirect.html -%}
+        {%- endif -%}
     {%- endif -%}
 
     {%- if jekyll.environment == 'production' and site.google_analytics -%}
