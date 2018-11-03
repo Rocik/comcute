@@ -30,10 +30,3 @@ Nie musisz instalować dodatkowego oprogramowania – Comcute działa w przeglą
 # Na co w praktyce pozwalają systemy wysokiej wydajności, takie jak Comcute
 
 Comcute niesie ze sobą nieograniczoną liczbę możliwości. W praktyce tylko wyobraźnia ogranicza twórców w tym, co mogą osiągnąć dzięki naszej platformie. Symulacje powodzi, modelowanie pogody, czy symulacja zachowań tłumu w panice, to tylko przykłady zagadnień, które dzięki przetwarzaniu rozproszonemu na platformie staną się możliwe do zrealizowania. Już na początku istnienia Comcute zaprojektowano oprogramowanie, którego celem jest symulacja pożarów w lasach. Opisane wieloma parametrami (takimi jak prędkość i kierunek wiatru, kaloryczności podłoża i drzew oraz wilgotność powietrza) wirtualne przestrzenie poddawane są regularnym podpaleniom, a uzyskane wyniki mogą przynieść ogromne korzyści np.: pomóc lepiej chronić tereny narażone na podpalenie przed rozprzestrzenianiem się ognia. Ośrodki naukowe, armia, firmy polegające na niezawodności obliczeń, a nawet banki – wszyscy oni mogą czerpać korzyści z platformy Comcute i wykorzystywać jej potencjał do swoich celów w skali w jakiej ciężko jest o tym pomyśleć, przy tak niskich kosztach.
-
-<script>
-if (navigator.language != "pl-PL" && navigator.language != "pl" && sessionStorage.getItem('redirected') == null) {
-    sessionStorage.setItem('redirected', 'true');
-    window.location.pathname += "en/";
-}
-</script>
