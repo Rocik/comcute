@@ -1,0 +1,7 @@
+<script>
+	if (navigator.language != "pl-PL" && navigator.language != "pl"
+	 && sessionStorage.getItem('redirected') == null) {
+		window.location.pathname += "en/";
+		sessionStorage.setItem('redirected', 'true');
+	}
+</script>

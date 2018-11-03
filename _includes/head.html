@@ -14,14 +14,8 @@
     <link rel="icon" href="{{ "/images/favicon.png" | relative_url }}"/>
     <link rel="stylesheet" href="{{ "/css/main.css" | relative_url  }}">
 
-    {%- if page.url == '/' -%}
-        <script>
-            if (navigator.language != "pl-PL" && navigator.language != "pl"
-             && sessionStorage.getItem('redirected') == null) {
-                window.location.pathname += "en/";
-                sessionStorage.setItem('redirected', 'true');
-            }
-        </script>
+    {%- if page.url == '/' and site.active_lang == 'pl' -%}
+        {%- include language-redirect.html -%}
     {%- endif -%}
 
     {%- if jekyll.environment == 'production' and site.google_analytics -%}
