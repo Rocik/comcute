@@ -1,0 +1,11 @@
+version: '3.2'
+services:
+  comcute_website:
+    image: comcute-website
+    build: .
+    container_name: comcute_website
+    command: jekyll s
+    environment:
+      - JEKYLL_ENV=production
+    ports:
+      - 4000:4000
