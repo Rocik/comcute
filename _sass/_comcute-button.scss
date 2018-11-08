@@ -85,7 +85,10 @@ $container-shadow-size: 16px;
         line-height: $comcute-button-height-mobile;
         min-width: 100%;
 
-        padding: $container-shadow-size;
+        padding-top: $container-shadow-size;
+        padding-bottom: $container-shadow-size;
+        padding-left: 0;
+        padding-right: 0;
         margin-top: $comcute-button-height-mobile - $container-shadow-size;
 
         @include relative-font-size(1.15);
@@ -97,6 +100,11 @@ $container-shadow-size: 16px;
         top: $container-shadow-size;
         left: $container-shadow-size;
         width: calc(100% - #{$container-shadow-size} * 2);
+
+        @include media-query($max-inline-header-width) {
+            left: 0;
+            width: 100%;
+        }
 
         pointer-events: none;
         z-index: 6;
