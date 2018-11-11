@@ -15,6 +15,7 @@ function WW(javaScriptFunction) {
             super(stringUrl);
             this._isBusy = false;
             this._callback = null;
+            this._errorHandler = null;
         }
 
 
@@ -22,8 +23,9 @@ function WW(javaScriptFunction) {
          * @param {number} workerIndex
          * @param {Object} input
          * @param {Function} [callback]
+         * @param {Function} [errorHandler]
          */
-        start(workerIndex, input, callback) {
+        start(workerIndex, input, callback, errorHandler) {
             let transfer = [];
             if (input instanceof ArrayBuffer
              || input instanceof MessagePort
@@ -36,9 +38,17 @@ function WW(javaScriptFunction) {
                 data: input,
                 index: workerIndex
             }, transfer);
-            
+
             this._isBusy = true;
             this._callback = callback;
+
+            if (this._errorHandler !== null) {
+                super.removeEventListener('error', this._errorHandler, true);
+            }
+            if (typeof errorHandler === 'function') {
+                super.addEventListener('error', errorHandler);
+                this._errorHandler = errorHandler;
+            }
         }
 
 
@@ -85,7 +95,7 @@ function WW(javaScriptFunction) {
     const includes = [];
     /**
      * Tasks queue used when no workers are free to store future jobs.
-     * @type {Array.<{input: *, callback: Function}>}
+     * @type {Array.<{input: *, callback: Function, errorHandler: Function}>}
      */
     const jobQueue = [];
     /**
@@ -197,17 +207,24 @@ function WW(javaScriptFunction) {
      * Start task on first first unoccupied worker.
      * @param  {*} input - Any data directly sent to the worker.
      * @param  {Function} [callback] - Executed after the task is done.
+     * @param  {Function} [errorHandler] - Executed when task runs into error.
      * @return {Promise} When callback is null Promise is returned.
      */
-    this.run = function(input, callback) {
+    this.run = function(input, callback, errorHandler) {
         if (callback === undefined) {
             return new Promise((resolve, reject) => {
-                this.run(input, resolve);
+                this.run(input, resolve, err => {
+                    if (typeof reject === 'function') {
+                        reject();
+                    } else {
+                        throw new Error(err);
+                    }
+                });
             });
         }
 
-        if (!runOnUnoccupiedWorker(input, callback)) {
-            jobQueue.push({ input, callback });
+        if (!runOnUnoccupiedWorker(input, callback, errorHandler)) {
+            jobQueue.push({ input, callback, errorHandler });
         }
     };
 
@@ -255,12 +272,13 @@ function WW(javaScriptFunction) {
      * Start a task on the first unoccupied Worker.
      * @param  {*} input - Any data directly sent to the worker.
      * @param  {Function} [callback] - Executed after the task is done.
+     * @param  {Function} [errorHandler] - Executed when task runs into error.
      * @return {boolean}  True if found free worker.
      */
-    function runOnUnoccupiedWorker(input, callback) {
+    function runOnUnoccupiedWorker(input, callback, errorHandler) {
         for (let i = 0; i < workers.length; ++i) {
             if (workers[i].isIdle) {
-                startWorker(i, input, callback);
+                startWorker(i, input, callback, errorHandler);
                 return true;
             }
         }
@@ -274,9 +292,10 @@ function WW(javaScriptFunction) {
      * @param  {number} workerIndex
      * @param  {*} input - Any data directly sent to the worker.
      * @param  {Function} [callback] - Executed after the task is done.
+     * @param  {Function} [errorHandler] - Executed when task runs into error.
      */
-    function startWorker(workerIndex, input, callback) {
-        workers[workerIndex].start(workerIndex, input, callback);
+    function startWorker(workerIndex, input, callback, errorHandler) {
+        workers[workerIndex].start(workerIndex, input, callback, errorHandler);
         usedWorkers++;
     }
 

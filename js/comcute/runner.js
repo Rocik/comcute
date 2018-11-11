@@ -201,9 +201,10 @@ var Runner = function(userSettings) {
             }
             setTimeout(reject, 1000);
         }))
-        .then((preparedData) => {
+        .then(preparedData => {
             inputData.preparedData = preparedData;
-            ww.run(inputData, onRunFinished);
+            ww.run(inputData)
+            .then(onRunFinished, self.errorCallback);
         }, self.errorCallback);
     }
 
