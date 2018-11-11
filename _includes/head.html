@@ -9,7 +9,7 @@
         {{ page.title }} | {{ site.title }}
     {% endif %}
     </title>
-    {%- seo title=false -%}
+    <meta name="description" content="{{ site.description[site.active_lang] }}" />
     {% I18n_Headers %}
     <link rel="icon" href="{{ "/images/favicon.png" | relative_url }}"/>
     <link rel="stylesheet" href="{{ "/css/main.css" | relative_url  }}">
