@@ -106,7 +106,11 @@ var Runner = function(userSettings) {
 
         inputTaskIndex = 0;
         if (typeof computeModule.getInputTasksAmount === 'function') {
-            inputTaskGoal = computeModule.getInputTasksAmount(data.input);
+            try {
+                inputTaskGoal = computeModule.getInputTasksAmount(data.input);
+            } catch (err) {
+                self.errorCallback(err);
+            }
             results = [];
         } else {
             inputTaskGoal = 0;
@@ -121,7 +125,11 @@ var Runner = function(userSettings) {
                     }
 
                     if (typeof computeModule.getInputTasksAmount === 'function') {
-                        result = computeModule.setResponse(results);
+                        try {
+                            result = computeModule.setResponse(results);
+                        } catch (err) {
+                            self.errorCallback(err);
+                        }
                     } else {
                         result = results;
                     }
@@ -186,7 +194,11 @@ var Runner = function(userSettings) {
 
     function startPrepared(inputData, onRunFinished) {
         (new Promise((resolve, reject) => {
-            computeModule.prepare(inputData.data, resolve);
+            try {
+                computeModule.prepare(inputData.data, resolve);
+            } catch (err) {
+                self.errorCallback(err);
+            }
             setTimeout(reject, 1000);
         }))
         .then((preparedData) => {
@@ -264,7 +276,11 @@ var Runner = function(userSettings) {
                     return;
                 }
             }
-            computeModule.drawCanvas(canvas, extraData);
+            try {
+                computeModule.drawCanvas(canvas, extraData);
+            } catch (err) {
+                self.errorCallback(err);
+            }
             canvases.removeAttribute('style');
         }
     }
@@ -275,24 +291,29 @@ var Runner = function(userSettings) {
         textStatus.removeAttribute("style");
 
         if (computeModule.getStatus !== undefined) {
-            const moduleStatus = computeModule.getStatus(dataObject, Comcute.currentLanguage);
-            statusTexts[dataID] = moduleStatus.taskStatus;
-            let statusText = "";
-            let paragraphs = totalThreads;
-            
-            for (const id in statusTexts) {
-                if (typeof statusTexts[id] === 'string') {
-                    statusText += "<p>" + statusTexts[id] + "</p>";
-                    paragraphs--;
+            try {
+                const moduleStatus = computeModule.getStatus(dataObject, Comcute.currentLanguage);
+                statusTexts[dataID] = moduleStatus.taskStatus;
+                let statusText = "";
+                let paragraphs = totalThreads;
+                
+                for (const id in statusTexts) {
+                    if (typeof statusTexts[id] === 'string') {
+                        statusText += "<p>" + statusTexts[id] + "</p>";
+                        paragraphs--;
+                    }
                 }
-            }
-            
-            for (let i = 0; i < paragraphs; ++i) {
-                statusText += "<p class='awaiting'>" + Comcute.messages.awaitingData + "</p>";
-            }
+                
+                for (let i = 0; i < paragraphs; ++i) {
+                    statusText += "<p class='awaiting'>" + Comcute.messages.awaitingData + "</p>";
+                }
 
-            const moduleDescription = moduleStatus.description || "";
-            textStatus.innerHTML = moduleDescription + statusText;
+                const moduleDescription = moduleStatus.description || "";
+                textStatus.innerHTML = moduleDescription + statusText;
+            } catch (err) {
+                textStatus.innerHTML = "";
+                console.error(err);
+            }
         } else if (willDrawCanvas()) {
             textStatus.innerHTML = Comcute.messages.awaitingData;
         } else {

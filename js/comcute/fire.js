@@ -95,7 +95,7 @@ window.comcuteFireModule = {
 
         function start() {
             const inputData = parseInput(dataObject.data);
-            loadMapDataFromImage(inputData.imageURL);
+            loadMapDataFromImage();
 
             const fire = inputData.fires[dataObject.inputTaskIndex];
             evenCPU = 1;
@@ -105,17 +105,17 @@ window.comcuteFireModule = {
 
             setProgressGoal(1500 * inputData.fires.length);
 
-            console.time('updateFires');
+            console.time('updateFires'); // TODO: remove
             for (var i = 0; i <= 1500; i++) {
                 simulateCPU();
                 if (i % 4 == 0) {
-                    updateFire(i);
+                    updateFire();
                     updateProgress(i, pixels);
                 } else {
                     updateProgress(i);
                 }
             }
-            console.timeEnd('updateFires');
+            console.timeEnd('updateFires'); // TODO: remove
 
             let coveredWithFireCnt = 0;
             for (var x = 0; x < mapWidth; x++) {
@@ -351,7 +351,7 @@ window.comcuteFireModule = {
         }
 
         function simulate(even) {
-            newActiveBlocks = {};
+            var newActiveBlocks = {};
 
             var internalCellsDataX = null;
             var resultCellsDataX = null;
