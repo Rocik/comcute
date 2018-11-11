@@ -118,7 +118,7 @@ $container-shadow-size: 16px;
 
     #comcute-tasks {
         transform: translateY(-100%);
-        @include transition(all 0.3s ease-out);
+        @include transition(transform 0.3s ease-out);
     }
 
     a {
