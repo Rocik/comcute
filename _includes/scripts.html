@@ -1,27 +1,39 @@
 <script>
     /* <![CDATA[ */
     var Comcute = {
-        messages: {
         {% if site.active_lang == "pl" %}
-            error: "Przepraszamy, ale wystąpił błąd. Spróbuj dołączyć do nas później.",
-            noTask: "Aktualnie nie ma więcej zadań do wykonania. Spróbuj dołączyć do nas później.",
-            awaitingData: "Oczekuję na dane. Obliczenia wkrótce zostaną rozpoczęte.",
-            computingStart: "Dziękujemy za udostępnienie mocy obliczeniowej. Obliczenia trwają...",
-            computingEnd: "Zakończono obliczenia. Dziękujemy za współpracę.",
-            oldBrowser: "Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.",
+            messages: {
+                error: "Przepraszamy, ale wystąpił błąd. Spróbuj dołączyć do nas później.",
+                noTask: "Aktualnie nie ma więcej zadań do wykonania. Spróbuj dołączyć do nas później.",
+                awaitingData: "Oczekuję na dane. Obliczenia wkrótce zostaną rozpoczęte.",
+                computingStart: "Dziękujemy za udostępnienie mocy obliczeniowej. Obliczenia trwają...",
+                computingEnd: "Zakończono obliczenia. Dziękujemy za współpracę.",
+                oldBrowser: "Twoja przeglądarka nie wspiera technologii Web Workers! Uruchamianie zadań będzie niemożliwe.",
+            },
+            tasks_titles: {
+                fire: "Symulacja pożarów",
+                collatz: "Hipoteza Collatza",
+                mersenne: "Liczby Mersenne’a",
+            },
         {% else %}
-            error: "We're sorry, but an error occured. Please try joining us later.",
-            noTask: "There are no more task to compute currently. Please try joining us later.",
-            awaitingData: "Awaiting data. Computations will start soon.",
-            computingStart: "Thank you for sharing your computer's computing power with us. Calculations in progress...",
-            computingEnd: "Calculations ended. Thank you for participating.",
-            oldBrowser: "Your browser does not support Web Workers! You will not be able to start tasks.",
+            messages: {
+                error: "We're sorry, but an error occured. Please try joining us later.",
+                noTask: "There are no more task to compute currently. Please try joining us later.",
+                awaitingData: "Awaiting data. Computations will start soon.",
+                computingStart: "Thank you for sharing your computer's computing power with us. Calculations in progress...",
+                computingEnd: "Calculations ended. Thank you for participating.",
+                oldBrowser: "Your browser does not support Web Workers! You will not be able to start tasks.",
+            },
+            tasks_titles: {
+                fire: "Fire simulation",
+                collatz: "Collatz Intervals",
+                mersenne: "Finding Mersenne numbers",
+            },
         {% endif %}
-        },
         currentLanguage: "{{ site.active_lang }}"
     };
     /* ]]> */
 </script>
 <script src="{{ "/js/comcute.js" | relative_url }}"></script>
-<script src="{{ "/js/jsbn.js" | relative_url }}" async></script>
-<script src="{{ "/js/jsbn2.js" | relative_url }}" async></script>
+<script src="{{ "/js/jsbn.js" | relative_url }}"></script>
+<script src="{{ "/js/jsbn2.js" | relative_url }}"></script>

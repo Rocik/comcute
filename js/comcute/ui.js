@@ -1,9 +1,9 @@
 const UI = function() {
 
 	const enabledTasks = [
-		{ title: "Fire spreading",		js: window.comcuteFireModule },
-		{ title: "Collatz Intervals",	js: window.comcuteCollatzModule },
-		{ title: "Mersenne",			js: window.comcuteMersenneModule },
+		{ title: Comcute.tasks_titles.fire,		js: window.comcuteFireModule },
+		{ title: Comcute.tasks_titles.collatz,	js: window.comcuteCollatzModule },
+		{ title: Comcute.tasks_titles.mersenne,	js: window.comcuteMersenneModule },
 	]
 
 	const userSettings = new UserSettings();
