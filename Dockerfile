@@ -1,7 +1,19 @@
-FROM jekyll/jekyll
+FROM jekyll/jekyll as builder
 
-COPY Gemfile .
+ENV JEKYLL_ENV=production
 
+WORKDIR /srv/jekyll
+
+COPY Gemfile ./
+COPY Gemfile.lock ./
 RUN bundle install
 
-COPY . /srv/jekyll
+COPY . ./
+RUN jekyll build
+
+
+FROM nginx
+
+ADD nginx.conf /etc/nginx/nginx.conf
+
+COPY --from=builder /srv/jekyll/_site /usr/share/nginx/html

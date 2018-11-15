@@ -67,3 +67,6 @@ exclude:
    - js/comcute/
    - js/spec/
    - js/Rakefile
+   - Dockerfile
+   - docker-compose.yml
+   - nginx.conf
