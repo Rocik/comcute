@@ -7,10 +7,10 @@ permalink: /settings/
 
 ## How much computing power do you want to share
 
-_Amount of simultaneously processed tasks._
-
 <div class="slide-container">
-	<span class="slider-label">Minimum</span>
+	<span class="slider-label">Small</span>
 	<input id="workers-count" class="slider" type="range" min="1">
-	<span class="slider-label">Maximum</span>
+	<span class="slider-label">Large</span>
 </div>
+
+_It is amount of simultaneously processed tasks._
