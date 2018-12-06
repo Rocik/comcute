@@ -64,13 +64,14 @@ window.comcuteFireModule = {
         const firefighters = results[0].firefighters;
 
         let coveredWithFireTotalCnt = 0;
-        for (const result of results)
+        for (const result of results) {
             coveredWithFireTotalCnt += result.damage;
+        }
 
         let response = coveredWithFireTotalCnt + " " + firefighters.length + " ";
         for (var firefighter of firefighters) {
-            response += firefighter._x + " "
-                      + firefighter._y + " ";
+            response += firefighter.x + " "
+                      + firefighter.y + " ";
         }
 
         return response;
@@ -103,7 +104,7 @@ window.comcuteFireModule = {
             initializeSimulationData(inputData.firefighters, fire);
             printMap();
 
-            setProgressGoal(1500 * inputData.fires.length);
+            setProgressGoal(1500 * dataObject.goalScale);
 
             console.time('updateFires'); // TODO: remove
             for (var i = 0; i <= 1500; i++) {
