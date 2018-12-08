@@ -1,17 +1,19 @@
 /**
  *  Controls data flow: fetching data, running tasks, sending results
+ *  TODO: extract excess logic from this class, it does too many things
  */
 var Runner = function(userSettings) {
     const self = this;
 
-    let server;
+    let server = null;
 
     let running = true;
-    let computeModule;
+    let computeModule = {};
     let statusTexts = {};
-    let ww;
+    let ww = null;
     let previousProgress;
     let totalThreads;
+    let threadsAmount;
 
     const canvases = document.getElementById('sim-canvas');
     const selectedCanvas = canvases.getElementsByClassName("selected")[0];
@@ -99,7 +101,6 @@ var Runner = function(userSettings) {
 
         updateStatusbar(data.input, data.UUID);
 
-        const threadsAmount = ww.getFreeWorkers();
         for (let i = 0; i < threadsAmount; ++i) {
             canvasDelayTimeouts[i] = false;
         }
@@ -144,14 +145,11 @@ var Runner = function(userSettings) {
             self.server.setResults(data.UUID, [
                 result,
                 navigator.userAgent
-            ])
-            .catch(function(err) {
+            ]).catch(function(err) {
                 self.errorCallback(err);
             });
             
-            if (inputTaskGoal === 0) {
-                fetchInputData();
-            }
+            fetchInputData();
 
             delete statusTexts[data.UUID];
         }
@@ -171,9 +169,11 @@ var Runner = function(userSettings) {
 
         let inputData;
         if (inputTaskGoal > 0) {
+            const goalScale = inputTaskGoal / threadsAmount;
             inputData = {
                 data: dataObject,
                 inputTaskIndex: inputTaskIndex,
+                goalScale: goalScale.toFixed(1)
             }
             inputTaskIndex++;
         } else if (prepare) {
@@ -221,7 +221,7 @@ var Runner = function(userSettings) {
             newCanvas.setAttribute("class", "canvas");
             selectedCanvas.appendChild(newCanvas);
 
-            const threadsAmount = ww.getFreeWorkers();
+            threadsAmount = ww.getFreeWorkers();
             const canvasList = canvases.getElementsByClassName("all")[0];
 
             for (let i = 1; i < threadsAmount; ++i) {
@@ -342,3 +342,6 @@ var Runner = function(userSettings) {
         }
     }
 };
+
+// I you have to work on this we are really sorry,
+// time was limited and neither of us was experienced in JS environment :P
