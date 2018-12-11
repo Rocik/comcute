@@ -106,7 +106,6 @@ window.comcuteFireModule = {
 
             setProgressGoal(1500 * dataObject.goalScale);
 
-            console.time('updateFires'); // TODO: remove
             for (var i = 0; i <= 1500; i++) {
                 simulateCPU();
                 if (i % 4 == 0) {
@@ -116,7 +115,6 @@ window.comcuteFireModule = {
                     updateProgress(i);
                 }
             }
-            console.timeEnd('updateFires'); // TODO: remove
 
             let coveredWithFireCnt = 0;
             for (var x = 0; x < mapWidth; x++) {
